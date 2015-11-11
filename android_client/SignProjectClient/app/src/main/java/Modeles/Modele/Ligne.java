@@ -3,22 +3,23 @@ package Modeles.Modele;
 import java.util.ArrayList;
 
 /**
- * Created by Axel_2 on 27/10/2015.
+ * Created by Axel_2 on 11/11/2015.
  */
 public class Ligne {
 
     protected int id;
     protected String nom;
-    protected String ville;
+    protected String coordonnees;
+    protected String description;
     protected ArrayList<Arret> arrets;
 
-    public Ligne(int id, String nom, String ville, ArrayList<Arret> arrets) {
+    public Ligne(int id, String nom, String coordonnees, String description, ArrayList<Arret> arrets) {
         this.id = id;
         this.nom = nom;
-        this.ville = ville;
+        this.coordonnees = coordonnees;
+        this.description = description;
         this.arrets = arrets;
     }
-
 
     public int getId() {
         return id;
@@ -36,14 +37,21 @@ public class Ligne {
         this.nom = nom;
     }
 
-    public String getVille() {
-        return ville;
+    public String getCoordonnees() {
+        return coordonnees;
     }
 
-    public void setVille(String ville) {
-        this.ville = ville;
+    public void setCoordonnees(String coordonnees) {
+        this.coordonnees = coordonnees;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public ArrayList<Arret> getArrets() {
         return arrets;
@@ -58,7 +66,8 @@ public class Ligne {
         return "Ligne{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
-                ", ville='" + ville + '\'' +
+                ", coordonnees='" + coordonnees + '\'' +
+                ", description='" + description + '\'' +
                 ", arrets=" + arrets +
                 '}';
     }

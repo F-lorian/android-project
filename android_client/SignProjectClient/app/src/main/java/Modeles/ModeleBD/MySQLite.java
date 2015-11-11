@@ -27,7 +27,7 @@ public class MySQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         //Création des tables
-        sqLiteDatabase.execSQL("");
+        sqLiteDatabase.execSQL(ArretBD.CREATE_TABLE_ARRET);
     }
 
     @Override

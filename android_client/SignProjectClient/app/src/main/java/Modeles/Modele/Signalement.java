@@ -1,28 +1,29 @@
 package Modeles.Modele;
 
+import java.util.Date;
+
 /**
- * Created by Axel_2 on 27/10/2015.
+ * Created by Axel_2 on 10/11/2015.
  */
-public class Signalement {
+public abstract class Signalement {
 
     protected int id;
     protected String contenu;
     protected String remarques;
-    protected String date;
-    protected TypeSignalement type;
+    protected Date date;
     protected Arret arret;
+    protected TypeSignalement type;
     protected Utilisateur emetteur;
 
-    public Signalement(int id, String contenu, String remarques, String date, TypeSignalement type, Arret arret, Utilisateur emetteur) {
+    public Signalement(int id, String contenu, String remarques, Date date, Arret arret, TypeSignalement type, Utilisateur emetteur) {
         this.id = id;
         this.contenu = contenu;
         this.remarques = remarques;
         this.date = date;
-        this.type = type;
         this.arret = arret;
+        this.type = type;
         this.emetteur = emetteur;
     }
-
 
     public int getId() {
         return id;
@@ -48,20 +49,12 @@ public class Signalement {
         this.remarques = remarques;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
-    }
-
-    public TypeSignalement getType() {
-        return type;
-    }
-
-    public void setType(TypeSignalement type) {
-        this.type = type;
     }
 
     public Arret getArret() {
@@ -70,6 +63,14 @@ public class Signalement {
 
     public void setArret(Arret arret) {
         this.arret = arret;
+    }
+
+    public TypeSignalement getType() {
+        return type;
+    }
+
+    public void setType(TypeSignalement type) {
+        this.type = type;
     }
 
     public Utilisateur getEmetteur() {
@@ -86,9 +87,9 @@ public class Signalement {
                 "id=" + id +
                 ", contenu='" + contenu + '\'' +
                 ", remarques='" + remarques + '\'' +
-                ", date='" + date + '\'' +
-                ", type=" + type +
+                ", date=" + date +
                 ", arret=" + arret +
+                ", type=" + type +
                 ", emetteur=" + emetteur +
                 '}';
     }

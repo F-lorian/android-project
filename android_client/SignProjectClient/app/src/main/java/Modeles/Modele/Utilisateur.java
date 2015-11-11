@@ -3,22 +3,26 @@ package Modeles.Modele;
 import java.util.ArrayList;
 
 /**
- * Created by Axel_2 on 27/10/2015.
+ * Created by Axel_2 on 10/11/2015.
  */
 public class Utilisateur {
 
     protected int id;
     protected String pseudo;
     protected String mdp;
-    protected ArrayList<Groupe> groupes;
+    protected ArrayList<SignalementPublic> signalements;
+    protected ArrayList<Groupe> groupesAppartient;
+    protected ArrayList<Groupe> groupesAdmin;
 
-
-    public Utilisateur(int id, String pseudo, String mdp, ArrayList<Groupe> groupes) {
+    public Utilisateur(int id, String pseudo, String mdp, ArrayList<SignalementPublic> signalements, ArrayList<Groupe> groupesAppartient, ArrayList<Groupe> groupesAdmin) {
         this.id = id;
         this.pseudo = pseudo;
         this.mdp = mdp;
-        this.groupes = groupes;
+        this.signalements = signalements;
+        this.groupesAppartient = groupesAppartient;
+        this.groupesAdmin = groupesAdmin;
     }
+
 
     public int getId() {
         return id;
@@ -44,12 +48,28 @@ public class Utilisateur {
         this.mdp = mdp;
     }
 
-    public ArrayList<Groupe> getGroupes() {
-        return groupes;
+    public ArrayList<SignalementPublic> getSignalements() {
+        return signalements;
     }
 
-    public void setGroupes(ArrayList<Groupe> groupes) {
-        this.groupes = groupes;
+    public void setSignalements(ArrayList<SignalementPublic> signalements) {
+        this.signalements = signalements;
+    }
+
+    public ArrayList<Groupe> getGroupesAppartient() {
+        return groupesAppartient;
+    }
+
+    public void setGroupesAppartient(ArrayList<Groupe> groupesAppartient) {
+        this.groupesAppartient = groupesAppartient;
+    }
+
+    public ArrayList<Groupe> getGroupesAdmin() {
+        return groupesAdmin;
+    }
+
+    public void setGroupesAdmin(ArrayList<Groupe> groupesAdmin) {
+        this.groupesAdmin = groupesAdmin;
     }
 
     @Override
@@ -58,7 +78,9 @@ public class Utilisateur {
                 "id=" + id +
                 ", pseudo='" + pseudo + '\'' +
                 ", mdp='" + mdp + '\'' +
-                ", groupes=" + groupes +
+                ", signalements=" + signalements +
+                ", groupesAppartient=" + groupesAppartient +
+                ", groupesAdmin=" + groupesAdmin +
                 '}';
     }
 }

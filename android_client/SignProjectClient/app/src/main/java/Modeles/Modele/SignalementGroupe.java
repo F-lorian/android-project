@@ -1,29 +1,34 @@
 package Modeles.Modele;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
- * Created by Axel_2 on 27/10/2015.
+ * Created by Axel_2 on 10/11/2015.
  */
-public class SignalementGroupe extends Signalement {
+public class SignalementGroupe extends Signalement{
 
-    protected Groupe recepteur;
+    public static final String type = "groupe";
+    protected ArrayList<Groupe> groupesDestinateurs;
 
-    public SignalementGroupe(int id, String contenu, String remarques, String date, TypeSignalement type, Arret arret, Utilisateur emetteur, Groupe recepteur) {
-        super(id, contenu, remarques, date, type, arret, emetteur);
-        this.recepteur = recepteur;
+    public SignalementGroupe(int id, String contenu, String remarques, Date date, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Groupe> groupesDestinateurs) {
+        super(id, contenu, remarques, date, arret, type, emetteur);
+        this.groupesDestinateurs = groupesDestinateurs;
     }
 
-    public Groupe getRecepteur() {
-        return recepteur;
+    public ArrayList<Groupe> getGroupesDestinateurs() {
+        return groupesDestinateurs;
     }
 
-    public void setRecepteur(Groupe recepteur) {
-        this.recepteur = recepteur;
+    public void setGroupesDestinateurs(ArrayList<Groupe> groupesDestinateurs) {
+        this.groupesDestinateurs = groupesDestinateurs;
     }
 
     @Override
     public String toString() {
         return "SignalementGroupe{" +
-                "recepteur=" + recepteur +
+                "type=" + type +
+                "groupesDestinateurs=" + groupesDestinateurs +
                 '}';
     }
 }

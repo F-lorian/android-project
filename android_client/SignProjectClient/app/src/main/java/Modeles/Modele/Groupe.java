@@ -3,34 +3,26 @@ package Modeles.Modele;
 import java.util.ArrayList;
 
 /**
- * Created by Axel_2 on 27/10/2015.
+ * Created by Axel_2 on 10/11/2015.
  */
 public class Groupe {
 
     protected int id;
     protected String nom;
-    protected String type;
+    protected String type; // Enum type = {public, privée}
+    protected ArrayList<SignalementGroupe> signalements;
+    protected ArrayList<Utilisateur> membres;
     protected Utilisateur admin;
-    protected ArrayList<Utilisateur> utilisateurs;
 
-    public Groupe(int id, String nom, String type, Utilisateur admin, ArrayList<Utilisateur> utilisateurs) {
+    public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin) {
         this.id = id;
         this.nom = nom;
         this.type = type;
+        this.signalements = signalements;
+        this.membres = membres;
         this.admin = admin;
-        this.utilisateurs = utilisateurs;
     }
 
-    @Override
-    public String toString() {
-        return "Groupe{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", type='" + type + '\'' +
-                ", admin=" + admin +
-                ", utilisateurs=" + utilisateurs +
-                '}';
-    }
 
     public int getId() {
         return id;
@@ -56,6 +48,22 @@ public class Groupe {
         this.type = type;
     }
 
+    public ArrayList<SignalementGroupe> getSignalements() {
+        return signalements;
+    }
+
+    public void setSignalements(ArrayList<SignalementGroupe> signalements) {
+        this.signalements = signalements;
+    }
+
+    public ArrayList<Utilisateur> getMembres() {
+        return membres;
+    }
+
+    public void setMembres(ArrayList<Utilisateur> membres) {
+        this.membres = membres;
+    }
+
     public Utilisateur getAdmin() {
         return admin;
     }
@@ -64,13 +72,15 @@ public class Groupe {
         this.admin = admin;
     }
 
-    public ArrayList<Utilisateur> getUtilisateurs() {
-        return utilisateurs;
+    @Override
+    public String toString() {
+        return "Groupe{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", type='" + type + '\'' +
+                ", signalements=" + signalements +
+                ", membres=" + membres +
+                ", admin=" + admin +
+                '}';
     }
-
-    public void setUtilisateurs(ArrayList<Utilisateur> utilisateurs) {
-        this.utilisateurs = utilisateurs;
-    }
-
-
 }
