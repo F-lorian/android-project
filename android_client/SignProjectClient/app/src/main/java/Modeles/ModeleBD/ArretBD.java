@@ -14,7 +14,7 @@ import Modeles.Modele.Arret;
  */
 public class ArretBD {
 
-    private static final String TABLE_NAME = "ARRET";
+    protected static final String TABLE_NAME = "ARRET";
     public static final String ID_ARRET="id_arret";
     public static final String NOM_ARRET="nom_arret";
     public static final String COORDONNEES_ARRET="coordonnees_arret";
@@ -23,8 +23,8 @@ public class ArretBD {
     public static final String CREATE_TABLE_ARRET = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_ARRET+" INTEGER PRIMARY KEY AUTOINCREMENT," +
-            " "+NOM_ARRET+" TEXT" +
-            " "+COORDONNEES_ARRET+" TEXT" +
+            " "+NOM_ARRET+" TEXT," +
+            " "+COORDONNEES_ARRET+" TEXT," +
             " "+DIRECTION_ARRET+" TEXT" +
             ");";
 
@@ -92,19 +92,20 @@ public class ArretBD {
         Arret a = new Arret(0,"","","",null,null);
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_ARRET+"="+id, null);
+
         if (c.moveToFirst()) {
             a.setId(c.getInt(c.getColumnIndex(ID_ARRET)));
             a.setNom(c.getString(c.getColumnIndex(NOM_ARRET)));
             a.setCoordonnees(c.getString(c.getColumnIndex(COORDONNEES_ARRET)));
             a.setDirection(c.getString(c.getColumnIndex(DIRECTION_ARRET)));
-
-            c.close();
         }
+
+        c.close();
 
         return a;
     }
 
-    public ArrayList<Arret> getAnimaux() {
+    public ArrayList<Arret> getArrets() {
         // sélection de tous les enregistrements de la table
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
 
@@ -124,6 +125,8 @@ public class ArretBD {
                 c.moveToNext();
             }
         }
+
+        c.close();
 
         return arrets;
     }
