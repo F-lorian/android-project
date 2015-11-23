@@ -80,7 +80,7 @@ public class UtilisateurBD {
     }
 
     public Utilisateur getUtilisateur(String pseudo) {
-        // Retourne l'animal dont l'id est passé en paramètre
+        // Retourne l'enregistrement dont l'id est passé en paramètre
 
         Utilisateur u = new Utilisateur(0,"","",null,null,null);
 

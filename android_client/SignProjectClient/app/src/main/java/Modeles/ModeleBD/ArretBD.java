@@ -87,7 +87,7 @@ public class ArretBD {
     }
 
     public Arret getArret(int id) {
-        // Retourne l'animal dont l'id est passé en paramètre
+        // Retourne l'enregistrement dont l'id est passé en paramètre
 
         Arret a = new Arret(0,"","","",null,null);
 

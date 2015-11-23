@@ -90,16 +90,16 @@ public class GroupeBD {
     }
 
     public Groupe getGroupe(int id) {
-        // Retourne l'animal dont l'id est passé en paramètre
+        // Retourne l'enregistrement dont l'id est passé en paramètre
 
         Groupe g = new Groupe(0,"","",null,null,null);
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_GROUPE+"="+id, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
         if (c.moveToFirst()) {
             g.setId(c.getInt(c.getColumnIndex(ID_GROUPE)));
             g.setNom(c.getString(c.getColumnIndex(NOM_GROUPE)));
             g.setType(c.getString(c.getColumnIndex(TYPE_GROUPE)));
-            g.setAdmin(new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), "", "", null, null, null));
+            g.setAdmin(new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
 
         }
@@ -111,7 +111,7 @@ public class GroupeBD {
 
     public ArrayList<Groupe> getGroupes() {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
 
         ArrayList<Groupe> groupes = new ArrayList<Groupe>();
 
@@ -122,7 +122,7 @@ public class GroupeBD {
                 g.setId(c.getInt(c.getColumnIndex(ID_GROUPE)));
                 g.setNom(c.getString(c.getColumnIndex(NOM_GROUPE)));
                 g.setType(c.getString(c.getColumnIndex(TYPE_GROUPE)));
-                g.setAdmin(new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), "", "", null, null, null));
+                g.setAdmin(new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
 
                 groupes.add(g);

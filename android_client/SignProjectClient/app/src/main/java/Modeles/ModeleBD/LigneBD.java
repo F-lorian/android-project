@@ -19,9 +19,9 @@ public class LigneBD {
     public static final String ID_LIGNE="id_ligne";
     public static final String NOM_LIGNE="nom_ligne";
     public static final String COORDONNEES_LIGNE="coordonnees_ligne";
-    public static final String DESCRIPTION_LIGNE="description_arret";
+    public static final String DESCRIPTION_LIGNE="description_ligne";
 
-    public static final String CREATE_TABLE_ARRET = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE_LIGNE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_LIGNE+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+NOM_LIGNE+" TEXT," +
@@ -63,7 +63,7 @@ public class LigneBD {
     }
 
     public Ligne getLigne(int id) {
-        // Retourne l'animal dont l'id est passé en paramètre
+        // Retourne l'enregistrement dont l'id est passé en paramètre
 
         Ligne l = new Ligne(0,"","","",null);
 
