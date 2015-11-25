@@ -32,7 +32,7 @@ public class LigneArretBD {
     public static final String ID_LIGNE="id_ligne";
     public static final String ID_ARRET="id_arret";
 
-    public static final String CREATE_TABLE_LIGNE_ARRET= "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE= "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+ID_LIGNE+" INTEGER," +

@@ -19,7 +19,7 @@ public class UtilisateurBD {
     public static final String ID_UTILISATEUR="id_utilisateur";
     public static final String PSEUDO_UTILISATEUR="pseudo_utilisateur";
 
-    public static final String CREATE_TABLE_ARRET = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_UTILISATEUR+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+PSEUDO_UTILISATEUR+" TEXT," +

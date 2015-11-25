@@ -21,7 +21,7 @@ public class LigneBD {
     public static final String COORDONNEES_LIGNE="coordonnees_ligne";
     public static final String DESCRIPTION_LIGNE="description_ligne";
 
-    public static final String CREATE_TABLE_LIGNE = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_LIGNE+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+NOM_LIGNE+" TEXT," +

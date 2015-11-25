@@ -33,7 +33,7 @@ public class GroupeUtilisateurBD {
     public static final String ID_GROUPE="id_groupe";
     public static final String ETAT_GROUPE="etat_groupe";
 
-    public static final String CREATE_TABLE_GROUPE_UTILISATEUR = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+ID_UTILISATEUR+" INTEGER," +

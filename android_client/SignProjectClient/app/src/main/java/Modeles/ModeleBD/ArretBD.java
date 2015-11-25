@@ -20,7 +20,7 @@ public class ArretBD {
     public static final String COORDONNEES_ARRET="coordonnees_arret";
     public static final String DIRECTION_ARRET="direction_arret";
 
-    public static final String CREATE_TABLE_ARRET = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_ARRET+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+NOM_ARRET+" TEXT," +

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_margin="@dimen/margin_formulaire">
+
+
+    <LinearLayout
+        android:id="@+id/layoutPseudoConnection"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/imgPseudoConnection"
+            android:layout_width="@dimen/largeur_image_formulaire"
+            android:layout_height="@dimen/hauteur_image_formulaire"
+            android:src="@drawable/login"/>
+        <EditText
+            android:id="@+id/editTextPseudoConnection"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/champ_pseudo"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutMdpConnection"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/margin_between_field"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/imgMdpConnection"
+            android:layout_width="@dimen/largeur_image_formulaire"
+            android:layout_height="@dimen/hauteur_image_formulaire"
+            android:src="@drawable/pwd"/>
+        <EditText
+            android:id="@+id/editTextMdpConnection"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/champ_mdp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutBtnConnection"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_formulaire">
+        <Button
+            android:background="@android:color/holo_blue_light"
+            android:id="@+id/BtnSeConnecterConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/btn_seConnecter"/>
+        <Button
+            android:layout_marginLeft="@dimen/margin_between_field"
+            android:background="@android:color/holo_red_light"
+            android:id="@+id/BtnAnnulerConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/btn_Annuler"/>
+    </LinearLayout>
+
+
+</LinearLayout>

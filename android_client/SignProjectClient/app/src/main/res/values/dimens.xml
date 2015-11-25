@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="hauteur_champs_saisie">45dp</dimen>
+    <dimen name="margin_formulaire">30dp</dimen>
+    <dimen name="hauteur_image_formulaire">32dp</dimen>
+    <dimen name="largeur_image_formulaire">32dp</dimen>
+    <dimen name="margin_between_field">20dp</dimen>
+
 </resources>

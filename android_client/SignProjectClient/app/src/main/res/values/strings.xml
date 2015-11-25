@@ -3,4 +3,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="champ_pseudo">Votre pseudo</string>
+    <string name="champ_mdp">Votre mot de passe</string>
+    <string name="btn_seConnecter">Valider</string>
+    <string name="btn_Annuler">Annuler</string>
 </resources>

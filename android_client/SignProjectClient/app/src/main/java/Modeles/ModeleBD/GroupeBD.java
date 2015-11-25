@@ -22,7 +22,7 @@ public class GroupeBD {
     public static final String TYPE_GROUPE="type_groupe";
     public static final String ADMIN_GROUPE="admin_groupe";
 
-    public static final String CREATE_TABLE_ARRET = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_GROUPE+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+NOM_GROUPE+" TEXT," +

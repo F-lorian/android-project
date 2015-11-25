@@ -19,7 +19,7 @@ public class TypeSignalementBD {
     public static final String NOM_TYPE_SIGNALEMENT="nom_type_signalement";
 
 
-    public static final String CREATE_TABLE_LIGNE = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_TYPE_SIGNALEMENT+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+NOM_TYPE_SIGNALEMENT+" TEXT" +

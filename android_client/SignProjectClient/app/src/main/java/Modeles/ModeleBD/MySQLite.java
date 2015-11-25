@@ -27,7 +27,21 @@ public class MySQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         //Création des tables
-        sqLiteDatabase.execSQL(ArretBD.CREATE_TABLE_ARRET);
+        sqLiteDatabase.execSQL(ArretBD.CREATE_TABLE);
+        sqLiteDatabase.execSQL(DestinationSignalementGroupeBD.CREATE_TABLE_DESTINATION_SIGNALEMENT_GROUPE_A_ENVOYER);
+        sqLiteDatabase.execSQL(DestinationSignalementGroupeBD.CREATE_TABLE_DESTINATION_SIGNALEMENT_GROUPE_RECU);
+        sqLiteDatabase.execSQL(DestinationSignalementPublicBD.CREATE_TABLE_DESTINATION_SIGNALEMENT_UTILISATEUR_A_ENVOYER);
+        sqLiteDatabase.execSQL(DestinationSignalementPublicBD.CREATE_TABLE_DESTINATION_SIGNALEMENT_UTILISATEUR_RECU);
+        sqLiteDatabase.execSQL(GroupeBD.CREATE_TABLE);
+        sqLiteDatabase.execSQL(GroupeUtilisateurBD.CREATE_TABLE);
+        sqLiteDatabase.execSQL(LigneArretBD.CREATE_TABLE);
+        sqLiteDatabase.execSQL(LigneBD.CREATE_TABLE);
+        sqLiteDatabase.execSQL(SignalementBD.CREATE_TABLE_SIGNALEMENT_A_ENVOYER);
+        sqLiteDatabase.execSQL(SignalementBD.CREATE_TABLE_SIGNALEMENT_RECU);
+        sqLiteDatabase.execSQL(TypeSignalementBD.CREATE_TABLE);
+        sqLiteDatabase.execSQL(UtilisateurBD.CREATE_TABLE);
+
+
     }
 
     @Override
