@@ -1,8 +1,12 @@
 package activites;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -17,84 +21,131 @@ import modeles.Modele.Utilisateur;
  */
 public class InscriptionActivity extends Activity {
 
+    private EditText pseudo;
+    private EditText mdp;
+    private EditText confirmeMdp;
+    private Button seConnecter;
+    private Button annuler;
+    private static float alphaBtnSeConnecter = 64f/255f;
+    private AlertDialog.Builder buildAlertInscriptionInvalide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_connection);
+        setContentView(R.layout.activity_inscription);
 
-        EditText pseudo = (EditText) findViewById(R.id.editTextPseudoInscription);
+        this.pseudo = (EditText) findViewById(R.id.editTextPseudoInscription);
+        this.mdp = (EditText) findViewById(R.id.editTextMdpInscription);
+        this.confirmeMdp = (EditText) findViewById(R.id.editTextConfirmationMdpInscription);
+        this.seConnecter = (Button) findViewById(R.id.BtnSeConnecterInscription);
+        this.annuler = (Button) findViewById(R.id.BtnAnnulerInscription);
 
-        pseudo.setOnKeyListener(new View.OnKeyListener() {
+        this.seConnecter.setEnabled(false);
+        this.seConnecter.setAlpha(alphaBtnSeConnecter);
+
+        this.buildAlertInscriptionInvalide = new AlertDialog.Builder(InscriptionActivity.this);
+        this.buildAlertInscriptionInvalide.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.buildAlertInscriptionInvalide.setIcon(R.drawable.ic_action_error);
+        this.buildAlertInscriptionInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+
+        pseudo.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                EditText pseudo = (EditText) findViewById(R.id.editTextPseudoInscription);
-                Button seConnecter = (Button) findViewById(R.id.BtnSeConnecterInscription);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                if (!Utilisateur.pseudoValide(pseudo.getText().toString())) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!Utilisateur.pseudoValide(s.toString())) {
                     pseudo.setError(getResources().getString(R.string.erreur_pseudo));
                     seConnecter.setEnabled(false);
+                    seConnecter.setAlpha(alphaBtnSeConnecter);
                 } else {
-                    seConnecter.setEnabled(true);
+                    pseudo.setError(null);
+
+                    if (Utilisateur.mdpValide(mdp.getText().toString()) && Utilisateur.mdpValide(confirmeMdp.getText().toString()))
+                    {
+                        seConnecter.setEnabled(true);
+                        seConnecter.setAlpha(1f);
+                    }
                 }
-
-                return true;
             }
-        });
 
-
-        EditText mdp = (EditText) findViewById(R.id.editTextMdpInscription);
-
-        mdp.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                EditText mdp = (EditText) findViewById(R.id.editTextMdpInscription);
-                Button seConnecter = (Button) findViewById(R.id.BtnSeConnecterInscription);
+            public void afterTextChanged(Editable s) {
 
-                if (!Utilisateur.mdpValide(mdp.getText().toString()))
-                {
-                    mdp.setError(getResources().getString(R.string.erreur_pseudo));
-                    seConnecter.setEnabled(false);
-                }
-                else {
-                    seConnecter.setEnabled(true);
-                }
-
-                return true;
             }
         });
 
-        EditText mdpConfirmation = (EditText) findViewById(R.id.editTextConfirmationMdpInscription);
-
-        mdp.setOnKeyListener(new View.OnKeyListener() {
+        mdp.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                EditText mdp = (EditText) findViewById(R.id.editTextConfirmationMdpInscription);
-                Button seConnecter = (Button) findViewById(R.id.BtnSeConnecterInscription);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                if (!Utilisateur.mdpValide(mdp.getText().toString()))
-                {
-                    mdp.setError(getResources().getString(R.string.erreur_pseudo));
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (!Utilisateur.mdpValide(s.toString())) {
+                    mdp.setError(getResources().getString(R.string.erreur_mdp));
                     seConnecter.setEnabled(false);
-                }
-                else {
-                    seConnecter.setEnabled(true);
-                }
+                    seConnecter.setAlpha(alphaBtnSeConnecter);
+                } else {
+                    mdp.setError(null);
 
-                return true;
+                    if (Utilisateur.pseudoValide(pseudo.getText().toString()) && Utilisateur.mdpValide(confirmeMdp.getText().toString())) {
+                        seConnecter.setEnabled(true);
+                        seConnecter.setAlpha(1f);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
-        Button seConnecter = (Button) findViewById(R.id.BtnSeConnecterInscription);
+        confirmeMdp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (!Utilisateur.mdpValide(s.toString())) {
+                    confirmeMdp.setError(getResources().getString(R.string.erreur_mdp));
+                    seConnecter.setEnabled(false);
+                    seConnecter.setAlpha(alphaBtnSeConnecter);
+                } else {
+                    confirmeMdp.setError(null);
+
+                    if (Utilisateur.pseudoValide(pseudo.getText().toString()) && Utilisateur.mdpValide(mdp.getText().toString())) {
+                        seConnecter.setEnabled(true);
+                        seConnecter.setAlpha(1f);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         seConnecter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                EditText pseudo = (EditText) findViewById(R.id.editTextPseudoInscription);
-                EditText mdp = (EditText) findViewById(R.id.editTextMdpInscription);
-                EditText mdpConfirmation = (EditText) findViewById(R.id.editTextConfirmationMdpInscription);
-
-                if (mdp.getText().toString().equals(mdpConfirmation.getText().toString()))
+                if (mdp.getText().toString().equals(confirmeMdp.getText().toString()))
                 {
                     //A FAIRE : verif pseudo et mdp BD sur serveur
 
@@ -103,25 +154,20 @@ public class InscriptionActivity extends Activity {
                 }
                 else
                 {
-                    mdpConfirmation.setError(getResources().getString(R.string.erreur_egaux_mdp));
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.erreur_egaux_mdp));
+                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                    alertInscriptionInvalide.show();
                 }
 
             }
         });
 
-        Button annuler = (Button) findViewById(R.id.BtnAnnulerConnection);
-
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                EditText pseudo = (EditText) findViewById(R.id.editTextPseudoInscription);
-                EditText mdp = (EditText) findViewById(R.id.editTextMdpInscription);
-                EditText mdpConfirmation = (EditText) findViewById(R.id.editTextConfirmationMdpInscription);
-
                 pseudo.setText("");
                 mdp.setText("");
-                mdpConfirmation.setText("");
+                confirmeMdp.setText("");
             }
         });
     }

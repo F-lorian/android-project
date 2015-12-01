@@ -93,7 +93,8 @@ public class Utilisateur {
     public static boolean mdpValide(String mdp)
     {
         // mdp de plus de 8 char + au moins une MAJ + au moins une MINUS + au moins un chiffre
-        return mdp.matches("(?=^.{8,}$)(?=.*\\d)(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
-        //return mdp.length() > 8 && mdp.matches("@[A-Z]@") && mdp.matches("@[a-z]@") && mdp.matches("@[0-9]@");
+        //return mdp.matches("(?=^.{8,}$)(?=.*\\d)(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
+        return mdp.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
+
     }
 }

@@ -1,194 +1,127 @@
 package activites;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.example.florian.signprojectclient.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fragments.FragmentListeSignalements;
-import adapters.CustomDrawerNavigationAdapter;
-import utilitaires.ItemNavigationDrawer;
 
 /**
  * Created by Axel_2 on 27/11/2015.
  */
-public class AccueilUserActivity extends Activity {
+public class AccueilUserActivity extends AppCompatActivity {
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    CustomDrawerNavigationAdapter adapter;
-
-    List<ItemNavigationDrawer> dataList;
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil_user);
 
-        //Initialisation
-        dataList = new ArrayList<ItemNavigationDrawer>();
-        mTitle = this.getTitle();
-        mDrawerTitle = mTitle;
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        // Set a Toolbar to replace the ActionBar.
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // Find our drawer view
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
 
-        dataList.add(new ItemNavigationDrawer(getResources().getString(R.string.menu_titre_signalement))); // adding a header to the list
-        dataList.add(new ItemNavigationDrawer(getResources().getString(R.string.menu_item_carte), R.drawable.ic_action_place));
-        dataList.add(new ItemNavigationDrawer(getResources().getString(R.string.menu_item_listAlerte), R.drawable.ic_action_warning));
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.setDrawerListener(drawerToggle);
 
-        dataList.add(new ItemNavigationDrawer(getResources().getString(R.string.menu_titre_groupe))); // adding a header to the list
-        dataList.add(new ItemNavigationDrawer(getResources().getString(R.string.menu_item_mesGroupes), R.drawable.ic_action_group));
-        dataList.add(new ItemNavigationDrawer(getResources().getString(R.string.menu_item_rejoindreGroupe), R.drawable.ic_action_add_group));
 
-        adapter = new CustomDrawerNavigationAdapter(this, R.layout.custom_item_navigation_drawer, dataList);
+        // Find our drawer view
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        // Setup drawer view
+        setupDrawerContent(nvDrawer);
 
-        mDrawerList.setAdapter(adapter);
+    }
 
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to
-                // onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to
-                // onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (savedInstanceState == null) {
-            if (dataList.get(0).getTitle() != null) {
-                SelectItem(1);
-            } else {
-                SelectItem(0);
-            }
-        }
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sign_project, menu);
-        return true;
-    }
-
-    public void SelectItem(int position) {
-
-        Fragment fragment = null;
-        Bundle args = new Bundle();
-        switch (position) {
-            case 1:
-                fragment = new FragmentListeSignalements();
-//                args.putString(FragmentTwo.ITEM_NAME, dataList.get(position)
-//                        .getItemName());
-//                args.putInt(FragmentTwo.IMAGE_RESOURCE_ID, dataList.get(position)
-//                        .getImgResID());
-                break;
-            case 2:
-                fragment = new FragmentListeSignalements();
-//                args.putString(FragmentThree.ITEM_NAME, dataList.get(position)
-//                        .getItemName());
-//                args.putInt(FragmentThree.IMAGE_RESOURCE_ID, dataList.get(position)
-//                        .getImgResID());
-                break;
-            case 4:
-                fragment = new FragmentListeSignalements();
-//                args.putString(FragmentTwo.ITEM_NAME, dataList.get(position)
-//                        .getItemName());
-//                args.putInt(FragmentTwo.IMAGE_RESOURCE_ID, dataList.get(position)
-//                        .getImgResID());
-                break;
-            case 5:
-                fragment = new FragmentListeSignalements();
-//                args.putString(FragmentThree.ITEM_NAME, dataList.get(position)
-//                        .getItemName());
-//                args.putInt(FragmentThree.IMAGE_RESOURCE_ID, dataList.get(position)
-//                        .getImgResID());
-                break;
-            default:
-                break;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // The action bar home/up action should open or close the drawer.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
         }
 
-        fragment.setArguments(args);
-        FragmentManager frgManager = getFragmentManager();
-        FragmentTransaction ft = frgManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
-
-        mDrawerList.setItemChecked(position, true);
-        setTitle(dataList.get(position).getItemName());
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
-    }
+        return super.onOptionsItemSelected(item);
+	}
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return false;
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
     }
 
-    private class DrawerItemClickListener implements
-            ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            SelectItem(position);
+    public void selectDrawerItem(MenuItem menuItem) {
 
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+
+        switch(menuItem.getItemId()) {
+            case R.id.item_carte:
+                fragment = new FragmentListeSignalements();
+                break;
+            case R.id.item_listAlerte:
+                fragment = new FragmentListeSignalements();
+                break;
+            case R.id.item_mesGroupes:
+                fragment = new FragmentListeSignalements();
+                break;
+            case R.id.item_rejoindreGroupe:
+                fragment = new FragmentListeSignalements();
+                break;
+            default:
+                break;
         }
+
+        fragment.setArguments(args);
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        // Highlight the selected item, update the title, and close the drawer
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        mDrawer.closeDrawers();
     }
 
     @Override

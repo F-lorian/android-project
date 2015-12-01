@@ -1,6 +1,8 @@
 package activites;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -24,7 +26,8 @@ public class ConnectionActivity extends Activity {
     private EditText mdp;
     private Button seConnecter;
     private Button annuler;
-    private int alphaBtnSeConnecter;
+    private static float alphaBtnSeConnecter = 64f/255f;
+    private AlertDialog.Builder buildAlertInscriptionInvalide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +39,17 @@ public class ConnectionActivity extends Activity {
         this.seConnecter = (Button) findViewById(R.id.BtnSeConnecterConnection);
         this.annuler = (Button) findViewById(R.id.BtnAnnulerConnection);
 
-        this.alphaBtnSeConnecter = 255;
-
         this.seConnecter.setEnabled(false);
-        seConnecter.setAlpha(64f / 255f);
+        this.seConnecter.setAlpha(alphaBtnSeConnecter);
+
+        this.buildAlertInscriptionInvalide = new AlertDialog.Builder(ConnectionActivity.this);
+        this.buildAlertInscriptionInvalide.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.buildAlertInscriptionInvalide.setIcon(R.drawable.ic_action_error);
+        this.buildAlertInscriptionInvalide.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
         pseudo.addTextChangedListener(new TextWatcher() {
             @Override
@@ -50,11 +60,10 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                System.out.println(PixelFormat.TRANSPARENT +" "+ alphaBtnSeConnecter);
                 if (!Utilisateur.pseudoValide(s.toString())) {
                     pseudo.setError(getResources().getString(R.string.erreur_pseudo));
                     seConnecter.setEnabled(false);
-                    seConnecter.setAlpha(64f/255f);
+                    seConnecter.setAlpha(alphaBtnSeConnecter);
                 } else {
                     pseudo.setError(null);
 
@@ -86,7 +95,7 @@ public class ConnectionActivity extends Activity {
                 {
                     mdp.setError(getResources().getString(R.string.erreur_mdp));
                     seConnecter.setEnabled(false);
-                    seConnecter.setAlpha(64f / 255f);
+                    seConnecter.setAlpha(alphaBtnSeConnecter);
                 }
                 else {
                     mdp.setError(null);

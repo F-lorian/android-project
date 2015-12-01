@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/menu_titre_signalement">
+        <menu>
+            <item
+                android:id="@+id/item_carte"
+                android:icon="@drawable/ic_action_place"
+                android:title="@string/menu_item_carte" />
+            <item
+                android:id="@+id/item_listAlerte"
+                android:icon="@drawable/ic_action_warning"
+                android:title="@string/menu_item_listAlerte" />
+        </menu>
+    </item>
+    <item android:title="@string/menu_titre_groupe">
+        <menu>
+            <item
+                android:id="@+id/item_mesGroupes"
+                android:icon="@drawable/ic_action_group"
+                android:title="@string/menu_item_mesGroupes" />
+            <item
+                android:id="@+id/item_rejoindreGroupe"
+                android:icon="@drawable/ic_action_add_group"
+                android:title="@string/menu_item_rejoindreGroupe" />
+        </menu>
+    </item>
+</menu>
