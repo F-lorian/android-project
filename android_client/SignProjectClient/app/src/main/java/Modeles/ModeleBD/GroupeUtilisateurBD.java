@@ -1,25 +1,14 @@
-package Modeles.ModeleBD;
+package modeles.ModeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import Modeles.Modele.Arret;
-import Modeles.Modele.Groupe;
-import Modeles.Modele.Ligne;
-import Modeles.Modele.Signalement;
-import Modeles.Modele.SignalementGroupe;
-import Modeles.Modele.SignalementPublic;
-import Modeles.Modele.TypeSignalement;
-import Modeles.Modele.Utilisateur;
-
-import static java.text.DateFormat.*;
+import modeles.Modele.Groupe;
+import modeles.Modele.Utilisateur;
 
 /**
  * Created by Axel_2 on 11/11/2015.

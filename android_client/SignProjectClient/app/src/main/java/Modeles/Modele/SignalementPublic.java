@@ -1,4 +1,4 @@
-package Modeles.Modele;
+package modeles.Modele;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +11,8 @@ public class SignalementPublic extends Signalement{
     public static final String type = "public";
     protected ArrayList<Utilisateur> utilisateursDestinateurs;
 
-    public SignalementPublic(int id, String contenu, String remarques, Date date, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Utilisateur> utilisateursDestinateurs) {
-        super(id, contenu, remarques, date, arret, type, emetteur);
+    public SignalementPublic(int id, String contenu, String remarques, Date date, boolean vu, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Utilisateur> utilisateursDestinateurs) {
+        super(id, contenu, remarques, date, vu, arret, type, emetteur);
         this.utilisateursDestinateurs = utilisateursDestinateurs;
     }
 

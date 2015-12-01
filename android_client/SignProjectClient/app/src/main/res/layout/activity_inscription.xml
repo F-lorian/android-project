@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_margin="@dimen/margin_formulaire">
+
+
+    <LinearLayout
+        android:id="@+id/layoutPseudoInscription"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/imgPseudoInscription"
+            android:layout_width="@dimen/largeur_image_formulaire"
+            android:layout_height="@dimen/hauteur_image_formulaire"
+            android:src="@drawable/ic_action_person"/>
+        <EditText
+            android:id="@+id/editTextPseudoInscription"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/champ_pseudo"/>
+    </LinearLayout>
+
+    <LinearLayout
+    android:id="@+id/layoutMdpInscription"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/hauteur_champs_saisie"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/margin_between_field"
+    android:gravity="center">
+    <ImageView
+        android:id="@+id/imgMdpInscription"
+        android:layout_width="@dimen/largeur_image_formulaire"
+        android:layout_height="@dimen/hauteur_image_formulaire"
+        android:src="@drawable/ic_action_accounts"/>
+    <EditText
+        android:id="@+id/editTextMdpInscription"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:inputType="textPassword"
+        android:hint="@string/champ_mdp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutConfirmationMdpInscription"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/margin_between_field"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/imgConfirmationMdpInscription"
+            android:layout_width="@dimen/largeur_image_formulaire"
+            android:layout_height="@dimen/hauteur_image_formulaire"
+            android:src="@drawable/ic_action_accounts"/>
+        <EditText
+            android:id="@+id/editTextConfirmationMdpInscription"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/champ_confirmer_mdp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutBtnInscription"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_boutons_formulaire"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_formulaire">
+        <Button
+            android:background="@android:color/holo_green_light"
+            android:id="@+id/BtnSeConnecterInscription"
+            android:layout_width="@dimen/largeur_boutons_formulaire"
+            android:layout_height="match_parent"
+            android:hint="@string/btn_inscription"
+            android:textSize="@dimen/texte_size_bouton"/>
+        <Button
+            android:layout_marginLeft="@dimen/margin_between_field"
+            android:background="@android:color/holo_red_light"
+            android:id="@+id/BtnAnnulerInscription"
+            android:layout_width="@dimen/largeur_boutons_formulaire"
+            android:layout_height="match_parent"
+            android:hint="@string/btn_Annuler"
+            android:textSize="@dimen/texte_size_bouton"/>
+    </LinearLayout>
+
+
+</LinearLayout>

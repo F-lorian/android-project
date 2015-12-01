@@ -1,4 +1,4 @@
-package Modeles.Modele;
+package modeles.Modele;
 
 import java.util.ArrayList;
 
@@ -82,5 +82,18 @@ public class Utilisateur {
                 ", groupesAppartient=" + groupesAppartient +
                 ", groupesAdmin=" + groupesAdmin +
                 '}';
+    }
+
+    public static boolean pseudoValide(String pseudo)
+    {
+        // chiffre ou MAJ ou MINUS de 3 à 16 caractere
+        return pseudo.matches("^[0-9A-Za-z_-]{3,16}$");
+    }
+
+    public static boolean mdpValide(String mdp)
+    {
+        // mdp de plus de 8 char + au moins une MAJ + au moins une MINUS + au moins un chiffre
+        return mdp.matches("(?=^.{8,}$)(?=.*\\d)(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
+        //return mdp.length() > 8 && mdp.matches("@[A-Z]@") && mdp.matches("@[a-z]@") && mdp.matches("@[0-9]@");
     }
 }

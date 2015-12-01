@@ -1,14 +1,14 @@
-package Modeles.ModeleBD;
+package modeles.ModeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import Modeles.Modele.Arret;
-import Modeles.Modele.Ligne;
+import modeles.Modele.Ligne;
 
 /**
  * Created by Axel_2 on 11/11/2015.
@@ -105,6 +105,11 @@ public class LigneBD {
         c.close();
 
         return lignes;
+    }
+
+    public long getCount()
+    {
+        return DatabaseUtils.queryNumEntries(this.db,TABLE_NAME);
     }
 
 }

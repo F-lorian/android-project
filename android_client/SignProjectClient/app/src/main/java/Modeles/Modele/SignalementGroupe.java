@@ -1,4 +1,4 @@
-package Modeles.Modele;
+package modeles.Modele;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +11,8 @@ public class SignalementGroupe extends Signalement{
     public static final String type = "groupe";
     protected ArrayList<Groupe> groupesDestinateurs;
 
-    public SignalementGroupe(int id, String contenu, String remarques, Date date, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Groupe> groupesDestinateurs) {
-        super(id, contenu, remarques, date, arret, type, emetteur);
+    public SignalementGroupe(int id, String contenu, String remarques, Date date, boolean vu, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Groupe> groupesDestinateurs) {
+        super(id, contenu, remarques, date, vu, arret, type, emetteur);
         this.groupesDestinateurs = groupesDestinateurs;
     }
 

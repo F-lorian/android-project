@@ -1,10 +1,27 @@
 <resources>
-    <string name="app_name">SignProjectClient</string>
+    <string name="app_name">SignProject</string>
+
+    <string name="drawer_open">Ouvrir le menu</string>
+    <string name="drawer_close">Fermer le menu</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="champ_pseudo">Votre pseudo</string>
     <string name="champ_mdp">Votre mot de passe</string>
-    <string name="btn_seConnecter">Valider</string>
+    <string name="btn_seConnecter">Se connecter</string>
     <string name="btn_Annuler">Annuler</string>
+    <string name="champ_confirmer_mdp">Confirmer votre mot de passe</string>
+    <string name="btn_inscription">S\'inscrire</string>
+    <string name="erreur_pseudo">doit être supérieur à 2 lettres, ne contenir que des lettres, des chiffres et les caractères _ et -</string>
+    <string name="erreur_mdp">doit être supérieur à 8 lettres, contenir au moins une majuscule, une minuscule, un chiffre et pas de caractères spéciaux</string>
+    <string name="erreur_egaux_mdp">les mots de passes doivent être égaux</string>
+
+    <string name="menu_titre_signalement">Signalements</string>
+    <string name="menu_item_carte">Carte</string>
+    <string name="menu_item_listAlerte">Liste des alertes</string>
+    <string name="menu_titre_groupe">Groupes</string>
+    <string name="menu_item_mesGroupes">Mes groupes</string>
+    <string name="menu_item_rejoindreGroupe">Rejoindre un groupe</string>
+
+
 </resources>

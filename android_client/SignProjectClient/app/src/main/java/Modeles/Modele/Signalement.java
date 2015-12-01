@@ -1,4 +1,4 @@
-package Modeles.Modele;
+package modeles.Modele;
 
 import java.util.Date;
 
@@ -11,15 +11,18 @@ public abstract class Signalement {
     protected String contenu;
     protected String remarques;
     protected Date date;
+
+    protected boolean vu;
     protected Arret arret;
     protected TypeSignalement type;
     protected Utilisateur emetteur;
 
-    public Signalement(int id, String contenu, String remarques, Date date, Arret arret, TypeSignalement type, Utilisateur emetteur) {
+    public Signalement(int id, String contenu, String remarques, Date date, boolean vu, Arret arret, TypeSignalement type, Utilisateur emetteur) {
         this.id = id;
         this.contenu = contenu;
         this.remarques = remarques;
         this.date = date;
+        this.vu = vu;
         this.arret = arret;
         this.type = type;
         this.emetteur = emetteur;
@@ -57,6 +60,14 @@ public abstract class Signalement {
         this.date = date;
     }
 
+    public boolean isVu() {
+        return vu;
+    }
+
+    public void setVu(boolean vu) {
+        this.vu = vu;
+    }
+
     public Arret getArret() {
         return arret;
     }
@@ -88,6 +99,7 @@ public abstract class Signalement {
                 ", contenu='" + contenu + '\'' +
                 ", remarques='" + remarques + '\'' +
                 ", date=" + date +
+                ", vu=" + vu +
                 ", arret=" + arret +
                 ", type=" + type +
                 ", emetteur=" + emetteur +
