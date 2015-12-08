@@ -32,7 +32,7 @@ public class DestinationSignalementPublicBD {
             " (" +
             " "+ID+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+ID_SIGNALEMENT_UTILISATEUR+" INTEGER," +
-            " "+ID_UTILISATEUR_DESTINATION+" INTEGER" +
+            " "+ID_UTILISATEUR_DESTINATION+" INTEGER," +
             " FOREIGN KEY ("+ID_SIGNALEMENT_UTILISATEUR+") REFERENCES "+SignalementBD.TABLE_NAME_SIGNALEMENT_RECU+"("+SignalementBD.ID_SIGNALEMENT+")," +
             " FOREIGN KEY ("+ID_UTILISATEUR_DESTINATION+") REFERENCES "+UtilisateurBD.TABLE_NAME+"("+UtilisateurBD.ID_UTILISATEUR+")" +
             ");";
@@ -41,7 +41,7 @@ public class DestinationSignalementPublicBD {
             " (" +
             " "+ID+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             " "+ID_SIGNALEMENT_UTILISATEUR+" INTEGER," +
-            " "+ID_UTILISATEUR_DESTINATION+" INTEGER" +
+            " "+ID_UTILISATEUR_DESTINATION+" INTEGER," +
             " FOREIGN KEY ("+ID_SIGNALEMENT_UTILISATEUR+") REFERENCES "+SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER+"("+SignalementBD.ID_SIGNALEMENT+")," +
             " FOREIGN KEY ("+ID_UTILISATEUR_DESTINATION+") REFERENCES "+UtilisateurBD.TABLE_NAME+"("+UtilisateurBD.ID_UTILISATEUR+")" +
             ");";

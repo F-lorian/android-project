@@ -3,6 +3,7 @@ package modeles.ModeleBD;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -119,4 +120,8 @@ public class TypeSignalementBD {
         return typeSignalements;
     }
 
+    public long getCount()
+    {
+        return DatabaseUtils.queryNumEntries(this.db, TABLE_NAME);
+    }
 }

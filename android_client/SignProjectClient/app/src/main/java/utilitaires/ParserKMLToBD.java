@@ -23,8 +23,8 @@ public class ParserKMLToBD {
 
     private static final String ns = null;
 
-    private ArrayList<Ligne> lignes;
-    private ArrayList<Arret> arrets;
+    public ArrayList<Ligne> lignes;
+    public ArrayList<Arret> arrets;
 
     public ParserKMLToBD()
     {
@@ -39,7 +39,6 @@ public class ParserKMLToBD {
             parser.setInput(in, null);
             parser.nextTag();
             parser.nextTag();
-            parser.nextTag();
             this.readDocument(parser);
         } finally {
             in.close();
@@ -48,6 +47,7 @@ public class ParserKMLToBD {
 
     private void readDocument(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "Document");
+
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -72,7 +72,7 @@ public class ParserKMLToBD {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("name")) {
-                nameFolder = parser.getText();
+                nameFolder = this.readText(parser);
             }
             else if (name.equals("Placemark"))
             {
@@ -100,6 +100,7 @@ public class ParserKMLToBD {
         String description = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
+
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
@@ -115,8 +116,7 @@ public class ParserKMLToBD {
             else if (name.equals("description"))
             {
                 parser.require(XmlPullParser.START_TAG, ns, "description");
-                String extract = this.readText(parser);
-                description = extract.substring(9,extract.length()-4);
+                description = this.readText(parser);
                 parser.require(XmlPullParser.END_TAG, ns, "description");
             }
             else if (name.equals("LineString"))
@@ -130,6 +130,7 @@ public class ParserKMLToBD {
                 this.skip(parser);
             }
         }
+
         this.lignes.add(new Ligne(0, nom, coordonnees, description, null));
     }
 
@@ -178,8 +179,7 @@ public class ParserKMLToBD {
             else if (name.equals("description"))
             {
                 parser.require(XmlPullParser.START_TAG, ns, "description");
-                String extract = this.readText(parser);
-                direction = extract.substring(9,extract.length()-4);
+                direction = this.readText(parser);
                 parser.require(XmlPullParser.END_TAG, ns, "description");
             }
             else if (name.equals("Point"))
@@ -193,7 +193,9 @@ public class ParserKMLToBD {
                 this.skip(parser);
             }
         }
+
         this.arrets.add(new Arret(0, nom, coordonnees, direction, null,null));
+
     }
 
     private String readPoint(XmlPullParser parser)throws IOException, XmlPullParserException {
@@ -256,10 +258,15 @@ public class ParserKMLToBD {
         ligneBd.open();
 
         for (int i = 0; i<this.lignes.size(); i++) {
-            if (ligneBd.add(this.lignes.get(i)) < 0) {
+
+            int id = (int) ligneBd.add(this.lignes.get(i));
+
+            if (id < 0) {
                 ligneBd.close();
                 return false;
             }
+
+            this.lignes.get(i).setId(id);
         }
 
         ligneBd.close();
@@ -272,10 +279,15 @@ public class ParserKMLToBD {
         arretBd.open();
 
         for (int i = 0; i<this.arrets.size(); i++) {
-            if (arretBd.add(this.arrets.get(i)) < 0) {
+
+            int id = (int) arretBd.add(this.arrets.get(i));
+
+            if (id < 0) {
                 arretBd.close();
                 return false;
             }
+
+            this.arrets.get(i).setId(id);
         }
 
         arretBd.close();
@@ -291,15 +303,46 @@ public class ParserKMLToBD {
         for (int i=0; i<this.lignes.size(); i++)
         {
             String description = this.lignes.get(i).getDescription();
-            description = description.replaceAll(" / "," - ");
             String[] destinations = description.split(" - ");
+            //for (int k=0; k<destinations.length; k++) {
+                //System.out.println(destinations[k] + " -- " + this.lignes.get(i).getNom());
+            //}
             for (int j=0; j<this.arrets.size(); j++)
             {
-                String direction = this.arrets.get(i).getDirection();
+                String direction = this.arrets.get(j).getDirection();
                 for (int k=0; k<destinations.length; k++)
                 {
-                    if (direction.contains(destinations[k]))
+                    boolean appartientALigne = false;
+
+                    if (destinations[k].contains(" / "))
                     {
+                        String dest = destinations[k].replace(" / ","_");
+
+                        if (direction.contains(dest))
+                        {
+                            appartientALigne = true;
+                        }
+                        else
+                        {
+                            String[] dests = dest.split("_");
+
+                            for (int ind = 0; ind<dests.length; ind++)
+                            {
+                                if (dests[ind].equals(direction))
+                                {
+                                    appartientALigne = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        appartientALigne = direction.contains(destinations[k]);
+                    }
+
+                    if (appartientALigne)
+                    {
+                        //System.out.println(this.lignes.get(i).getNom() + " ** " + this.arrets.get(j).getNom() + "  " + destinations[k]);
                         if(labd.add(this.lignes.get(i).getId(),this.arrets.get(j).getId()) < 0)
                         {
                             labd.close();

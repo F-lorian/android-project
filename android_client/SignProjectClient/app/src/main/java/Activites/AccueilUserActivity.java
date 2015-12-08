@@ -10,11 +10,20 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.florian.signprojectclient.R;
 
 import fragments.FragmentListeSignalements;
+import modeles.Modele.Utilisateur;
+import modeles.ModeleBD.GroupeUtilisateurBD;
+import modeles.ModeleBD.LigneArretBD;
+import modeles.ModeleBD.UtilisateurBD;
+import utilitaires.InitData;
+import utilitaires.JeuDeDonnees;
+import utilitaires.SessionManager;
 
 /**
  * Created by Axel_2 on 27/11/2015.
@@ -35,6 +44,7 @@ public class AccueilUserActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         // Find our drawer view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = setupDrawerToggle();
@@ -47,6 +57,13 @@ public class AccueilUserActivity extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
+
+        SessionManager sessionManager = new SessionManager(this);
+        TextView headerNav = (TextView) findViewById(R.id.header_nav);
+        headerNav.setText(headerNav.getText().toString() + " " + sessionManager.getUserPseudo());
+
+        this.InitilisationDesDonnees();
+
 
     }
 
@@ -78,6 +95,13 @@ public class AccueilUserActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_toolbar_accueil_user, menu);
+        return true;
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -152,5 +176,24 @@ public class AccueilUserActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public void InitilisationDesDonnees()
+    {
+
+        JeuDeDonnees j = new JeuDeDonnees(this);
+
+        LigneArretBD la = new LigneArretBD(this);
+
+        la.open();
+
+        if (la.getCount() <= 0)
+        {
+            InitData initData = new InitData(this,"tam.kml");
+            initData.execute();
+        }
+
+        la.close();
+
     }
 }

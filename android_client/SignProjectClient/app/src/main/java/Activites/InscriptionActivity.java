@@ -154,7 +154,7 @@ public class InscriptionActivity extends Activity {
                 }
                 else
                 {
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.erreur_egaux_mdp));
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_egaux_mdp));
                     AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                     alertInscriptionInvalide.show();
                 }

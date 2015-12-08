@@ -58,7 +58,7 @@ public class SignalementBD {
             " "+REMARQUE_SIGNALEMENT+" TEXT," +
             " "+DATE_SIGNALEMENT+" TEXT," +
             " "+VU_SIGNALEMENT+" INTEGER," +
-            " "+TYPE_DIFFUSION_SIGNALEMENT+" TEXT" +
+            " "+TYPE_DIFFUSION_SIGNALEMENT+" TEXT," +
             " "+ARRET_SIGNALEMENT+" INTEGER," +
             " "+TYPE_SIGNALEMENT+" INTEGER," +
             " "+EMETTEUR_SIGNALEMENT+" INTEGER," +

@@ -14,6 +14,9 @@ public class Groupe {
     protected ArrayList<Utilisateur> membres;
     protected Utilisateur admin;
 
+    public static final String typePublic = "public";
+    public static final String typePrivé = "privé";
+
     public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin) {
         this.id = id;
         this.nom = nom;

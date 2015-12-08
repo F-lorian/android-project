@@ -21,7 +21,7 @@ public class UtilisateurBD {
     public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_UTILISATEUR+" INTEGER PRIMARY KEY AUTOINCREMENT," +
-            " "+PSEUDO_UTILISATEUR+" TEXT," +
+            " "+PSEUDO_UTILISATEUR+" TEXT" +
             ");";
 
     private MySQLite maBaseSQLite; // notre gestionnaire du fichier SQLite

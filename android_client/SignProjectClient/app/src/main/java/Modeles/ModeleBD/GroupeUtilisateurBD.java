@@ -3,6 +3,7 @@ package modeles.ModeleBD;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -17,10 +18,10 @@ public class GroupeUtilisateurBD {
 
     protected static final String TABLE_NAME = "GROUPE_UTILISATEUR";
 
-    public static final String ID="id";
-    public static final String ID_UTILISATEUR="id_utilisateur";
-    public static final String ID_GROUPE="id_groupe";
-    public static final String ETAT_GROUPE="etat_groupe";
+    public static final String ID="id_gu";
+    public static final String ID_UTILISATEUR="id_utilisateur_gu";
+    public static final String ID_GROUPE="id_groupe_gu";
+    public static final String ETAT_GROUPE="etat_groupe_gu";
 
     public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
@@ -34,6 +35,9 @@ public class GroupeUtilisateurBD {
 
     private MySQLite maBaseSQLite; // notre gestionnaire du fichier SQLite
     private SQLiteDatabase db;
+
+    public static final String ETAT_ATTENTE = "en attente";
+    public static final String ETAT_APPARTIENT = "appartient";
 
     // Constructeur
     public GroupeUtilisateurBD(Context context)
@@ -78,7 +82,7 @@ public class GroupeUtilisateurBD {
 
     public ArrayList<Utilisateur> getUtilisateur(int idGroupe, String etat) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_GROUPE+"="+idGroupe+" AND "+ID_UTILISATEUR+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+ETAT_GROUPE+"="+etat, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_GROUPE+"="+idGroupe+" AND "+ID_UTILISATEUR+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+ETAT_GROUPE+"='"+etat+"'", null);
 
         ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 
@@ -102,7 +106,7 @@ public class GroupeUtilisateurBD {
     public ArrayList<Groupe> getGroupe(int idUtilisateur, String etat) {
         // sélection de tous les enregistrements de la table
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+GroupeBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_UTILISATEUR+"="+idUtilisateur+" AND "+ID_GROUPE+"="+GroupeBD.ID_GROUPE+" AND "+ETAT_GROUPE+"="+etat+" AND "+UtilisateurBD.ID_UTILISATEUR+"="+GroupeBD.ADMIN_GROUPE, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+GroupeBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_UTILISATEUR+"="+idUtilisateur+" AND "+ID_GROUPE+"="+GroupeBD.ID_GROUPE+" AND "+ETAT_GROUPE+"='"+etat+"' AND "+UtilisateurBD.ID_UTILISATEUR+"="+GroupeBD.ADMIN_GROUPE, null);
 
         ArrayList<Groupe> groupes = new ArrayList<Groupe>();
 
@@ -124,5 +128,10 @@ public class GroupeUtilisateurBD {
         c.close();
 
         return groupes;
+    }
+
+    public long getCount()
+    {
+        return DatabaseUtils.queryNumEntries(this.db, TABLE_NAME);
     }
 }

@@ -3,7 +3,9 @@ package modeles.ModeleBD;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -17,9 +19,9 @@ public class LigneArretBD {
 
     protected static final String TABLE_NAME = "LIGNE_ARRET";
 
-    public static final String ID="id";
-    public static final String ID_LIGNE="id_ligne";
-    public static final String ID_ARRET="id_arret";
+    public static final String ID="id_la";
+    public static final String ID_LIGNE="id_ligne_la";
+    public static final String ID_ARRET="id_arret_la";
 
     public static final String CREATE_TABLE= "CREATE TABLE "+TABLE_NAME+
             " (" +
@@ -82,8 +84,12 @@ public class LigneArretBD {
         return db.delete(TABLE_NAME, where, whereArgs);
     }
 
-    public ArrayList<Arret> getArret(int idLigne) {
+    public ArrayList<Arret> getArrets(int idLigne) {
         // sélection de tous les enregistrements de la table
+
+        String query = "SELECT * FROM "+TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_LIGNE+"="+idLigne+" AND "+ID_ARRET+"="+ArretBD.ID_ARRET;
+        Log.d("query", query);
+
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_LIGNE+"="+idLigne+" AND "+ID_ARRET+"="+ArretBD.ID_ARRET, null);
 
         ArrayList<Arret> arrets = new ArrayList<Arret>();
@@ -99,15 +105,17 @@ public class LigneArretBD {
                 a.setDirection(c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)));
 
                 arrets.add(a);
+                c.moveToNext();
             }
         }
 
         c.close();
 
         return arrets;
+
     }
 
-    public ArrayList<Ligne> getLigne(int idArret) {
+    public ArrayList<Ligne> getLignes(int idArret) {
         // sélection de tous les enregistrements de la table
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+LigneBD.TABLE_NAME+" WHERE "+ID_ARRET+"="+idArret+" AND "+ID_LIGNE+"="+LigneBD.ID_LIGNE, null);
@@ -123,7 +131,6 @@ public class LigneArretBD {
                 l.setCoordonnees(c.getString(c.getColumnIndex(LigneBD.COORDONNEES_LIGNE)));
                 l.setDescription(c.getString(c.getColumnIndex(LigneBD.DESCRIPTION_LIGNE)));
 
-
                 lignes.add(l);
                 c.moveToNext();
             }
@@ -132,5 +139,10 @@ public class LigneArretBD {
         c.close();
 
         return lignes;
+    }
+
+    public long getCount()
+    {
+        return DatabaseUtils.queryNumEntries(this.db, TABLE_NAME);
     }
 }

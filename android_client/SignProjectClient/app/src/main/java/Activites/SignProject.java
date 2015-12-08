@@ -18,7 +18,7 @@ public class SignProject extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sign_project, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar_accueil_user, menu);
         return true;
     }
 

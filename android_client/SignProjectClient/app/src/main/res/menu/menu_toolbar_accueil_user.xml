@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".SignProject">
     <item
         android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:title="@string/action_toolbar_parametre"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

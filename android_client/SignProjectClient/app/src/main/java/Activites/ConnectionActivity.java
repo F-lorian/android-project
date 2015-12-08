@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.example.florian.signprojectclient.R;
 
 import modeles.Modele.Utilisateur;
+import utilitaires.SessionManager;
 
 /**
  * Created by Axel_2 on 28/11/2015.
@@ -121,6 +122,9 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
 
                 //A FAIRE : verif pseudo et mdp BD sur serveur
+
+                SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
+                sessionManager.createLoginSession(0,pseudo.getText().toString());
 
                 Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
                 startActivity(intent);

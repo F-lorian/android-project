@@ -5,7 +5,6 @@
     <string name="drawer_close">Fermer le menu</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="champ_pseudo">Votre pseudo</string>
     <string name="champ_mdp">Votre mot de passe</string>
     <string name="btn_seConnecter">Se connecter</string>
@@ -14,17 +13,31 @@
     <string name="btn_inscription">S\'inscrire</string>
     <string name="erreur_pseudo">Doit être supérieur à 2 lettres, ne peut contenir que des lettres, des chiffres et les caractères _ et -</string>
     <string name="erreur_mdp">Doit être supérieur à 7 lettres, contenir au moins une majuscule, une minuscule, un chiffre</string>
-    <string name="erreur_egaux_mdp">les mots de passes doivent être égaux</string>
 
-    <string name="menu_titre_signalement">Signalements</string>
+
+    <string name="menu_titre_signalement">SIGNALEMENTS</string>
     <string name="menu_item_carte">Carte</string>
     <string name="menu_item_listAlerte">Liste des alertes</string>
-    <string name="menu_titre_groupe">Groupes</string>
+    <string name="menu_titre_groupe">GROUPES</string>
     <string name="menu_item_mesGroupes">Mes groupes</string>
     <string name="menu_item_rejoindreGroupe">Rejoindre un groupe</string>
 
     <string name="titre_alert_dialog_erreur">Erreur</string>
     <string name="btn_alert_dialog_erreur">Fermer</string>
+    <string name="message_alert_dialog_erreur_egaux_mdp">les mots de passes doivent être égaux</string>
+    <string name="message_alert_dialog_erreur_chargement">Les données n\'ont pas pu être chargées. Veuillez réessayer ultérieurement</string>
+
+    <string name="progress_dialog_titre">Chargement...</string>
+    <string name="progress_dialog_message">Initialisation en cours</string>
+    <string name="popup_progress_dialog_termine">Chargement terminé</string>
+
+    <string name="texte_header_nav">Bienvenue</string>
+
+    <string name="titre_toolbar_ajout_signalement">Nouveau signalement</string>
+    <string name="action_toolbar_parametre">Paramètres</string>
+    <string name="action_toolbar_envoyer_signalement">Envoyer</string>
+
+
 
 
 
