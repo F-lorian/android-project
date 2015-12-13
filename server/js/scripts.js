@@ -17,25 +17,32 @@ function sendNotification() {
     
     console.log(regIDs);
     console.log(message);
-    $('#notification').unbind('submit');
-    
-    
-    $.ajax({
-        url: "server.php?action=sendNotificationPost",
-        type: 'POST',
-        data: { regIDs: regIDs, message: message },
-        beforeSend: function () {
+    if(regIDs != null && message != ""){
+        regIDs = regIDs.join("|");
+        
+        console.log(regIDs);
+        console.log(message);
+        $('#notification').unbind('submit');
 
-        },
-        success: function (data, textStatus, xhr) {
-            $('.message').val("");
-            $('#result-message').text(data);
-            console.log(data);
-        },
-        error: function (xhr, textStatus, errorThrown) {
 
-        }
-    });
+        $.ajax({
+            url: "server.php?action=sendNotificationPost",
+            type: 'POST',
+            data: { regIDs: regIDs, message: message },
+            beforeSend: function () {
+
+            },
+            success: function (data, textStatus, xhr) {
+                $('.message').val("");
+                $('#result-message').html(data);
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+
+            }
+        });  
+    }
+    
     return false;
 }
 

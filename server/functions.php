@@ -13,12 +13,17 @@ function sendNotificationPost(){
     $message = $_POST["message"];
     
     if(isset($registrationIds) && isset($message)){
+        
+        $registrationIds = explode('|',$registrationIds);
          /*$notification = new Notification();
         $notification->setMessage($message);
         $notification->setRegistrationId($registrationIds);
         $notification->send();*/
         
-         echo 'notification envoyée';
+         echo 'notification envoyée: <br/> message :'.$message.'<br/>à :';
+        foreach($registrationIds as $id){
+            echo $id.' ';
+        }
     }else{
        echo 'erreur'; 
     }
