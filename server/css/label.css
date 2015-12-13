@@ -1,0 +1,143 @@
+/******* à garder LABEL INSET********/
+
+.label{
+    font-size: 1em;
+}
+.label.inset{
+
+}
+
+a .label.inset{
+	display: inline-block;
+}
+
+.label.label-default.inset{
+	background-color: #2d2d2d ;
+	color: #5E5E5E;
+}
+
+a.label.label-default.inset{
+	color: #5E5E5E;
+}
+
+a.label.label-default.inset:hover {
+	color: #9b9b9b;
+}
+
+a:hover .label.label-default.inset{
+	color: #9b9b9b ;
+}
+
+.label.label-success.inset{
+	background-color: #297c29 ;
+	color: #58b758;
+}
+
+a.label.label-success.inset{
+	color: #58b758;
+}
+
+a.label.label-success.inset:hover {
+	color: #82e082;
+}
+
+a:hover .label.label-success.inset{
+	color: #82e082 ;
+}
+
+.label.label-primary.inset{
+	background-color: #184363 !important;
+	color : #337AB7 !important;
+}
+/*
+.label.label-primary.inset i{
+	background-color: #184363 !important;
+	color : #337AB7 !important;
+}
+*/
+a.label.label-primary.inset{
+	color : #5ebeff !important;
+}
+
+a.label.label-primary.inset:hover{
+	color : #91d3ff !important;
+
+}
+
+a:hover .label.label-primary.inset{
+	color: #5ebeff !important;
+}
+
+a.label.label-primary.inset.label-hover{
+	color : #337AB7 !important;
+}
+
+a.label.label-primary.inset.label-hover:hover {
+	color: #5ebeff !important;
+}
+
+.label.label-warning.inset{
+	background-color: #a36a1a;
+	color: #F0AD4E;
+}
+
+a.label.label-warning.inset{
+	color: #F0AD4E;
+}
+
+a.label.label-warning.inset:hover {
+	color: #fcc06c;
+}
+
+a:hover .label.label-warning.inset{
+	color: #fcc06c;
+}
+
+.label.label-danger.inset{
+	background-color: #932322;
+	color: #D9534F;
+}
+
+a.label.label-danger.inset{
+	color: #D9534F;
+}
+
+a.label.label-danger.inset:hover {
+	color: #ff817f;
+}
+
+a:hover .label.label-danger.inset{
+	color: #ff817f;
+}
+
+.label{
+	border-radius: 5px;
+	font-weight: normal;
+}
+
+.label.label-circle{
+	width : inherit;
+	text-align: center;
+	padding: 4px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-radius: 50px;
+}
+
+a#log-out i{
+	color: #fc6000 !important;
+}
+
+a#log-out:hover i{
+	color: #ffae00 !important;
+}
+
+a#log-out{
+	background-color: #2d2d2d;
+}
+
+a#log-out:hover{
+	background-color: #C9302C;
+}
+
+/*************************/

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign project</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/label.css" type="text/css" />
+    <link rel="stylesheet" href="css/listgroup.css" type="text/css" />
+    <link rel="stylesheet" href="css/pagination.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
+
+    <link rel="icon" type="image/x-icon" href="" />
+</head>
+
+<body>
+    
+    
+    <div id="panel-users" class="panel">
+        <span id="result-message"></span>
+        <form id="notification" onSubmit="return sendNotification()">
+            <textarea name="message" class="message" placeholder="message..."></textarea>
+            <input type="submit" value="envoyer" onClick=""/>
+        </form>
+            <div class="panel-header">
+               <span class="label label-default">Sélection</span>
+            </div>
+            <div class="panel-body">
+                <div id="user_list" class="list">
+                </div>
+            </div>
+        </div>
+    
+    <div id="global-container" class="container-fluid">
+        
+        <h4>Sign Project</h4>
+        
+        
+        <div class="panel">
+            <div class="panel-header">
+               <span class="label label-default">Recherche</span>
+            </div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="add-user" name="add-user" placeholder="Search for...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="add_to_list_input('users','user_list')"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
+                </div>
+          </div>
+        </div>      
+        
+        <div id="users" class="list-group">
+            <a class="list-group-item list-group-action" href="">
+                <span class="label label-primary inset">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </span> envoyer une notification
+            </a>
+            <div class="list-group-item list-group-title" >
+                <div class="row">
+                    <div class="col-sm-4">
+                        pseudo
+                    </div>
+                    <div class="col-sm-4">
+                        mail
+                    </div>
+                    <div class="col-sm-4">
+                        registrationID
+                    </div>
+                </div>
+            </div>
+            {% for u in users %}
+
+            <a class="label label-default label-circle inset label-hover list-group-option remove" href="">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+         
+            <a class="list-group-item selectable" mail="{{u.email}}" regID="{{u.gcm_regid}}" onclick="return false;" href="">
+                <div class="row">
+                    
+                    <div class="col-sm-4">
+                        <span class="label label-default inset">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <i class="glyphicon glyphicon-ok invisible"></i>
+                        </span> {{u.pseudo}}
+                    </div>
+                    <div class="col-sm-4">
+                        {{u.email}}
+                    </div>
+                    <div class="col-sm-4">
+                        {{u.gcm_regid}}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <form method="post" action="">
+
+        <input type="submit" value="test"></input>
+
+    </form>
+    
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
+    <script src="js/list.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
