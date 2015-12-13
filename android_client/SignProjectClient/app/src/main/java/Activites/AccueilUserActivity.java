@@ -180,7 +180,6 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     public void InitilisationDesDonnees()
     {
-
         JeuDeDonnees j = new JeuDeDonnees(this);
 
         LigneArretBD la = new LigneArretBD(this);

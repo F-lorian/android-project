@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutRemarquesAjoutSignalement"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/hauteur_text_area"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginTop="@dimen/margin_formulaire">
+
+    <EditText
+        android:id="@+id/textAreaAjoutSignalement"
+        android:hint="@string/titre_textarea_remarque_ajout_signalement"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:singleLine="false"
+        android:lines="5"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip" />
+
+</LinearLayout>
+

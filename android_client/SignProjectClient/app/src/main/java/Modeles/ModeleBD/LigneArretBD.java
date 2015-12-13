@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import modeles.Modele.Arret;
 import modeles.Modele.Ligne;
@@ -141,8 +142,45 @@ public class LigneArretBD {
         return lignes;
     }
 
+    public HashMap<Integer,String> getStringOfArretLigne()
+    {
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+LigneBD.TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_ARRET+"="+ArretBD.ID_ARRET+" AND "+ID_LIGNE+"="+LigneBD.ID_LIGNE, null);
+
+        HashMap<Integer,String> arretsString = new HashMap<Integer,String>();
+
+        if (c.moveToFirst()) {
+            while (c.isAfterLast() == false) {
+
+                String[] destinationArret = c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)).split("_");
+                String destinationLigne = c.getString(c.getColumnIndex(LigneBD.DESCRIPTION_LIGNE));
+
+                String destinationCorrespondanteLigne = null;
+
+                for(int i = 0; i<destinationArret.length; i++)
+                {
+                    if (destinationLigne.contains(destinationArret[i]))
+                    {
+                        destinationCorrespondanteLigne = destinationArret[i];
+                    }
+                }
+
+                String ligneString = c.getString(c.getColumnIndex(LigneBD.NOM_LIGNE));
+
+                String arretString = c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)) + " - " + ligneString.charAt(0)+ligneString.charAt(ligneString.length()-1) + " - " + destinationCorrespondanteLigne;
+
+                arretsString.put(c.getInt(c.getColumnIndex(ID)), arretString);
+
+                c.moveToNext();
+            }
+        }
+
+        return arretsString;
+    }
+
     public long getCount()
     {
         return DatabaseUtils.queryNumEntries(this.db, TABLE_NAME);
     }
+
+
 }

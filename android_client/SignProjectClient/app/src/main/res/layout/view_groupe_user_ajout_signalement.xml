@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutPrincipaleGroupeUserAjoutSignalement"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/margin_top_dynamic_field"
+    android:layout_height="150dp">
+
+    <ListView
+        android:id="@+id/listGroupUserAjoutSignalement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+
+</LinearLayout>

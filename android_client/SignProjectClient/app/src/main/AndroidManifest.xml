@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher1"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -26,6 +26,10 @@
         </activity>
         <activity
             android:name="activites.AccueilUserActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="activites.AjoutSignalementActivity"
             android:label="@string/app_name" >
         </activity>
     </application>

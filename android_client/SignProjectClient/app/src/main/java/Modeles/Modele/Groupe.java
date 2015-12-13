@@ -77,13 +77,6 @@ public class Groupe {
 
     @Override
     public String toString() {
-        return "Groupe{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", type='" + type + '\'' +
-                ", signalements=" + signalements +
-                ", membres=" + membres +
-                ", admin=" + admin +
-                '}';
+        return nom;
     }
 }

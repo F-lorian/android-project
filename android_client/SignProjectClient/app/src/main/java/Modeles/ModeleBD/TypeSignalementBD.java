@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import modeles.Modele.TypeSignalement;
 
@@ -80,7 +81,7 @@ public class TypeSignalementBD {
         return db.delete(TABLE_NAME, where, whereArgs);
     }
 
-    public TypeSignalement getGroupe(int id) {
+    public TypeSignalement getTypeSignalement(int id) {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
         TypeSignalement t = new TypeSignalement(0,"");
@@ -97,7 +98,7 @@ public class TypeSignalementBD {
         return t;
     }
 
-    public ArrayList<TypeSignalement> getGroupes() {
+    public ArrayList<TypeSignalement> getTypeSignalements() {
         // sélection de tous les enregistrements de la table
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
         ArrayList<TypeSignalement> typeSignalements = new ArrayList<TypeSignalement>();
@@ -124,4 +125,5 @@ public class TypeSignalementBD {
     {
         return DatabaseUtils.queryNumEntries(this.db, TABLE_NAME);
     }
+
 }

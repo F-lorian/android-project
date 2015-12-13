@@ -74,14 +74,7 @@ public class Utilisateur {
 
     @Override
     public String toString() {
-        return "Utilisateur{" +
-                "id=" + id +
-                ", pseudo='" + pseudo + '\'' +
-                ", mdp='" + mdp + '\'' +
-                ", signalements=" + signalements +
-                ", groupesAppartient=" + groupesAppartient +
-                ", groupesAdmin=" + groupesAdmin +
-                '}';
+        return pseudo;
     }
 
     public static boolean pseudoValide(String pseudo)

@@ -124,7 +124,7 @@ public class ConnectionActivity extends Activity {
                 //A FAIRE : verif pseudo et mdp BD sur serveur
 
                 SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
-                sessionManager.createLoginSession(0,pseudo.getText().toString());
+                sessionManager.createLoginSession(1,pseudo.getText().toString());
 
                 Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
                 startActivity(intent);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:background="#fff">
+
+    <ImageView
+        android:id="@+id/imageSpinnerType"
+        android:layout_width="@dimen/hauteur_champs_saisie"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_controleur"/>
+
+    <TextView
+        android:id="@+id/textViewSpinnerType"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:text="Controleur"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/margin_right_text_spinner"
+        android:textColor="#000"
+        android:textSize="@dimen/text_size_spinner" />
+
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutPrincipaleHoraireAjoutSignalement"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="215dp"
+    android:layout_marginTop="@dimen/margin_formulaire">
+
+    <RelativeLayout
+        android:id="@+id/layoutAjoutHoraireAjoutSignalement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/horaires_ajout_signalement"
+            android:textSize="@dimen/texte_size_libelle_formulaire"
+            android:layout_marginRight="@dimen/margin_between_field"
+            android:gravity="center" />
+
+        <ImageButton
+            android:id="@+id/radioButtonSpinnerType"
+            android:layout_width="wrap_content"
+            style="@style/PlusButton"
+
+            android:background="@drawable/btn_circle"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/margin_top_dynamic_field"
+        android:layout_height="150dp"></ListView>
+
+</LinearLayout>

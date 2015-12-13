@@ -37,6 +37,26 @@
     <string name="action_toolbar_parametre">Paramètres</string>
     <string name="action_toolbar_envoyer_signalement">Envoyer</string>
 
+    <string name="type_ajout_signalement">Type</string>
+    <string name="titre_spinner">Choisir</string>
+    <string name="controleur_spinner">Controleur</string>
+    <string name="horaire_spinner">Horaires</string>
+    <string name="accident_autres_spinner">Accidents/Autres</string>
+
+    <string name="arret_ajout_signalement">Arret</string>
+    <string name="destination_ajout_signalement">Destination</string>
+    <string name="titre_textarea_remarque_ajout_signalement">Remarques...</string>
+
+    <string name="description_minus_button">Moins</string>
+    <string name="description_plus_button">Plus</string>
+
+    <string name="public_spinner">Public</string>
+    <string name="groupe_spinner">Groupe(s)</string>
+    <string name="autres_personnes_spinner">Autre(s) personne(s)</string>
+
+    <string name="horaires_ajout_signalement">Horaire</string>
+
+    <string name="prefix_token_ajout_signalement">Destiné à :</string>
 
 
 

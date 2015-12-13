@@ -46,7 +46,7 @@ public class JeuDeDonnees {
 
         var.add(new TypeSignalement(0, "Controleur"));
         var.add(new TypeSignalement(0,"Horaires"));
-        var.add(new TypeSignalement(0, "Accidents / Autres"));
+        var.add(new TypeSignalement(0, "Accidents/Autres"));
 
         var.close();
     }
@@ -75,14 +75,14 @@ public class JeuDeDonnees {
         var.add(5, 1, GroupeUtilisateurBD.ETAT_APPARTIENT);
 
         var.add(2,2,GroupeUtilisateurBD.ETAT_APPARTIENT);
-        var.add(6,1,GroupeUtilisateurBD.ETAT_APPARTIENT);
-        var.add(7,2,GroupeUtilisateurBD.ETAT_APPARTIENT);
-        var.add(8,1,GroupeUtilisateurBD.ETAT_APPARTIENT);
+        var.add(6,2,GroupeUtilisateurBD.ETAT_APPARTIENT);
+        var.add(1,2,GroupeUtilisateurBD.ETAT_APPARTIENT);
+        var.add(8,2,GroupeUtilisateurBD.ETAT_APPARTIENT);
 
         var.add(3,3,GroupeUtilisateurBD.ETAT_APPARTIENT);
         var.add(5,3,GroupeUtilisateurBD.ETAT_APPARTIENT);
         var.add(7,3,GroupeUtilisateurBD.ETAT_APPARTIENT);
-        var.add(12,3,GroupeUtilisateurBD.ETAT_APPARTIENT);
+        var.add(1,3,GroupeUtilisateurBD.ETAT_APPARTIENT);
         var.add(10,3,GroupeUtilisateurBD.ETAT_ATTENTE);
         var.add(11,3,GroupeUtilisateurBD.ETAT_ATTENTE);
 

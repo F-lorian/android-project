@@ -12,4 +12,9 @@
     <dimen name="fab_button_margin_bottom">16dp</dimen>
     <dimen name="fab_button_margin_right">16dp</dimen>
     <dimen name="texte_size_bouton">20dp</dimen>
+    <dimen name="texte_size_libelle_formulaire">20dp</dimen>
+    <dimen name="hauteur_text_area">80dp</dimen>
+    <dimen name="text_size_spinner">20dp</dimen>
+    <dimen name="margin_right_text_spinner">50dp</dimen>
+    <dimen name="margin_top_dynamic_field">15dp</dimen>
 </resources>
