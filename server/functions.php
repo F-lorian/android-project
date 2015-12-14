@@ -33,24 +33,32 @@ function sendNotificationPost(){
 
 function storeUser($name, $email, $password, $gcm_regid) {
         
-    $result = array();
-    $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-    $stmt = $dbh->prepare("INSERT INTO gcm_users
-                        (name, email, gcm_regid, created_at) VALUES ('$name', '$email', '$gcm_regid', NOW())");
-    $result = $stmt->execute();
+   
     
-    $result = array();
-    $stmt = $dbh->prepare("SELECT * FROM user WHERE email = '$email' LIMIT 1");
-    $result = $stmt->execute();
-    while ($row = $stmt->fetch()) {
-        $result[] = $row;
-    }
-         
-    // return user details 
-    if (mysql_num_rows($result) > 0) { 
-        return $result;
-    } else {
-        return false;
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("INSERT INTO gcm_users
+                            (name, email, gcm_regid, created_at) VALUES ('$name', '$email', '$gcm_regid', NOW())");
+        $result = $stmt->execute();
+
+        $result = array();
+        $stmt = $dbh->prepare("SELECT * FROM user WHERE email = '$email' LIMIT 1");
+        $result = $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        // return user details 
+        if (mysql_num_rows($result) > 0) { 
+            return $result;
+        } else {
+            return false;
+        }
+        $dbh = null;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
     }
     
 }
@@ -100,7 +108,7 @@ function userExist($email) {
         //echo $row;
     }
     
-    $NumOfRows = mysql_num_rows($result);
+    $NumOfRows = count($result);
     if ($NumOfRows > 0) {
         // user existed
         return true;
@@ -143,9 +151,24 @@ function register($name, $email, $password, $gcm_regid){
         echo $result;
     } else {
         // user details not found
+        echo 'Erreur lors de l\'inscription';
     }
 }
 
+function deleteUser(){
+    $email  = $_POST["email"];
+    
+    if(userExist($email)){
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("DELETE FROM user WHERE email = '$email' LIMIT 1");
+        $stmt->execute();
+        
+        echo 'success';
+        
+    }
+    
+}
 
 function addGroup(){
     $name  = $_POST["name"];

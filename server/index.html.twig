@@ -20,8 +20,12 @@
     <div id="panel-users" class="panel">
         <span id="result-message"></span>
         <form id="notification" onSubmit="return sendNotification()">
-            <textarea name="message" class="message" placeholder="message..."></textarea>
-            <input type="submit" value="envoyer" onClick=""/>
+            <textarea name="message" class="form-control message" placeholder="message..."></textarea>
+            <button class="form-control list-group-item list-group-action">
+                <span class="label label-primary inset">
+                    <i class="glyphicon glyphicon-send"></i>
+                </span> envoyer
+            </button>
         </form>
             <div class="panel-header">
                <span class="label label-default">Sélection</span>
@@ -72,11 +76,11 @@
             </div>
             {% for u in users %}
 
-            <a class="label label-default label-circle inset label-hover list-group-option remove" href="">
+            <a class="label label-default label-circle inset label-hover list-group-option remove" onclick="deleteUser('{{u.email}}');">
                 <i class="glyphicon glyphicon-remove"></i>
             </a>
          
-            <a class="list-group-item selectable" mail="{{u.email}}" regID="{{u.gcm_regid}}" onclick="return false;" href="">
+            <a class="list-group-item selectable" mail="{{u.email}}" regID="{{u.gcm_regid}}" onclick="return false;">
                 <div class="row">
                     
                     <div class="col-sm-4">

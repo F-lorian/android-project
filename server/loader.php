@@ -16,6 +16,7 @@ try {
 
 } catch (PDOException $e) {
     echo 'Échec lors de la connexion à la base de données: ' . $e->getMessage();
+    die();
 }
  
 ?>

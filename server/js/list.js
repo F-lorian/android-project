@@ -24,6 +24,18 @@ function removeword(list, value, id) {
 
 }
 
+function removeword2(list, value) {
+
+    lists[list].splice(lists[list].indexOf(value), 1);
+
+    if (lists[list].length == 0) {
+        delete lists[list];
+    }
+
+    console.log(lists[list]);
+
+}
+
 function add_to_list_input(input, list, char) {
 
     var value = $('#' + input).val();

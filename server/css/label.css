@@ -68,6 +68,10 @@ a:hover .label.label-primary.inset{
 	color: #5ebeff !important;
 }
 
+button:hover .label.label-primary.inset{
+	color: #5ebeff !important;
+}
+
 a.label.label-primary.inset.label-hover{
 	color : #337AB7 !important;
 }

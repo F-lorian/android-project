@@ -5,7 +5,7 @@ require_once('loader.php');
 
 
 if(isset($dbh)){
-
+    $dbh = null;
 /*
     $dbh = new PDO('mysql:host=localhost;dbname=dgback', "gara", "gara123");
     $result = array();
@@ -48,6 +48,9 @@ if(isset($dbh)){
             case "sendNotificationPost":
                 sendNotificationPost();
                 break;
+            case "deleteUser":
+                deleteUser();
+                break;
         }
     }
 
@@ -77,8 +80,7 @@ if(isset($dbh)){
 
     sendNotification($registrationIds, $message);*/
     
-//$users = array(array('name' => 'nom test'), array('name' => 'nom test 2'));
-$users = getAllUsers();
+
 
 ///////////////////////////////////////
 

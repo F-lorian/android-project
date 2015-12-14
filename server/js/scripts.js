@@ -12,7 +12,7 @@ function removeClass (obj, Class)	{
 }
 
 function sendNotification() {
-    var regIDs = getList('user_list');
+    var regIDs = getList('regid_list');
     var message = $('.message').val();
     
     console.log(regIDs);
@@ -46,6 +46,32 @@ function sendNotification() {
     return false;
 }
 
+
+function deleteUser(user) {
+    if(user != null && user != ""){
+       
+        console.log(user);
+
+        $.ajax({
+            url: "server.php?action=deleteUser",
+            type: 'POST',
+            data: { email: user },
+            beforeSend: function () {
+
+            },
+            success: function (data, textStatus, xhr) {
+                $('#result-message').html('utilisateur '+user+' supprimé');
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+
+            }
+        });  
+    }
+    
+    return false;
+}
+
 $(document).ready(function ()	{
   $('.list-group-item.selectable').click(function(e){
       toggleClass(this, 'active'); 
@@ -63,14 +89,14 @@ $(document).ready(function ()	{
       toggleClass(selected, 'invisible');
       
       var mail = $(this).attr('mail');
+      var registrationId = $(this).attr('regID');
       if(!existInList(mail,'user_list')){
           add_to_list(mail,'user_list');
+          add_to_list(registrationId,'regid_list');
       }else{
           removeword('user_list',mail,filterMail(mail));
-      }
-      
-      var registrationId = $(this).attr('regID');
-      
+          removeword2('regid_list',registrationId);
+      }   
   });
     
     
