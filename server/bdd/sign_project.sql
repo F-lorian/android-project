@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 14 Décembre 2015 à 01:17
+-- Généré le :  Mar 15 Décembre 2015 à 02:49
 -- Version du serveur :  5.6.21
 -- Version de PHP :  5.6.3
 
@@ -29,15 +29,16 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `group` (
 `id` int(11) NOT NULL,
   `name` varchar(500) NOT NULL,
-  `type` enum('private','public') NOT NULL DEFAULT 'public'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `type` enum('private','public') NOT NULL DEFAULT 'public',
+  `creator` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `group`
 --
 
-INSERT INTO `group` (`id`, `name`, `type`) VALUES
-(1, 'test', 'public');
+INSERT INTO `group` (`id`, `name`, `type`, `creator`) VALUES
+(2, 'test', 'public', 1);
 
 -- --------------------------------------------------------
 
@@ -72,13 +73,6 @@ CREATE TABLE IF NOT EXISTS `signalement_for_group` (
   `signalement` int(11) NOT NULL,
   `group` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Contenu de la table `signalement_for_group`
---
-
-INSERT INTO `signalement_for_group` (`signalement`, `group`) VALUES
-(1, 1);
 
 -- --------------------------------------------------------
 
@@ -129,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `pseudo` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `gcm_regid` text NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `user`
@@ -151,13 +145,6 @@ CREATE TABLE IF NOT EXISTS `user_in_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `user_in_group`
---
-
-INSERT INTO `user_in_group` (`user`, `group`) VALUES
-(1, 1);
-
---
 -- Index pour les tables exportées
 --
 
@@ -165,7 +152,7 @@ INSERT INTO `user_in_group` (`user`, `group`) VALUES
 -- Index pour la table `group`
 --
 ALTER TABLE `group`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `creator` (`creator`);
 
 --
 -- Index pour la table `signalement`
@@ -211,7 +198,7 @@ ALTER TABLE `user_in_group`
 -- AUTO_INCREMENT pour la table `group`
 --
 ALTER TABLE `group`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `signalement`
 --
@@ -226,10 +213,16 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- Contraintes pour les tables exportées
 --
+
+--
+-- Contraintes pour la table `group`
+--
+ALTER TABLE `group`
+ADD CONSTRAINT `fk_creator` FOREIGN KEY (`creator`) REFERENCES `user` (`id`);
 
 --
 -- Contraintes pour la table `signalement`

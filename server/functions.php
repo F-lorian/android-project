@@ -195,7 +195,7 @@ function deleteUser(){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("DELETE FROM user WHERE email = '$email' LIMIT 1");
-            $stmt->execute();
+            //$stmt->execute();
             
             if (!userExist($email)) { 
                 echo $success;
