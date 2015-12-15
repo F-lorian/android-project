@@ -39,6 +39,15 @@ a:focus{
     margin-bottom: 0;
 }
 
+#result-message{
+    margin: 5px;
+    margin-left: 0;
+    margin-right: 0;
+    /*width: calc(100% - 10px);*/
+    text-align: center;
+    background-color: chartreuse;
+}
+
 .list-group-option{
 	right:12%;
 }
@@ -79,5 +88,8 @@ a:focus{
     padding: 3px;
     padding-top: 3px;
 }
+
+textarea{
+    border-radius: 0 !important;
 
 

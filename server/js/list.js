@@ -122,7 +122,7 @@ function existInList(value, list) {
 
 }
 
-function add_to_list(value, list) {
+function add_to_list(value, list, callback) {
 
     if (value != "null") {
 
@@ -135,7 +135,7 @@ function add_to_list(value, list) {
 
         if (!exist && notempty) {
             var cont = " <span class='label label-primary inset' id='" + filtered_value + "container'>" + value + "<span id='" + filtered_value +
-                "remove' onclick=\"removeword('" + list + "','" + value + "','" + filtered_value + "'); \" class='glyphicon glyphicon-remove remove'></span></span>";
+                "remove' onclick=\"removeword('" + list + "','" + value + "','" + filtered_value + "');"+callback+"; \" class='glyphicon glyphicon-remove remove'></span></span>";
 
             //$('#'+input).val("");
             $('#' + list).append($(cont).hide());

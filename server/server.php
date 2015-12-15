@@ -6,22 +6,6 @@ require_once('loader.php');
 
 if(isset($dbh)){
     $dbh = null;
-/*
-    $dbh = new PDO('mysql:host=localhost;dbname=dgback', "gara", "gara123");
-    $result = array();
-    //echo ($_REQUEST['request']);
-
-    $stmt = $dbh->prepare($_REQUEST['request']);
-    $stmt->execute();
-    while ($row = $stmt->fetch()) {
-        $result[] = $row;
-        //echo $row;
-    }
-
-
-    echo (json_encode($result));
-    $dbh = null;
-*/
 
     //traitement de l'action demandée/////////////////////////
     if(isset($_REQUEST['action'])){
@@ -50,6 +34,18 @@ if(isset($dbh)){
                 break;
             case "deleteUser":
                 deleteUser();
+                break;
+            case "userExist":
+                userExistRequest();
+                break;
+            case "isInGroup":
+                isInGroupRequest();
+                break;
+            case "groupExist":
+                groupExistRequest();
+                break;
+            case "searchByMail":
+                getUserByEmailRequest();
                 break;
         }
     }

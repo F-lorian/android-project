@@ -18,9 +18,9 @@
     
     
     <div id="panel-users" class="panel">
-        <span id="result-message"></span>
+        <div id="result-message"></div>
         <form id="notification" onSubmit="return sendNotification()">
-            <textarea name="message" class="form-control message" placeholder="message..."></textarea>
+            <textarea name="message" id="message" class="form-control" placeholder="message..."></textarea>
             <button class="form-control list-group-item list-group-action">
                 <span class="label label-primary inset">
                     <i class="glyphicon glyphicon-send"></i>
@@ -46,12 +46,14 @@
                <span class="label label-default">Recherche</span>
             </div>
             <div class="panel-body">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="add-user" name="add-user" placeholder="Search for...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" onclick="add_to_list_input('users','user_list')"><i class="glyphicon glyphicon-search"></i></button>
-                    </span>
-                </div>
+                <form id="search" onSubmit="return searchByMail()">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="search-user" name="search-user" placeholder="Search for...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit" onclick="add_to_list_input('users','user_list')"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div>
+                </form>
           </div>
         </div>      
         
@@ -74,8 +76,9 @@
                     </div>
                 </div>
             </div>
+            <span id="select-list">
             {% for u in users %}
-
+            
             <a class="label label-default label-circle inset label-hover list-group-option remove" onclick="deleteUser('{{u.email}}');">
                 <i class="glyphicon glyphicon-remove"></i>
             </a>
@@ -98,14 +101,9 @@
                 </div>
             </a>
             {% endfor %}
+            </span>
         </div>
     </div>
-    
-    <form method="post" action="">
-
-        <input type="submit" value="test"></input>
-
-    </form>
     
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
