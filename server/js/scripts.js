@@ -17,16 +17,19 @@ function sendNotification() {
     
     console.log(regIDs);
     console.log(message);
-    if(regIDs != null && message != ""){
-        regIDs = regIDs.join("|");
+    if(message != ""){
+        $('#notification').unbind('submit');
+        if(regIDs != null){
+            regIDs = regIDs.join("|");
+        }
         
         console.log(regIDs);
         console.log(message);
-        $('#notification').unbind('submit');
-
-
+        
+        
+        
         $.ajax({
-            url: "server.php?action=sendNotificationPost",
+            url: "server.php?action=sendNotification",
             type: 'POST',
             data: { regIDs: regIDs, message: message },
             beforeSend: function () {
@@ -43,10 +46,11 @@ function sendNotification() {
         });  
     }
     
-    $('#result-message').html("il faut entrer un message et selectionner au moins un utilisateur");
+    $('#result-message').html("il faut entrer un message");
     
     return false;
 }
+
 
 function searchByMail() {
     var search = $('#search-user').val();
@@ -59,9 +63,9 @@ function searchByMail() {
 
 
         $.ajax({
-            url: "server.php?action=searchByMail",
+            url: "server.php?action=searchUser",
             type: 'POST',
-            data: { email: search},
+            data: { w: search, page: 1},
             beforeSend: function () {
 
             },
@@ -69,40 +73,21 @@ function searchByMail() {
                 console.log(data);
                 
                 var res = JSON.parse(data);
+                var list_group = $('#users');
                 
-                $('#select-list').html("");
+                reset(list_group);
                 
                 if(res.length>0){
-                   for(var i=0;i<res.length;i++){
-                   $('#select-list').append('<a class="label label-default label-circle inset label-hover list-group-option remove" onclick="deleteUser('+res[i].email+');">'
-                                +'<i class="glyphicon glyphicon-remove"></i>'
-                            +'</a>'
-                            +'<a class="list-group-item selectable" mail="'+res[i].email+'" regID="'+res[i].gcm_regid+'" onclick="return false;">'
-                               +'<div class="row">'
-                                    +'<div class="col-sm-4">'
-                                        +'<span class="label label-default inset">'
-                                            +'<i class="glyphicon glyphicon-user"></i>'
-                                            +'<i class="glyphicon glyphicon-ok invisible"></i>'
-                                        +'</span> '+res[i].pseudo
-                                    +'</div>'
-                                    +'<div class="col-sm-4">'
-                                        +res[i].email
-                                    +'</div>'
-                                    +'<div class="col-sm-4">'
-                                        +res[i].gcm_regid
-                                    +'</div>'
-                                +'</div>'
-                            +'</a>');
-                    }
-                    $('.list-group-item.selectable').click(function(e){selectable_click(this)});
+ 
+                    for(var i=0;i<res.length;i++){
+                        var new_item = addSelectable(list_group, res[i].pseudo, res[i].email, res[i].gcm_regid);
+             
+                        if(existInList(res[i].email, 'user_list')){
+                            toggleSelectable(new_item); 
+                        }
+                    }   
                 }else{
-                    $('#select-list').append('<a class="list-group-item" onclick="return false;">'
-                                       +'<div class="row">'
-                                            +'<div class="col-sm-12">'
-                                                +'aucun résultats'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</a>');
+                    addRow(list_group, 'aucun résultat');
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -148,40 +133,6 @@ function deleteUser(user) {
     
     return false;
 }
-
-function selectable_click(obj) {
-    toggleClass(obj, 'active');
-
-    var label = $(obj).find('.label');
-    toggleClass(label, 'label-default');
-    toggleClass(label, 'label-primary');
-
-    var options = $(obj).prev('.list-group-options').find('a');
-    toggleClass(options, 'label-default');
-    toggleClass(options, 'label-primary');
-
-
-    var selected = $(obj).find('i:last-child');
-    toggleClass(selected, 'invisible');
-
-    var mail = $(obj).attr('mail');
-    var registrationId = $(obj).attr('regID');
-
-
-    if (!existInList(mail, 'user_list')) {
-        var callback = "removeword2('regid_list','" + registrationId + "')";
-        add_to_list(mail, 'user_list', callback);
-        add_to_list(registrationId, 'regid_list');
-    } else {
-        removeword('user_list', mail, filterMail(mail));
-        removeword2('regid_list', registrationId);
-    }
-}
-
-$(document).ready(function ()	{
-  $('.list-group-item.selectable').click(function(e){selectable_click(this)});
-      
-})
 /*
 
 bootbox.dialog({

@@ -123,7 +123,7 @@ a.list-group-item.active:focus{
 	background-color: #337AB7;
 }
 
-.list-group-item.selectable{
+.list-group-item.selectable, .list-group-item.list-group-action{
     cursor: pointer;
 }
 

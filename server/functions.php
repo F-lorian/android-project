@@ -1,59 +1,75 @@
 <?php
 require_once('notification.php');
 
+define("SUCCESS", true);
+define("ERROR", false);
+define("DENIED", null);
+
 function sendNotification($registrationIds, $message){
-    $notification = new Notification();
-    $notification->setMessage($message);
-    $notification->setRegistrationId($registrationIds);
-    $notification->send();
-}
-
-function sendNotificationPost(){
-    $registrationIds  = $_POST["regIDs"];
-    $message = $_POST["message"];
-    
-    if(isset($registrationIds) && isset($message)){
-        
-        $registrationIds = explode('|',$registrationIds);
-         /*$notification = new Notification();
-        $notification->setMessage($message);
-        $notification->setRegistrationId($registrationIds);
-        $notification->send();*/
-        
-        //echo 'notification envoyée: <br/> message :'.$message.'<br/>à :';
-        /*foreach($registrationIds as $id){
-            echo $id.' ';
-        }*/
-        
-        echo 'notification envoyée';
-        
-    }else{
-       echo 'erreur'; 
+    $regIDs = null;
+    if($registrationIds == null || count($registrationIds) == 0){
+        $regIDs = getAllUsersGCMID();
+        if($regIDs == null){
+            return DENIED;
+        }   
     }
-       
+    else{
+        $regIDs = $registrationIds;
+    }
+
+   /* $notification = new Notification();
+    $notification->setMessage($message);
+    
+    
+    $notification->setRegistrationId($regIDs);
+    $notification->send();*/
+    
+    return SUCCESS;
 }
 
-
-function storeUser($name, $email, $password, $gcm_regid) {
+function connection($email, $password) {
         
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("INSERT INTO gcm_users (name, email, gcm_regid, created_at) VALUES ('$name', '$email', '$gcm_regid', NOW())");
+        $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo = '$pseudo' AND password = '$password'");
         $stmt->execute();
-        $dbh = null;
-        
-        if (userExist($email)) { 
-            return true;
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        $NumOfRows = count($result);
+        if ($NumOfRows == 1) {
+            return SUCCESS;
         } else {
-            return false;
+            return ERROR;
         }
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
         die();
     }
-    
+}
+
+function register($pseudo, $email, $password, $gcm_regid) {
+        
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("INSERT INTO gcm_users (name, email, gcm_regid, created_at) VALUES ('$pseudo', '$email', '$gcm_regid', NOW())");
+        $stmt->execute();
+        $dbh = null;
+        
+        if (userExistMail($email)) { 
+            return SUCCESS;
+        } else {
+            return ERROR;
+        }
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }  
 }
 
 /**
@@ -67,7 +83,6 @@ function getUserByEmail($email) {
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $result[] = $row;
-            //echo $row;
         }
 
         return $result;
@@ -79,14 +94,27 @@ function getUserByEmail($email) {
 }
 
 /**
- * Get user by email
+ * search user
  */
-function getUserByEmailRequest() {
-    
-    $email  = $_POST["email"];
-    
-    echo (json_encode(getUserByEmail($email)));
+function searchUser($w, $page) {
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM user WHERE email LIKE '%$w%' OR pseudo LIKE '%$w%' OR gcm_regid LIKE '%$w%' ");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    } 
 }
+
+
 
 // Getting all registered users
 function getAllUsers() {
@@ -99,7 +127,9 @@ function getAllUsers() {
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
-
+        if(count($result) == 0){
+            return null;
+        }
         //echo (json_encode($result));
         return $result;
         
@@ -109,14 +139,33 @@ function getAllUsers() {
     } 
 }
 
-function userExistRequest(){
-    $email  = $_POST["email"];
-    
-    echo userExist($email);
-    
+// Getting all registered users
+function getAllUsersGCMID() {
+        
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT gcm_regid FROM user");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row[0];
+        }
+        
+        if(count($result) == 0){
+            return null;
+        }
+        //echo (json_encode($result));
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    } 
 }
 
-function userExist($email) {
+
+
+function userExistMail($email) {
      
     try {
         $result = array();
@@ -129,9 +178,9 @@ function userExist($email) {
 
         $NumOfRows = count($result);
         if ($NumOfRows > 0) {
-            return true;
+            return SUCCESS;
         } else {
-            return false;
+            return ERROR;
         }
         
     } catch (PDOException $e) {
@@ -140,71 +189,48 @@ function userExist($email) {
     }
 }
 
-
-function register($name, $email, $password, $gcm_regid){
-    // return json response 
-    $json = array();
-
-    $name  = $_POST["name"];
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-    $gcm_regid = $_POST["regId"];
-    
-    $success = "true";
-    $error = "erreur lors de l'inscription";
-    
-    /**
-     * Registering a user device in database
-     * Store reg id in users table
-     */
-    if (isset($name) 
-         && isset($email) 
-         && isset($password) 
-         && isset($gcm_regid)) {
-
-        // Store user details in db
-        $res = storeUser($name, $email, $password, $gcm_regid);
-        if(res){
-            echo $success;
-        } else {
-            echo $error;
+function userExistPseudo($pseudo) {
+     
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT pseudo FROM user WHERE pseudo = '$pseudo' LIMIT 1");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
         }
 
-/*        $registration_ids = array($gcm_regid);
-        $message = new Message();
-        $message->setContent("inscription réussie");
-        $message->setTitle("success");
-
-        $result = sendNotification($registration_ids, $message);*/
-
-        echo $result;
-    } else {
-        echo $error;
+        $NumOfRows = count($result);
+        if ($NumOfRows > 0) {
+            return SUCCESS;
+        } else {
+            return ERROR;
+        }
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
     }
 }
 
-function deleteUser(){
-    $email  = $_POST["email"];
-    
-    $success = "true";
-    $error = "erreur lors de la suppression";
+function deleteUser($email){
     
     try {
          
-        if(userExist($email)){
+        if(userExistMail($email)){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("DELETE FROM user WHERE email = '$email' LIMIT 1");
-            //$stmt->execute();
+            $stmt->execute();
             
-            if (!userExist($email)) { 
-                echo $success;
+            if (!userExistMail($email)) { 
+                return SUCCESS;
             } else {
-                echo $error;
+                return ERROR;
             }
-            return;
         }
-        echo $error.': utilisateur introuvable';
+        return DENIED;
+        //echo $error.': utilisateur introuvable';
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -212,14 +238,12 @@ function deleteUser(){
     }
     
 }
+
 
 function addGroup(){
     $name  = $_POST["name"];
     $type = $_POST["type"];
     $creator = $_POST["user_id"];
-    
-    $success = "true";
-    $error = "erreur lors de la création du groupe";
     
     try {
          
@@ -230,26 +254,17 @@ function addGroup(){
             $stmt->execute();
             
             if (groupExist($name, $creator)) { 
-                echo $success;
+                return SUCCESS;
             } else {
-                echo $error;
+                return ERROR;
             }
-            return;
         }
-        echo $error.': le groupe existe déjà';
+        echo DENIED;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
         die();
     }
-}
-
-function groupExistRequest(){
-    $name  = $_POST["name"];
-    $creator = $_POST["user_id"];
-    
-    echo isInGroup($name, $creator);
-    
 }
 
 function groupExist($name, $creator) {
@@ -265,9 +280,9 @@ function groupExist($name, $creator) {
 
         $NumOfRows = count($result);
         if ($NumOfRows > 0) {
-            return true;
+            return SUCCESS;
         } else {
-            return false;
+            return ERROR;
         }
  
     } catch (PDOException $e) {
@@ -276,12 +291,7 @@ function groupExist($name, $creator) {
     }
 }
 
-function addToGroup(){
-    $user_id  = $_POST["user_id"];
-    $group_id = $_POST["group_id"];
-    
-    $success = 'utilisateur ajouté au groupe';
-    $error = 'erreur lors de l\'ajout au groupe';
+function addToGroup($user_id, $group_id){ 
     
      try {
          
@@ -293,13 +303,12 @@ function addToGroup(){
             $dbh = null;
             
             if (isInGroup($user_id, $group_id)) { 
-                echo $success;
+                return SUCCESS;
             } else {
-                echo $error;
+                return ERROR;
             }
-            return;
         }
-        echo $error.': l\'utilisateur appartient déjà au groupe';
+        return DENIED;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -307,13 +316,6 @@ function addToGroup(){
     }
 }
 
-function isInGroupRequest(){
-    $user_id  = $_POST["user_id"];
-    $group_id = $_POST["group_id"];
-    
-    echo isInGroup($user_id, $group_id);
-    
-}
 
 function isInGroup($user_id, $group_id){
      try {
@@ -326,9 +328,9 @@ function isInGroup($user_id, $group_id){
         $dbh = null;
          
         if (count($result) > 0) { 
-            return true;
+            return SUCCESS;
         } else {
-            return false;
+            return ERROR;
         }
         
     } catch (PDOException $e) {
@@ -341,9 +343,6 @@ function removeFromGroup(){
     $user_id  = $_POST["user_id"];
     $group_id = $_POST["group_id"];
     
-    $success = 'utilisateur retiré du groupe';
-    $error = 'erreur lors de la suppression du groupe';
-    
      try {
          
         if(isInGroup($user_id, $group_id)){
@@ -354,13 +353,12 @@ function removeFromGroup(){
             $dbh = null;
             
             if (!isInGroup($user_id, $group_id)) { 
-                echo $success;
+                return SUCCESS;
             } else {
-                echo $error;
+                return ERROR;
             }
-            return;
         }
-        echo $error.': l\'utilisateur n\'est pas dans le groupe';
+        echo DENIED;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -375,9 +373,6 @@ function addSignalement(){
     $diffusion = $_POST["diffusion"];
     $type = $_POST["type"];
     
-    $success = "signalement ajouté";
-    $error = "erreur lors de l'ajout du signalement";
-    
      try {
          
         $result = array();
@@ -386,13 +381,13 @@ function addSignalement(){
         $stmt->execute();
         $dbh = null;
 
-      /*  if (!isInGroup($user_id, $group_id)) { 
-            echo $success;
+        /*if (!isInGroup($user_id, $group_id)) { 
+            return SUCCESS;
         } else {
-            echo $error;
+            return ERROR;
         }*/
          
-        echo $success;
+        echo SUCCESS;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -403,9 +398,6 @@ function addSignalement(){
 function deleteSignalement(){
     $sign_id  = $_POST["sign_id"];
 
-    $success = "signalement ajouté";
-    $error = "erreur lors de l'ajout du signalement";
-    
      try {
          
         $result = array();
@@ -420,7 +412,7 @@ function deleteSignalement(){
             echo $error;
         }*/
          
-        echo $success;
+        echo SUCCESS;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";

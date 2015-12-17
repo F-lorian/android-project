@@ -11,29 +11,26 @@ function getList(name){
 }
 
 function removeword(list, value, id) {
+    
+    if(list in lists){
+        $("#" + list + " #" + id + "container").remove();
 
-    $("#" + list + " #" + id + "container").remove();
-
-    lists[list].splice(lists[list].indexOf(value), 1);
-
-    if (lists[list].length == 0) {
-        delete lists[list];
+        removeword2(list, value);
     }
-
-    console.log(lists[list]);
 
 }
 
 function removeword2(list, value) {
 
-    lists[list].splice(lists[list].indexOf(value), 1);
+    if(list in lists){
+       lists[list].splice(lists[list].indexOf(value), 1);
 
-    if (lists[list].length == 0) {
-        delete lists[list];
+        if (lists[list].length == 0) {
+            delete lists[list];
+        }
+
+        console.log(lists[list]); 
     }
-
-    console.log(lists[list]);
-
 }
 
 function add_to_list_input(input, list, char) {
@@ -122,7 +119,7 @@ function existInList(value, list) {
 
 }
 
-function add_to_list(value, list, callback) {
+function add_to_list(value, list, ondelete) {
 
     if (value != "null") {
 
@@ -135,12 +132,19 @@ function add_to_list(value, list, callback) {
 
         if (!exist && notempty) {
             var cont = " <span class='label label-primary inset' id='" + filtered_value + "container'>" + value + "<span id='" + filtered_value +
-                "remove' onclick=\"removeword('" + list + "','" + value + "','" + filtered_value + "');"+callback+"; \" class='glyphicon glyphicon-remove remove'></span></span>";
+                "remove' onclick='' class='glyphicon glyphicon-remove remove'></span></span>";
 
             //$('#'+input).val("");
             $('#' + list).append($(cont).hide());
 
-            $('#' + list + ' #' + filtered_value + 'container').slideDown(1);
+            $('#' + list + ' #' + filtered_value + 'container').fadeIn(100);
+            $('#' + list + ' #' + filtered_value + 'container span').click(function(e){
+                removeword(list, value, filtered_value);
+            });
+            
+            if(ondelete != null){
+               $('#' + list + ' #' + filtered_value + 'container span').click(ondelete); 
+            }
 
             if (!(list in lists)) {
 
@@ -150,6 +154,26 @@ function add_to_list(value, list, callback) {
             lists[list].push(value);
 
             console.log(lists[list]);
+        }
+
+    }
+}
+
+function setOnDelete(value, list, ondelete){
+    console.log('SET ON DELETE');
+    if (value != "null") {
+        console.log('value != null');
+
+        var filtered_value = filterMail(value);
+        //-----------------------------------------
+        var notempty = value.length && value != " ";
+        var exist = existInList(value, list);
+        console.log(notempty);
+        console.log(exist);
+        console.log(ondelete);
+        if (exist && notempty) {
+            console.log('#' + list + ' #' + filtered_value + 'container span');
+            $('#' + list + ' #' + filtered_value + 'container span').click(ondelete);
         }
 
     }

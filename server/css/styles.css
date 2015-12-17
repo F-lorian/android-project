@@ -34,9 +34,14 @@ a:focus{
 
 #panel-users{
     position : fixed;
-    bottom : 0;
+    bottom : -100%;
     width: 100%;
     margin-bottom: 0;
+    transition: bottom 0.2s;
+}
+
+#panel-users.visible{
+    bottom : 0;
 }
 
 #result-message{
@@ -92,4 +97,4 @@ a:focus{
 textarea{
     border-radius: 0 !important;
 
-
+}

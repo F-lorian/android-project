@@ -27,14 +27,14 @@
                 </span> envoyer
             </button>
         </form>
-            <div class="panel-header">
-               <span class="label label-default">Sélection</span>
-            </div>
-            <div class="panel-body">
-                <div id="user_list" class="list">
-                </div>
+        <div class="panel-header">
+           <span class="label label-default">Sélection</span>
+        </div>
+        <div class="panel-body">
+            <div id="user_list" class="list">
             </div>
         </div>
+    </div>
     
     <div id="global-container" class="container-fluid">
         
@@ -58,7 +58,7 @@
         </div>      
         
         <div id="users" class="list-group">
-            <a class="list-group-item list-group-action" href="">
+            <a class="list-group-item list-group-action" onclick="$('#panel-users').toggleClass('visible'); return false;">
                 <span class="label label-primary inset">
                     <i class="glyphicon glyphicon-plus"></i>
                 </span> envoyer une notification
@@ -76,20 +76,19 @@
                     </div>
                 </div>
             </div>
-            <span id="select-list">
+            <span class="select-list">
             {% for u in users %}
             
             <a class="label label-default label-circle inset label-hover list-group-option remove" onclick="deleteUser('{{u.email}}');">
                 <i class="glyphicon glyphicon-remove"></i>
             </a>
          
-            <a class="list-group-item selectable" mail="{{u.email}}" regID="{{u.gcm_regid}}" onclick="return false;">
+            <a class="list-group-item selectable" mail="{{u.email}}" regID="{{u.gcm_regid}}">
                 <div class="row">
                     
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 col-lg-4">
                         <span class="label label-default inset">
-                            <i class="glyphicon glyphicon-user"></i>
-                            <i class="glyphicon glyphicon-ok invisible"></i>
+                            <i class="glyphicon glyphicon-user"></i><i class="glyphicon glyphicon-ok invisible"></i>
                         </span> {{u.pseudo}}
                     </div>
                     <div class="col-sm-4">
@@ -109,6 +108,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootbox.min.js"></script>
     <script src="js/list.js"></script>
+    <script src="js/tab.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 

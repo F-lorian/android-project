@@ -12,10 +12,16 @@ if(isset($dbh)){
         
         switch($_REQUEST['action']){
             case "register":
-                register();
+                registerRequest();
+                break;
+            case "connection":
+                connectionRequest();
                 break;
             case "getUserByEmail":
-                getUserByEmail($_POST["email"]);
+                getUserByEmailRequest();
+                break;
+            case "searchUser":
+                searchUserRequest();
                 break;
             case "addGroup":
                 addGroup();
@@ -29,11 +35,11 @@ if(isset($dbh)){
             case "addSignalement":
                 addSignalement();
                 break;
-            case "sendNotificationPost":
-                sendNotificationPost();
+            case "sendNotification":
+                sendNotificationRequest();
                 break;
             case "deleteUser":
-                deleteUser();
+                deleteUserRequest();
                 break;
             case "userExist":
                 userExistRequest();
@@ -44,9 +50,8 @@ if(isset($dbh)){
             case "groupExist":
                 groupExistRequest();
                 break;
-            case "searchByMail":
-                getUserByEmailRequest();
-                break;
+            
+            
         }
     }
 
