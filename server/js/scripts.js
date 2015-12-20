@@ -1,37 +1,41 @@
-
-function toggleClass (obj, Class) {
-  $(obj).toggleClass(Class);
+function toggleClass(obj, Class) {
+    $(obj).toggleClass(Class);
 }
 
-function addClass (obj, Class) {
-  $(obj).addClass(Class);
+function addClass(obj, Class) {
+    $(obj).addClass(Class);
 }
 
-function removeClass (obj, Class)	{
-  $(obj).removeClass(Class);
+function removeClass(obj, Class) {
+    $(obj).removeClass(Class);
 }
+
+var list;
 
 function sendNotification() {
-    var regIDs = getList('regid_list');
+    var regIDs = list.getValues();
     var message = $('#message').val();
-    
+
     console.log(regIDs);
     console.log(message);
-    if(message != ""){
+    if (message != "") {
         $('#notification').unbind('submit');
-        if(regIDs != null){
+        if (regIDs != null) {
             regIDs = regIDs.join("|");
         }
-        
+
         console.log(regIDs);
         console.log(message);
-        
-        
-        
+
+
+
         $.ajax({
             url: "server.php?action=sendNotification",
             type: 'POST',
-            data: { regIDs: regIDs, message: message },
+            data: {
+                regIDs: regIDs,
+                message: message
+            },
             beforeSend: function () {
 
             },
@@ -43,83 +47,96 @@ function sendNotification() {
             error: function (xhr, textStatus, errorThrown) {
 
             }
-        });  
+        });
     }
-    
+
     $('#result-message').html("il faut entrer un message");
-    
+
     return false;
 }
 
 
-function searchByMail() {
+function getUsers() {
     var search = $('#search-user').val();
-    
+
     console.log(search);
-    
-    if(search != null && search != ""){
-        
-        $('#search').unbind('submit');
 
+    var url = "server.php?action=searchUser";
+    var data = {
+        w: search,
+        page: 1
+    };
 
-        $.ajax({
-            url: "server.php?action=searchUser",
-            type: 'POST',
-            data: { w: search, page: 1},
-            beforeSend: function () {
+    if (search == null || search == "") {
+        url = "server.php?action=getAllUsers";
+        data = {
+            page: 1
+        };
 
-            },
-            success: function (data, textStatus, xhr) {
-                console.log(data);
-                
-                var res = JSON.parse(data);
-                var list_group = $('#users');
-                
-                reset(list_group);
-                
-                if(res.length>0){
- 
-                    for(var i=0;i<res.length;i++){
-                        var new_item = addSelectable(list_group, res[i].pseudo, res[i].email, res[i].gcm_regid);
-             
-                        if(existInList(res[i].email, 'user_list')){
-                            toggleSelectable(new_item); 
-                        }
-                    }   
-                }else{
-                    addRow(list_group, 'aucun résultat');
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-
-            }
-        });  
     }
-    
+
+    $('#search').unbind('submit');
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        beforeSend: function () {
+
+        },
+        success: function (data, textStatus, xhr) {
+            console.log(data);
+
+            var res = JSON.parse(data);
+            var list_group = $('#users');
+
+            list.reset();
+
+            if (res.length > 0) {
+
+                for (var i = 0; i < res.length; i++) {
+                    var new_item = list.addRow(res[i].pseudo, res[i].email, res[i].gcm_regid);
+
+                    if (list.rowSelected(res[i].gcm_regid)) {
+                        list.toggleSelectable(new_item);
+                    }
+                }
+            } else {
+                list.addMessageRow('aucun résultat');
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+
+        }
+    });
+
+
     return false;
 }
 
 
 function deleteUser(user) {
-    if(user != null && user != ""){
-       
+    if (user != null && user != "") {
+
         console.log(user);
 
         $.ajax({
             url: "server.php?action=deleteUser",
             type: 'POST',
-            data: { email: user },
+            data: {
+                email: user
+            },
             beforeSend: function () {
 
             },
             success: function (data, textStatus, xhr) {
-                if(data == "true"){
-                    $('#result-message').html('utilisateur '+user+' supprimé');
-                    $('.list-group-item.selectable').each(function(){
-                        if($(this).attr('mail') == user){
+                if (data == "true") {
+                    $('#result-message').html('utilisateur ' + user + ' supprimé');
+                    $('.list-group-item.selectable').each(function () {
+                        if ($(this).attr('mail') == user) {
                             $(this).prev('.list-group-option').remove();
                             $(this).prev('.list-group-options').remove();
-                            this.remove(); 
+                            this.remove();
                         }
                     });
                 }
@@ -128,11 +145,24 @@ function deleteUser(user) {
             error: function (xhr, textStatus, errorThrown) {
 
             }
-        });  
+        });
     }
-    
+
     return false;
 }
+
+
+$(document).ready(function () {
+
+    //$('#user_list').myList();
+    //var selection_list = $('#user_list').myList();
+    //list = $('#users').myTab({list: selection_list});
+    list = $('#users').myTab({
+        list: '#user_list'
+    });
+    getUsers();
+});
+
 /*
 
 bootbox.dialog({

@@ -31,7 +31,7 @@
            <span class="label label-default">Sélection</span>
         </div>
         <div class="panel-body">
-            <div id="user_list" class="list">
+            <div id="user_list" class="myList">
             </div>
         </div>
     </div>
@@ -46,69 +46,49 @@
                <span class="label label-default">Recherche</span>
             </div>
             <div class="panel-body">
-                <form id="search" onSubmit="return searchByMail()">
+                <form id="search" onSubmit="return getUsers()">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="search-user" name="search-user" placeholder="Search for...">
+                        <input type="text" class="form-control" id="search-user" name="search-user" placeholder="chercher utilisateur">
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" type="submit" onclick="add_to_list_input('users','user_list')"><i class="glyphicon glyphicon-search"></i></button>
+                            <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
                     </div>
                 </form>
           </div>
         </div>      
         
-        <div id="users" class="list-group">
-            <a class="list-group-item list-group-action" onclick="$('#panel-users').toggleClass('visible'); return false;">
-                <span class="label label-primary inset">
-                    <i class="glyphicon glyphicon-plus"></i>
-                </span> envoyer une notification
-            </a>
-            <div class="list-group-item list-group-title" >
-                <div class="row">
-                    <div class="col-sm-4">
-                        pseudo
-                    </div>
-                    <div class="col-sm-4">
-                        mail
-                    </div>
-                    <div class="col-sm-4">
-                        registrationID
+        
+        <div id="users" class="mytab">
+            <div class="list-group">
+                <a class="list-group-item list-group-action" onclick="$('#panel-users').toggleClass('visible'); return false;">
+                    <span class="label label-primary inset">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </span> envoyer une notification
+                </a>
+                <div class="list-group-item list-group-title" >
+                    <div class="row">
+                        <div class="col-sm-4">
+                            pseudo
+                        </div>
+                        <div class="col-sm-4">
+                            mail
+                        </div>
+                        <div class="col-sm-4">
+                            registrationID
+                        </div>
                     </div>
                 </div>
+                <span class="select-list">
+                </span>
             </div>
-            <span class="select-list">
-            {% for u in users %}
-            
-            <a class="label label-default label-circle inset label-hover list-group-option remove" onclick="deleteUser('{{u.email}}');">
-                <i class="glyphicon glyphicon-remove"></i>
-            </a>
-         
-            <a class="list-group-item selectable" mail="{{u.email}}" regID="{{u.gcm_regid}}">
-                <div class="row">
-                    
-                    <div class="col-sm-4 col-lg-4">
-                        <span class="label label-default inset">
-                            <i class="glyphicon glyphicon-user"></i><i class="glyphicon glyphicon-ok invisible"></i>
-                        </span> {{u.pseudo}}
-                    </div>
-                    <div class="col-sm-4">
-                        {{u.email}}
-                    </div>
-                    <div class="col-sm-4">
-                        {{u.gcm_regid}}
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-            </span>
         </div>
     </div>
     
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootbox.min.js"></script>
-    <script src="js/list.js"></script>
-    <script src="js/tab.js"></script>
+    <script src="js/list_plugin.js"></script>
+    <script src="js/tab_plugin.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 

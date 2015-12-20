@@ -1,3 +1,5 @@
+var list = $('#user_list').myList();
+
 function getSelectableHTML(pseudo, email, gcm_regid){
     var html = '<a class="label label-default label-circle inset label-hover list-group-option remove" onclick="deleteUser('+email+');">'
                 +'<i class="glyphicon glyphicon-remove"></i>'
@@ -43,11 +45,10 @@ function addSelectable(list_group, pseudo, email, gcm_regid){
     
     
     var ondelete = function(e){
-        removeword2('regid_list',gcm_regid);
         toggleSelectable(new_item);
     };
-    console.log('setOnDelete('+email+',\'user_list\','+ondelete+');');
-    setOnDelete(email, 'user_list', ondelete);
+    //console.log('setOnDelete('+email+',\'user_list\','+ondelete+');');
+    list.onDelete(email, ondelete);
     
     
     return new_item;
@@ -77,27 +78,27 @@ function toggleSelectable(obj){
     toggleClass(options, 'label-default');
     toggleClass(options, 'label-primary');
     toggleClass(selected, 'invisible');
+    
+    
+    console.log('toggle');
 };
 
 function selectable_click(obj) {
     
     toggleSelectable(obj);
-
+    
+    var pseudo = $(obj).attr('pseudo');
     var mail = $(obj).attr('mail');
     var registrationId = $(obj).attr('regID');
 
 
-    if (!existInList(mail, 'user_list')) {
+    if (!list.valueExist(mail)) {
         var ondelete = function(e){
-            removeword2('regid_list',registrationId);
             toggleSelectable(obj);
         };
-        //add_to_list(mail, 'user_list', ondelete);
-        add_to_list(mail, 'user_list', ondelete);
-        add_to_list(registrationId, 'regid_list');
+        list.addValue(mail, ondelete);
     } else {
-        removeword('user_list', mail, filterMail(mail));
-        removeword2('regid_list', registrationId);
+        list.delValue(mail);
     }
 }
 

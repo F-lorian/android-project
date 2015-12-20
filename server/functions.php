@@ -5,6 +5,54 @@ define("SUCCESS", true);
 define("ERROR", false);
 define("DENIED", null);
 
+
+function isLoggedAdmin(){
+    
+   /* echo $_SESSION['id']; 
+    echo $_SESSION['login'];
+    echo $_SESSION['admin'];*/
+    return (isset($_SESSION['id']) 
+            && isset($_SESSION['login']) 
+            && isset($_SESSION['admin']) 
+            && $_SESSION['admin'] == true);
+}
+
+function adminConnection($login, $password){
+    
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM admin WHERE login = '$login' AND password = '$password'");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        $NumOfRows = count($result);
+        if ($NumOfRows == 1) {
+            session_start ();
+            $_SESSION['id'] = $result[0]['id'];
+			$_SESSION['login'] = $result[0]['login'];
+			$_SESSION['admin'] = true;
+            return SUCCESS;
+        } else {
+            return ERROR;
+        }
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+
+
+	//Deconnexion
+function deconnexion(){
+    session_destroy(); // on detruit la session
+    header("location:" . ABSOLUTE_ROOT); // on redirige vers l'accueil
+}
+
 function sendNotification($registrationIds, $message){
     $regIDs = null;
     if($registrationIds == null || count($registrationIds) == 0){
@@ -27,6 +75,11 @@ function sendNotification($registrationIds, $message){
     return SUCCESS;
 }
 
+function isLogged(){
+    return (isset($_SESSION['id']) && isset($_SESSION['pseudo']));
+}
+
+
 function connection($email, $password) {
         
     try {
@@ -40,6 +93,9 @@ function connection($email, $password) {
 
         $NumOfRows = count($result);
         if ($NumOfRows == 1) {
+            $_SESSION['id'] = $result[0]['id'];
+            $_SESSION['pseudo'] = $result[0]['pseudo'];
+			$_SESSION['mail'] = $result[0]['email'];
             return SUCCESS;
         } else {
             return ERROR;
@@ -117,7 +173,7 @@ function searchUser($w, $page) {
 
 
 // Getting all registered users
-function getAllUsers() {
+function getAllUsers($page) {
         
     try {
         $result = array();

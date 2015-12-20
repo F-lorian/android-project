@@ -178,6 +178,11 @@ function searchUserRequest() {
     }
 }
 
+function getAllUsersRequest() {
+    $page  = $_POST["page"];
+    echo (json_encode(getAllUsers($page)));
+}
+
 function userExistRequest(){
     $email  = $_POST["email"];
     $pseudo  = $_POST["pseudo"];

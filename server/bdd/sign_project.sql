@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mar 15 Décembre 2015 à 02:49
+-- Généré le :  Dim 20 Décembre 2015 à 22:39
 -- Version du serveur :  5.6.21
 -- Version de PHP :  5.6.3
 
@@ -19,6 +19,25 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `sign_project`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin`
+--
+
+CREATE TABLE IF NOT EXISTS `admin` (
+`id` int(11) NOT NULL,
+  `login` varchar(200) NOT NULL,
+  `password` varchar(200) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `admin`
+--
+
+INSERT INTO `admin` (`id`, `login`, `password`) VALUES
+(1, 'test', 'test');
 
 -- --------------------------------------------------------
 
@@ -101,7 +120,7 @@ INSERT INTO `signalement_for_user` (`signalement`, `user`) VALUES
 CREATE TABLE IF NOT EXISTS `signalement_type` (
 `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `signalement_type`
@@ -109,7 +128,9 @@ CREATE TABLE IF NOT EXISTS `signalement_type` (
 
 INSERT INTO `signalement_type` (`id`, `name`) VALUES
 (1, 'alert'),
-(2, 'event');
+(2, 'controller'),
+(3, 'horaire'),
+(4, 'accident');
 
 -- --------------------------------------------------------
 
@@ -123,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `pseudo` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `gcm_regid` text NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `user`
@@ -131,7 +152,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `email`, `pseudo`, `password`, `gcm_regid`) VALUES
 (1, 'test@test.com', 'test', 'test', '7548474675'),
-(2, 'fghfgh', 'fghfgh', 'dfdfg', '87474858434');
+(2, 'fghfgh', 'fghfgh', 'dfdfg', '87474858434'),
+(5, 'sddfg', 'sdfsd', 'fsdf', 'sdf');
 
 -- --------------------------------------------------------
 
@@ -147,6 +169,12 @@ CREATE TABLE IF NOT EXISTS `user_in_group` (
 --
 -- Index pour les tables exportées
 --
+
+--
+-- Index pour la table `admin`
+--
+ALTER TABLE `admin`
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `group`
@@ -195,6 +223,11 @@ ALTER TABLE `user_in_group`
 --
 
 --
+-- AUTO_INCREMENT pour la table `admin`
+--
+ALTER TABLE `admin`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT pour la table `group`
 --
 ALTER TABLE `group`
@@ -208,12 +241,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT pour la table `signalement_type`
 --
 ALTER TABLE `signalement_type`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- Contraintes pour les tables exportées
 --

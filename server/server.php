@@ -23,6 +23,9 @@ if(isset($dbh)){
             case "searchUser":
                 searchUserRequest();
                 break;
+            case "getAllUsers":
+                getAllUsersRequest();
+                break;
             case "addGroup":
                 addGroup();
                 break;

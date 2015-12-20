@@ -1,8 +1,15 @@
 <?php
 require_once('loader.php');
-
-
 require_once 'lib/vendor/autoload.php';
+
+$loader = new Twig_Loader_Filesystem('./');
+$twig = new Twig_Environment($loader, array(
+    'debug ' => true 
+));
+
+if (isset($_POST["login"]) && isset($_POST["password"])) {
+    adminConnection($_POST["login"], $_POST["password"]);
+}
 
 $loader = new Twig_Loader_Filesystem('./');
 $twig = new Twig_Environment($loader, array(
@@ -12,11 +19,14 @@ $twig = new Twig_Environment($loader, array(
 
 //'cache' => 'cache/',
 
-//$users = array(array('name' => 'nom test'), array('name' => 'nom test 2'));
-$users = getAllUsers();
+if(isLoggedAdmin()){
 
-echo $twig->render('index.html.twig', array('users' => $users));
-
+    echo $twig->render('index.html.twig');
+}
+else {
+    
+    echo $twig->render('connection.html.twig');
+}
 ?>
 
 
