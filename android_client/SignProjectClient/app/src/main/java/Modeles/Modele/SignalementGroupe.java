@@ -1,4 +1,4 @@
-package modeles.Modele;
+package modeles.modele;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +16,10 @@ public class SignalementGroupe extends Signalement{
         this.groupesDestinateurs = groupesDestinateurs;
     }
 
+    public SignalementGroupe() {
+        super();
+    }
+
     public ArrayList<Groupe> getGroupesDestinateurs() {
         return groupesDestinateurs;
     }
@@ -27,8 +31,16 @@ public class SignalementGroupe extends Signalement{
     @Override
     public String toString() {
         return "SignalementGroupe{" +
-                "type=" + type +
-                "groupesDestinateurs=" + groupesDestinateurs +
+                "id=" + id +
+                ", contenu='" + contenu + '\'' +
+                ", remarques='" + remarques + '\'' +
+                ", date=" + date +
+                ", vu=" + vu +
+                ", arret=" + arret +
+                ", type=" + type +
+                ", emetteur=" + emetteur +
+                ", type=" + type +
+                ", groupesDestinateurs=" + groupesDestinateurs +
                 '}';
     }
 }

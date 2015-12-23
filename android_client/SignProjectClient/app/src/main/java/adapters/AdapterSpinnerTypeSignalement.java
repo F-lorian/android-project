@@ -14,7 +14,7 @@ import com.example.florian.signprojectclient.R;
 
 import java.util.List;
 
-import modeles.Modele.TypeSignalement;
+import modeles.modele.TypeSignalement;
 
 /**
  * Created by Axel_2 on 10/12/2015.
@@ -75,10 +75,15 @@ public class AdapterSpinnerTypeSignalement extends BaseAdapter {
             tv.setText(this.mContext.getResources().getString(R.string.horaire_spinner));
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_action_time));
         }
+        else if (this.mListTypeSignalement.get(position).getType().equals(this.mContext.getResources().getString(R.string.accident_spinner)))
+        {
+            tv.setText(this.mContext.getResources().getString(R.string.accident_spinner));
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_accident));
+        }
         else
         {
-            tv.setText(this.mContext.getResources().getString(R.string.accident_autres_spinner));
-            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_accident));
+            tv.setText(this.mContext.getResources().getString(R.string.autres_spinner));
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_autre));
         }
 
         return layoutItem;

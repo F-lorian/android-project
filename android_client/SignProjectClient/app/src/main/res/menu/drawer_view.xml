@@ -3,13 +3,21 @@
     <item android:title="@string/menu_titre_signalement">
         <menu>
             <item
-                android:id="@+id/item_carte"
+                android:id="@+id/item_signalementsProches"
                 android:icon="@drawable/ic_action_place"
-                android:title="@string/menu_item_carte" />
+                android:title="@string/menu_item_listSignalementsProches" />
             <item
-                android:id="@+id/item_listAlerte"
-                android:icon="@drawable/ic_action_warning"
-                android:title="@string/menu_item_listAlerte" />
+                android:id="@+id/item_signalementsControleurs"
+                android:icon="@drawable/ic_controleur"
+                android:title="@string/menu_item_listSignalementsControleurs" />
+            <item
+                android:id="@+id/item_signalementsHoraires"
+                android:icon="@drawable/ic_action_time"
+                android:title="@string/menu_item_listSignalementsHoraires" />
+            <item
+                android:id="@+id/item_signalementsAccidentsAutres"
+                android:icon="@drawable/ic_autre"
+                android:title="@string/menu_item_listSignalementsAccidentsAutres" />
         </menu>
     </item>
     <item android:title="@string/menu_titre_groupe">

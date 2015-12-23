@@ -1,4 +1,4 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

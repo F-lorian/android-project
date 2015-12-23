@@ -4,7 +4,7 @@
     android:id="@+id/layoutPrincipaleHoraireAjoutSignalement"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="215dp"
+    android:layout_height="185dp"
     android:layout_marginTop="@dimen/margin_formulaire">
 
     <RelativeLayout
@@ -23,7 +23,7 @@
             android:gravity="center" />
 
         <ImageButton
-            android:id="@+id/radioButtonSpinnerType"
+            android:id="@+id/buttonAddHoraire"
             android:layout_width="wrap_content"
             style="@style/PlusButton"
 
@@ -34,9 +34,9 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/listHoraireAjoutSignalement"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/margin_top_dynamic_field"
-        android:layout_height="150dp"></ListView>
+        android:layout_height="120dp"></ListView>
 
 </LinearLayout>

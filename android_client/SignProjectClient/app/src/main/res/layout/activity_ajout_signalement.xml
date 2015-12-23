@@ -9,76 +9,82 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/layoutFormAjoutSignalement"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_margin="15dp">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
 
         <LinearLayout
-            android:id="@+id/layoutTypeAjoutSignalement"
+            android:id="@+id/layoutFormAjoutSignalement"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/hauteur_champs_saisie"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/type_ajout_signalement"
-                android:textSize="@dimen/texte_size_libelle_formulaire"
-                android:layout_marginRight="@dimen/margin_between_field"
-                android:gravity="center" />
-
-            <Spinner
-                android:id="@+id/spinnerAjoutSignalement"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/titre_spinner"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layoutArretAjoutSignalement"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/hauteur_champs_saisie"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_marginTop="@dimen/margin_formulaire">
+            android:layout_margin="15dp">
 
-            <AutoCompleteTextView
-                android:id="@+id/champArretSignalement"
-                android:hint="Arret"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/titre_spinner"/>
+            <LinearLayout
+                android:id="@+id/layoutTypeAjoutSignalement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/type_ajout_signalement"
+                    android:textSize="@dimen/texte_size_libelle_formulaire"
+                    android:layout_marginRight="@dimen/margin_between_field"
+                    android:gravity="center" />
+
+                <Spinner
+                    android:id="@+id/spinnerAjoutSignalement"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/titre_spinner"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutArretAjoutSignalement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_formulaire">
+
+                <AutoCompleteTextView
+                    android:id="@+id/champArretSignalement"
+                    android:hint="Arret"
+                    android:textSize="15sp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/titre_spinner"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutDestinationAjoutSignalement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_formulaire">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/destination_ajout_signalement"
+                    android:textSize="@dimen/texte_size_libelle_formulaire"
+                    android:layout_marginRight="@dimen/margin_between_field"
+                    android:gravity="center" />
+
+                <Spinner
+                    android:id="@+id/spinnerDestinationAjoutSignalement"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/titre_spinner"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layoutDestinationAjoutSignalement"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/hauteur_champs_saisie"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/margin_formulaire">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/destination_ajout_signalement"
-                android:textSize="@dimen/texte_size_libelle_formulaire"
-                android:layout_marginRight="@dimen/margin_between_field"
-                android:gravity="center" />
-
-            <Spinner
-                android:id="@+id/spinnerDestinationAjoutSignalement"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/titre_spinner"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
-
+    </ScrollView>
 </LinearLayout>

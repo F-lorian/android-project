@@ -1,29 +1,30 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import modeles.Modele.Arret;
-import modeles.Modele.Signalement;
-import modeles.Modele.SignalementGroupe;
-import modeles.Modele.SignalementPublic;
-import modeles.Modele.TypeSignalement;
-import modeles.Modele.Utilisateur;
+import modeles.modele.Arret;
+import modeles.modele.Signalement;
+import modeles.modele.SignalementGroupe;
+import modeles.modele.SignalementPublic;
+import modeles.modele.TypeSignalement;
+import modeles.modele.Utilisateur;
 
 /**
  * Created by Axel_2 on 11/11/2015.
  */
 public class SignalementBD {
 
-    protected static final String TABLE_NAME_SIGNALEMENT_RECU = "SIGNALEMENT_RECU";
+    public static final String TABLE_NAME_SIGNALEMENT_RECU = "SIGNALEMENT_RECU";
 
-    protected static final String TABLE_NAME_SIGNALEMENT_A_ENVOYER = "SIGNALEMENT_A_ENVOYER";
+    public static final String TABLE_NAME_SIGNALEMENT_A_ENVOYER = "SIGNALEMENT_A_ENVOYER";
 
     public static final String ID_SIGNALEMENT="id_signalement";
     public static final String CONTENU_SIGNALEMENT="nom_signalement";
@@ -91,10 +92,12 @@ public class SignalementBD {
     public long addSignalement(Signalement signalement, String table) {
         // Ajout d'un enregistrement dans la table
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
         ContentValues values = new ContentValues();
         values.put(CONTENU_SIGNALEMENT, signalement.getContenu());
         values.put(REMARQUE_SIGNALEMENT, signalement.getRemarques());
-        values.put(DATE_SIGNALEMENT, signalement.getDate().toString());
+        values.put(DATE_SIGNALEMENT, dateFormat.format(signalement.getDate()));
         values.put(VU_SIGNALEMENT, 0);
         values.put(ARRET_SIGNALEMENT, signalement.getArret().getId());
         values.put(TYPE_SIGNALEMENT, signalement.getType().getId());
@@ -210,7 +213,7 @@ public class SignalementBD {
         return s;
     }
 
-    public ArrayList<Signalement> getSignalement(String table) {
+    public ArrayList<Signalement> getSignalements(String table) {
         // sélection de tous les enregistrements de la table
         Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT, null);
 

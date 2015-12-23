@@ -16,14 +16,15 @@
             android:layout_height="@dimen/hauteur_champs_saisie"
             android:text="L3 SAINT-JEAN DE VEDAS"
             android:gravity="center"
-            android:layout_marginLeft="@dimen/margin_between_field"
+
             android:textColor="#000"
             android:textSize="15dp" />
         <TextView
             android:id="@+id/textViewMinuteListHoraire"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/hauteur_champs_saisie"
-            android:text="   22 MN"
+            android:text="22 MN"
+            android:layout_marginLeft="15dp"
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="#000"
@@ -32,10 +33,9 @@
 
 
     <ImageButton
-        android:id="@+id/radioButtonSpinnerType"
+        android:id="@+id/buttonRemoveHoraireListView"
         android:layout_width="wrap_content"
         style="@style/MinusButton"
-        android:layout_marginRight="@dimen/margin_between_field"
         android:background="@drawable/btn_circle"
         android:layout_height="@dimen/hauteur_champs_saisie"
         android:layout_centerVertical="true"

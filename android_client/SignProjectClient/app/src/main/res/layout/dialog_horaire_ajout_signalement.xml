@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="64dp"
+        android:layout_gravity="center_horizontal">
+
+        <NumberPicker
+            android:id="@+id/numberPickerDialogAjoutHoraireSignalement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_ajout_horaire_signalement"
+            android:textSize="@dimen/texte_size_bouton"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_between_field">
+
+        <Spinner
+            android:id="@+id/spinnerDialogAjoutHoraireSignalement"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:layout_margin="@dimen/margin_between_field">
+        </Spinner>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="100dp">
+
+        <Button
+            android:id="@+id/buttonOKDialogAjoutHoraireSignalement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_btn_positive_ajout_horaire_signalement" />
+
+        <Button
+            android:id="@+id/buttonAnnulerDialogAjoutHoraireSignalement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_Annuler"
+            android:layout_marginLeft="100dp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

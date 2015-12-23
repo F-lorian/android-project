@@ -1,4 +1,4 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,9 +7,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import modeles.Modele.TypeSignalement;
+import modeles.modele.TypeSignalement;
 
 /**
  * Created by Axel_2 on 11/11/2015.

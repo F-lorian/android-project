@@ -1,4 +1,4 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import modeles.Modele.Arret;
+import modeles.modele.Arret;
 
 /**
  * Created by Axel_2 on 11/11/2015.

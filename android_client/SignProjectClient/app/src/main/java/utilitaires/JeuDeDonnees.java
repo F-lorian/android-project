@@ -2,13 +2,13 @@ package utilitaires;
 
 import android.content.Context;
 
-import modeles.Modele.Groupe;
-import modeles.Modele.TypeSignalement;
-import modeles.Modele.Utilisateur;
-import modeles.ModeleBD.GroupeBD;
-import modeles.ModeleBD.GroupeUtilisateurBD;
-import modeles.ModeleBD.TypeSignalementBD;
-import modeles.ModeleBD.UtilisateurBD;
+import modeles.modele.Groupe;
+import modeles.modele.TypeSignalement;
+import modeles.modele.Utilisateur;
+import modeles.modeleBD.GroupeBD;
+import modeles.modeleBD.GroupeUtilisateurBD;
+import modeles.modeleBD.TypeSignalementBD;
+import modeles.modeleBD.UtilisateurBD;
 
 /**
  * Created by Axel_2 on 08/12/2015.
@@ -46,7 +46,8 @@ public class JeuDeDonnees {
 
         var.add(new TypeSignalement(0, "Controleur"));
         var.add(new TypeSignalement(0,"Horaires"));
-        var.add(new TypeSignalement(0, "Accidents/Autres"));
+        var.add(new TypeSignalement(0, "Accidents"));
+        var.add(new TypeSignalement(0, "Autres"));
 
         var.close();
     }

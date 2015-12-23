@@ -1,4 +1,4 @@
-package modeles.Modele;
+package modeles.modele;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +16,10 @@ public class SignalementPublic extends Signalement{
         this.utilisateursDestinateurs = utilisateursDestinateurs;
     }
 
+    public SignalementPublic() {
+        super();
+    }
+
     public ArrayList<Utilisateur> getUtilisateursDestinateurs() {
         return utilisateursDestinateurs;
     }
@@ -27,8 +31,16 @@ public class SignalementPublic extends Signalement{
     @Override
     public String toString() {
         return "SignalementPublic{" +
-                "type=" + type +
-                "utilisateursDestinateurs=" + utilisateursDestinateurs +
+                "id=" + id +
+                ", contenu='" + contenu + '\'' +
+                ", remarques='" + remarques + '\'' +
+                ", date=" + date +
+                ", vu=" + vu +
+                ", arret=" + arret +
+                ", type=" + type +
+                ", emetteur=" + emetteur +
+                ", type=" + type +
+                ", utilisateursDestinateurs=" + utilisateursDestinateurs +
                 '}';
     }
 }

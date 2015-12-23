@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.florian.signprojectclient.R;
 import com.tokenautocomplete.TokenCompleteTextView;
 
-import modeles.Modele.Utilisateur;
+import modeles.modele.Utilisateur;
 
 /**
  * Created by Axel_2 on 11/12/2015.

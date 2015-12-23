@@ -4,18 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.florian.signprojectclient.R;
 
-import modeles.Modele.Utilisateur;
+import modeles.modele.Utilisateur;
+import modeles.modeleBD.UtilisateurBD;
 import utilitaires.SessionManager;
 
 /**
@@ -43,10 +42,10 @@ public class ConnectionActivity extends Activity {
         this.seConnecter.setEnabled(false);
         this.seConnecter.setAlpha(alphaBtnSeConnecter);
 
-        this.buildAlertInscriptionInvalide = new AlertDialog.Builder(ConnectionActivity.this);
+        this.buildAlertInscriptionInvalide = new AlertDialog.Builder(this);
         this.buildAlertInscriptionInvalide.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
         this.buildAlertInscriptionInvalide.setIcon(R.drawable.ic_action_error);
-        this.buildAlertInscriptionInvalide.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        this.buildAlertInscriptionInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
@@ -122,12 +121,27 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
 
                 //A FAIRE : verif pseudo et mdp BD sur serveur
+                UtilisateurBD utilisateurBD = new UtilisateurBD(ConnectionActivity.this);
+                utilisateurBD.open();
+                Utilisateur utilisateur = utilisateurBD.getUtilisateur(pseudo.getText().toString());
+                utilisateurBD.close();
 
-                SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
-                sessionManager.createLoginSession(1,pseudo.getText().toString());
+                if (utilisateur != null)
+                {
+                    SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
+                    sessionManager.createLoginSession(utilisateur.getId(),utilisateur.getPseudo());
 
-                Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
-                startActivity(intent);
+                    Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pseudo_mdp));
+                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                    alertInscriptionInvalide.show();
+                }
+
+
             }
         });
 

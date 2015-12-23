@@ -1,4 +1,4 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,8 +10,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import modeles.Modele.Arret;
-import modeles.Modele.Ligne;
+import modeles.modele.Arret;
+import modeles.modele.Ligne;
 
 /**
  * Created by Axel_2 on 11/11/2015.
@@ -87,9 +87,6 @@ public class LigneArretBD {
 
     public ArrayList<Arret> getArrets(int idLigne) {
         // sélection de tous les enregistrements de la table
-
-        String query = "SELECT * FROM "+TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_LIGNE+"="+idLigne+" AND "+ID_ARRET+"="+ArretBD.ID_ARRET;
-        Log.d("query", query);
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_LIGNE+"="+idLigne+" AND "+ID_ARRET+"="+ArretBD.ID_ARRET, null);
 
@@ -174,7 +171,27 @@ public class LigneArretBD {
             }
         }
 
+        c.close();
+
         return arretsString;
+    }
+
+    public Arret getArret(int id)
+    {
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_ARRET+"="+ArretBD.ID_ARRET+" AND "+ID+"="+id, null);
+
+        Arret a = new Arret(0,"","","",null,null);
+
+        if (c.moveToFirst()) {
+            a.setId(c.getInt(c.getColumnIndex(ArretBD.ID_ARRET)));
+            a.setNom(c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)));
+            a.setCoordonnees(c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)));
+            a.setDirection(c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)));
+        }
+
+        c.close();
+
+        return a;
     }
 
     public long getCount()

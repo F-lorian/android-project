@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import modeles.Modele.Arret;
-import modeles.Modele.Ligne;
-import modeles.ModeleBD.ArretBD;
-import modeles.ModeleBD.LigneArretBD;
-import modeles.ModeleBD.LigneBD;
+import modeles.modele.Arret;
+import modeles.modele.Ligne;
+import modeles.modeleBD.ArretBD;
+import modeles.modeleBD.LigneArretBD;
+import modeles.modeleBD.LigneBD;
 
 /**
  * Created by Axel_2 on 26/11/2015.

@@ -16,8 +16,10 @@
 
 
     <string name="menu_titre_signalement">SIGNALEMENTS</string>
-    <string name="menu_item_carte">Carte</string>
-    <string name="menu_item_listAlerte">Liste des alertes</string>
+    <string name="menu_item_listSignalementsProches">Les plus proches</string>
+    <string name="menu_item_listSignalementsControleurs">Contrôleurs</string>
+    <string name="menu_item_listSignalementsHoraires">Horaires</string>
+    <string name="menu_item_listSignalementsAccidentsAutres">Accidents/autres</string>
     <string name="menu_titre_groupe">GROUPES</string>
     <string name="menu_item_mesGroupes">Mes groupes</string>
     <string name="menu_item_rejoindreGroupe">Rejoindre un groupe</string>
@@ -25,7 +27,14 @@
     <string name="titre_alert_dialog_erreur">Erreur</string>
     <string name="btn_alert_dialog_erreur">Fermer</string>
     <string name="message_alert_dialog_erreur_egaux_mdp">les mots de passes doivent être égaux</string>
+    <string name="message_alert_dialog_erreur_pseudo_mdp">Pseudo ou mot de passe incorrect</string>
     <string name="message_alert_dialog_erreur_chargement">Les données n\'ont pas pu être chargées. Veuillez réessayer ultérieurement</string>
+    <string name="message_alert_dialog_erreur_horaire_signalement">Aucun horaire ajouté</string>
+    <string name="message_alert_dialog_erreur_groupe_signalement">Aucun groupe selectionné</string>
+    <string name="message_alert_dialog_erreur_utilisateur_signalement">Aucun utilisateur selectionné</string>
+    <string name="message_alert_dialog_erreur_ajout_signalement_bd">Problème d\'enregistrement du signalement</string>
+    <string name="message_alert_dialog_erreur_arret_signalement">Aucun arret selectionné</string>
+
 
     <string name="progress_dialog_titre">Chargement...</string>
     <string name="progress_dialog_message">Initialisation en cours</string>
@@ -41,7 +50,8 @@
     <string name="titre_spinner">Choisir</string>
     <string name="controleur_spinner">Controleur</string>
     <string name="horaire_spinner">Horaires</string>
-    <string name="accident_autres_spinner">Accidents/Autres</string>
+    <string name="accident_spinner">Accidents</string>
+    <string name="autres_spinner">Autres</string>
 
     <string name="arret_ajout_signalement">Arret</string>
     <string name="destination_ajout_signalement">Destination</string>
@@ -58,6 +68,11 @@
 
     <string name="prefix_token_ajout_signalement">Destiné à :</string>
 
+    <string name="dialog_ajout_horaire_signalement">minute(s)</string>
+    <string name="dialog_btn_positive_ajout_horaire_signalement">OK</string>
+    <string name="dialog_titre_ajout_horaire_signalement">Ajout du temps d\'attente et de la ligne correspondante</string>
+
+    <string name="toast_signalement_envoye">Signalement envoyé !</string>
 
 
 

@@ -1,4 +1,4 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,12 +9,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import modeles.Modele.Arret;
-import modeles.Modele.Groupe;
-import modeles.Modele.Signalement;
-import modeles.Modele.SignalementGroupe;
-import modeles.Modele.TypeSignalement;
-import modeles.Modele.Utilisateur;
+import modeles.modele.Arret;
+import modeles.modele.Groupe;
+import modeles.modele.Signalement;
+import modeles.modele.SignalementGroupe;
+import modeles.modele.TypeSignalement;
+import modeles.modele.Utilisateur;
 
 /**
  * Created by Axel_2 on 11/11/2015.

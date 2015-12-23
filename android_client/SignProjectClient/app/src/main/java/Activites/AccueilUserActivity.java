@@ -17,10 +17,7 @@ import android.widget.TextView;
 import com.example.florian.signprojectclient.R;
 
 import fragments.FragmentListeSignalements;
-import modeles.Modele.Utilisateur;
-import modeles.ModeleBD.GroupeUtilisateurBD;
-import modeles.ModeleBD.LigneArretBD;
-import modeles.ModeleBD.UtilisateurBD;
+import modeles.modeleBD.LigneArretBD;
 import utilitaires.InitData;
 import utilitaires.JeuDeDonnees;
 import utilitaires.SessionManager;
@@ -121,10 +118,16 @@ public class AccueilUserActivity extends AppCompatActivity {
         Bundle args = new Bundle();
 
         switch(menuItem.getItemId()) {
-            case R.id.item_carte:
+            case R.id.item_signalementsProches:
                 fragment = new FragmentListeSignalements();
                 break;
-            case R.id.item_listAlerte:
+            case R.id.item_signalementsControleurs:
+                fragment = new FragmentListeSignalements();
+                break;
+            case R.id.item_signalementsHoraires:
+                fragment = new FragmentListeSignalements();
+                break;
+            case R.id.item_signalementsAccidentsAutres:
                 fragment = new FragmentListeSignalements();
                 break;
             case R.id.item_mesGroupes:

@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.florian.signprojectclient.R;
 
-import modeles.Modele.Utilisateur;
+import modeles.modele.Utilisateur;
 
 /**
  * Created by Axel_2 on 28/11/2015.
@@ -43,7 +42,7 @@ public class InscriptionActivity extends Activity {
         this.seConnecter.setEnabled(false);
         this.seConnecter.setAlpha(alphaBtnSeConnecter);
 
-        this.buildAlertInscriptionInvalide = new AlertDialog.Builder(InscriptionActivity.this);
+        this.buildAlertInscriptionInvalide = new AlertDialog.Builder(this);
         this.buildAlertInscriptionInvalide.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
         this.buildAlertInscriptionInvalide.setIcon(R.drawable.ic_action_error);
         this.buildAlertInscriptionInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {

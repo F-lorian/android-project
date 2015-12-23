@@ -1,5 +1,8 @@
-package modeles.Modele;
+package modeles.modele;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -26,6 +29,11 @@ public abstract class Signalement {
         this.arret = arret;
         this.type = type;
         this.emetteur = emetteur;
+    }
+
+    public Signalement() {
+        this.vu = false;
+        this.date = new Date();
     }
 
     public int getId() {

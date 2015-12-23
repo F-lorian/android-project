@@ -1,4 +1,4 @@
-package modeles.ModeleBD;
+package modeles.modeleBD;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import modeles.Modele.Utilisateur;
+import modeles.modele.Utilisateur;
 
 /**
  * Created by Axel_2 on 11/11/2015.
@@ -81,10 +81,12 @@ public class UtilisateurBD {
     public Utilisateur getUtilisateur(String pseudo) {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
-        Utilisateur u = new Utilisateur(0,"","",null,null,null);
+        Utilisateur u = null;
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+PSEUDO_UTILISATEUR+"="+pseudo, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+PSEUDO_UTILISATEUR+"='"+pseudo+"'", null);
         if (c.moveToFirst()) {
+
+            u = new Utilisateur(0,"","",null,null,null);
             u.setId(c.getInt(c.getColumnIndex(ID_UTILISATEUR)));
             u.setPseudo(c.getString(c.getColumnIndex(PSEUDO_UTILISATEUR)));
         }

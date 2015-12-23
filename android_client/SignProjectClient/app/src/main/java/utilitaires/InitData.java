@@ -13,13 +13,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-
-import modeles.Modele.Arret;
-import modeles.Modele.Ligne;
-import modeles.ModeleBD.ArretBD;
-import modeles.ModeleBD.LigneArretBD;
-import modeles.ModeleBD.LigneBD;
 
 /**
  * Created by Axel_2 on 07/12/2015.
