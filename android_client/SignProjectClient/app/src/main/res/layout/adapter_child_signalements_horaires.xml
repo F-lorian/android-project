@@ -6,40 +6,31 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/textViewArretListHoraire"
+            android:id="@+id/textViewArretHoraire"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/hauteur_champs_saisie"
             android:text="L3 SAINT-JEAN DE VEDAS CENTRE"
+            android:layout_marginLeft="@dimen/margin_between_field"
             android:gravity="center"
-
             android:textColor="#000"
             android:textSize="15dp" />
+
         <TextView
-            android:id="@+id/textViewMinuteListHoraire"
+            android:id="@+id/textViewMinuteHoraire"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/hauteur_champs_saisie"
             android:text="22 MN"
             android:layout_marginLeft="15dp"
             android:gravity="center"
             android:textStyle="bold"
-            android:textColor="#000"
+            android:textColor="#F51836"
             android:textSize="20dp" />
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/buttonRemoveHoraireListView"
-        android:layout_width="wrap_content"
-        style="@style/MinusButton"
-        android:background="@drawable/btn_circle"
-        android:layout_height="@dimen/hauteur_champs_saisie"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

@@ -225,26 +225,23 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
                 if (this.idLigneArretCourant != ListView.INVALID_POSITION)
                 {
-                    signalement.setArret(new Arret(this.idLigneArretCourant, "", "", "", null, null));
+                    LigneArretBD ligneArretBD = new LigneArretBD(this);
+                    ligneArretBD.open();
+                    Arret arret = ligneArretBD.getArret(this.idLigneArretCourant);
+                    ligneArretBD.close();
+
+                    signalement.setArret(arret);
+
+                    String contenu = autoCompleteTextViewArret.getText().toString() + "\n" + this.idLigneArretCourant;
 
                     if (this.typeSignalements.get(indiceTypeSignalement).getType().equals(this.getResources().getString(R.string.horaire_spinner)))
                     {
                         if (this.horaires.size()>0)
                         {
-                            String contenu = "";
                             for (int i=0; i<this.horaires.size(); i++)
                             {
-                                if (i<this.horaires.size())
-                                {
-                                    contenu = contenu + this.horaires.get(i) + "\n";
-                                }
-                                else
-                                {
-                                    contenu = contenu + this.horaires.get(i);
-                                }
-
+                                contenu = contenu + "\n" + this.horaires.get(i);
                             }
-                            signalement.setContenu(contenu);
                         }
                         else
                         {
@@ -255,6 +252,8 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             return true;
                         }
                     }
+
+                    signalement.setContenu(contenu);
 
                     if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.groupe_spinner)))
                     {
@@ -316,7 +315,9 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
                     SignalementBD signalementBD = new SignalementBD(this);
                     signalementBD.open();
-                    int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
+
+                    //****** A REMPLACER PAR TABLE_NAME_SIGNALEMENT_A_ENVOYER *******
+                    int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
                     signalementBD.close();
 
                     if (id > 0)

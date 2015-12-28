@@ -8,6 +8,7 @@
 
     <!-- This LinearLayout represents the contents of the screen  -->
     <LinearLayout
+        android:id="@+id/layout_content_accueil_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,6 +18,7 @@
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
 
         <!-- The main content view where fragments are loaded -->
         <FrameLayout
@@ -33,6 +35,5 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
-        app:menu="@menu/drawer_view"
-        app:headerLayout="@layout/nav_header"/>
+        app:menu="@menu/drawer_view" />
 </android.support.v4.widget.DrawerLayout>

@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class SignalementPublic extends Signalement{
 
-    public static final String type = "public";
+    public static final String TYPE_DESTINATAIRE = "public";
     protected ArrayList<Utilisateur> utilisateursDestinateurs;
 
     public SignalementPublic(int id, String contenu, String remarques, Date date, boolean vu, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Utilisateur> utilisateursDestinateurs) {
@@ -39,7 +39,7 @@ public class SignalementPublic extends Signalement{
                 ", arret=" + arret +
                 ", type=" + type +
                 ", emetteur=" + emetteur +
-                ", type=" + type +
+                ", TYPE_DESTINATAIRE=" + TYPE_DESTINATAIRE +
                 ", utilisateursDestinateurs=" + utilisateursDestinateurs +
                 '}';
     }

@@ -47,7 +47,7 @@
             <LinearLayout
                 android:id="@+id/layoutArretAjoutSignalement"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/margin_formulaire">
@@ -55,7 +55,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/champArretSignalement"
                     android:hint="Arret"
-                    android:textSize="15sp"
+                    android:textSize="20sp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:prompt="@string/titre_spinner"/>

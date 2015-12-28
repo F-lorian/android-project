@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/titre_adapter_signalement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:text="CONTROLEUR"
+        android:textSize="25sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/arret_adapter_signalement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_textview_liste_signalement"
+        android:text="HOP. LAPEYRONIE - L1 - MOSSON"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/layout_adapter_heure_signalement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_textview_liste_signalement"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/text_adapter_il_y_a_heure"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:text="@string/adapter_liste_signalement_heure"
+            android:textSize="@dimen/texte_size_libelle_formulaire"
+            android:layout_marginRight="5dp"
+            android:gravity="center" />
+        <TextView
+            android:id="@+id/text_adapter_heure"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:text="00h 00min 00s"
+            android:textSize="@dimen/texte_size_libelle_formulaire"
+            android:gravity="center"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutBtnAdapterListViewSignalement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_boutons_formulaire"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_top_dynamic_field">
+        <ImageButton
+            android:id="@+id/Btn_adapter_CarteSignalement"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_place"
+            android:textSize="@dimen/texte_size_bouton" />
+        <ImageButton
+            android:layout_marginLeft="@dimen/margin_between_field"
+            android:id="@+id/Btn_adapter_DetailSignalement"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_name"
+            android:textSize="@dimen/texte_size_bouton" />
+    </LinearLayout>
+
+
+</LinearLayout>

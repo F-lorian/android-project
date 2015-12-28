@@ -4,7 +4,6 @@
     <string name="drawer_open">Ouvrir le menu</string>
     <string name="drawer_close">Fermer le menu</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="champ_pseudo">Votre pseudo</string>
     <string name="champ_mdp">Votre mot de passe</string>
     <string name="btn_seConnecter">Se connecter</string>
@@ -73,6 +72,14 @@
     <string name="dialog_titre_ajout_horaire_signalement">Ajout du temps d\'attente et de la ligne correspondante</string>
 
     <string name="toast_signalement_envoye">Signalement envoyé !</string>
+
+    <string name="adapter_liste_signalement_heure">Il y a</string>
+    <string name="dialog_detail_signalement_envoye_le">Envoyé le</string>
+    <string name="dialog_detail_signalement_a">à</string>
+    <string name="dialog_detail_signalement_par">par</string>
+
+    <string name="dialog_titre_detail_signalement">Détail du signalement</string>
+    <string name="title_activity_position_signalement_maps">Position du signalement</string>
 
 
 

@@ -71,8 +71,8 @@ public class AdapterListViewHoraireSignalement extends BaseAdapter {
 
         direction.setText(splitHoraire[0]);
         minute.setText(splitHoraire[1] + "MN");
-        boutonSupp.setTag(position);
 
+        boutonSupp.setTag(position);
         boutonSupp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

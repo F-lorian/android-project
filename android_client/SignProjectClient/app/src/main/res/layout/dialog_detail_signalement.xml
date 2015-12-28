@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_between_field">
+
+    <TextView
+        android:id="@+id/dialog_textview_arret"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_between_field"
+        android:textSize="15sp"
+        android:text="SAINT JEAN DE VEDAS CENTRE - L1 - SAINT JEAN DE VEDAS CENTRE"/>
+
+    <TextView
+        android:id="@+id/dialog_textarea_remarques"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_text_area"
+        android:gravity="left"
+        android:layout_below="@+id/dialog_textview_arret"
+        android:layout_marginTop="70dp"
+        android:textSize="15sp"
+        android:scrollbars="vertical"
+        android:text="Eodem tempore Serenianus ex duce, cuius ignavia populatam in Phoenice Celsen ante rettulimus, pulsatae maiestatis imperii reus iure postulatus ac lege, incertum qua potuit suffragatione absolvi, aperte convictus familiarem suum cum pileo, quo caput operiebat, incantato vetitis artibus ad templum misisse fatidicum, quaeritatum expresse an ei firmum portenderetur imperium, ut cupiebat, et cunctum."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/dialog_textarea_remarques"
+        android:layout_marginTop="45dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/dialog_text_envoyer_le_heure"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="@string/dialog_detail_signalement_envoye_le"
+                android:textSize="@dimen/margin_top_dynamic_field"
+                android:layout_marginRight="5dp"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/dialog_date_detail_signalement"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="JJ/MM/AAAA"
+                android:textSize="@dimen/margin_top_dynamic_field"
+                android:gravity="center"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/dialog_text_a"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="@string/dialog_detail_signalement_a"
+                android:textSize="@dimen/margin_top_dynamic_field"
+                android:layout_marginRight="5dp"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/dialog_heure_detail_signalement"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="00h00"
+                android:textSize="@dimen/margin_top_dynamic_field"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/dialog_text_par"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="@string/dialog_detail_signalement_par"
+                android:textSize="@dimen/margin_top_dynamic_field"
+                android:layout_marginRight="5dp"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/dialog_pseudo_detail_signalement"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="pseudo1"
+                android:textSize="@dimen/margin_top_dynamic_field"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/dialog_btn_detail_signalement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_boutons_formulaire"
+        android:text="@string/dialog_btn_positive_ajout_horaire_signalement"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

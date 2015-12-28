@@ -27,6 +27,8 @@ public class SessionManager {
 
     public static final String KEY_PSEUDO_USER = "pseudo";
 
+    public static final String KEY_REGID_GSM = "regid";
+
     // Constructor
     public SessionManager(Context context){
         this.context = context;
@@ -37,13 +39,15 @@ public class SessionManager {
     /**
      * Create login session
      * */
-    public void createLoginSession(int id, String pseudo){
+    public void createLoginSession(int id, String pseudo, String regidGSM){
 
         editor.putBoolean(IS_LOGIN, true);
 
         editor.putInt(KEY_ID_USER, id);
 
         editor.putString(KEY_PSEUDO_USER, pseudo);
+
+        editor.putString(KEY_REGID_GSM, regidGSM);
 
         editor.commit();
     }
@@ -88,6 +92,9 @@ public class SessionManager {
         return pref.getString(KEY_PSEUDO_USER,null);
     }
 
+    public String getRegidGsm() {
+        return pref.getString(KEY_REGID_GSM,null);
+    }
     /**
      * Clear session details
      * */

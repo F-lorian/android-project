@@ -17,14 +17,14 @@ import java.io.InputStream;
 /**
  * Created by Axel_2 on 07/12/2015.
  */
-public class InitData extends AsyncTask<Void,Void,Void> {
+public class InitDataTask extends AsyncTask<Void,Void,Void> {
 
     protected ProgressDialog progressDialog;
     protected Activity activity;
     protected String urlKml;
     protected boolean reussi;
 
-    public InitData (Activity activity, String urlKml){
+    public InitDataTask(Activity activity, String urlKml){
         this.activity = activity;
         this.urlKml = urlKml;
         this.reussi = true;
@@ -79,7 +79,7 @@ public class InitData extends AsyncTask<Void,Void,Void> {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            InitData.this.activity.finish();
+                            InitDataTask.this.activity.finish();
                         }
                     });
         }

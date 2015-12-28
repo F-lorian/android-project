@@ -105,11 +105,11 @@ public class SignalementBD {
 
         if (signalement instanceof SignalementGroupe)
         {
-            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementGroupe.type);
+            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementGroupe.TYPE_DESTINATAIRE);
         }
         else
         {
-            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementPublic.type);
+            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementPublic.TYPE_DESTINATAIRE);
         }
 
 
@@ -131,11 +131,11 @@ public class SignalementBD {
 
         if (signalement instanceof SignalementGroupe)
         {
-            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementGroupe.type);
+            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementGroupe.TYPE_DESTINATAIRE);
         }
         else
         {
-            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementPublic.type);
+            values.put(TYPE_DIFFUSION_SIGNALEMENT, SignalementPublic.TYPE_DESTINATAIRE);
         }
 
         if (signalement.isVu())
@@ -174,7 +174,7 @@ public class SignalementBD {
 
             String type = c.getString(c.getColumnIndex(TYPE_DIFFUSION_SIGNALEMENT));
 
-            if (type.equals(SignalementGroupe.type))
+            if (type.equals(SignalementGroupe.TYPE_DESTINATAIRE))
             {
                 s = new SignalementGroupe(0,"","",null,false,null,null,null,null);
             }
@@ -190,8 +190,9 @@ public class SignalementBD {
             s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
             s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)),c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)),"",null,null,null));
 
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                s.setDate(new SimpleDateFormat().parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
+                s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -215,7 +216,7 @@ public class SignalementBD {
 
     public ArrayList<Signalement> getSignalements(String table) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"='"+TypeSignalementBD.ID_TYPE_SIGNALEMENT+"' ORDER BY datetime("+DATE_SIGNALEMENT+")", null);
 
         ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 
@@ -226,7 +227,7 @@ public class SignalementBD {
 
                 String type = c.getString(c.getColumnIndex(TYPE_DIFFUSION_SIGNALEMENT));
 
-                if (type.equals(SignalementGroupe.type))
+                if (type.equals(SignalementGroupe.TYPE_DESTINATAIRE))
                 {
                     s = new SignalementGroupe(0,"","",null,false,null,null,null,null);
                 }
@@ -242,9 +243,66 @@ public class SignalementBD {
                 s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
                 s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
-
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
-                    s.setDate(new SimpleDateFormat().parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
+                    s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                int vu = c.getInt(c.getColumnIndex(VU_SIGNALEMENT));
+                if (vu == 0)
+                {
+                    s.setVu(false);
+                }
+                else
+                {
+                    s.setVu(true);
+                }
+
+
+                signalements.add(s);
+                c.moveToNext();
+            }
+        }
+
+        c.close();
+
+        return signalements;
+    }
+
+    public ArrayList<Signalement> getSignalementsByType(String table, String type) {
+        // sélection de tous les enregistrements de la table
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TypeSignalementBD.ID_TYPE_SIGNALEMENT+"="+TYPE_SIGNALEMENT+" AND "+TypeSignalementBD.NOM_TYPE_SIGNALEMENT+"='"+type+"' ORDER BY datetime("+DATE_SIGNALEMENT+")", null);
+
+        ArrayList<Signalement> signalements = new ArrayList<Signalement>();
+
+        if (c.moveToFirst()) {
+            while (c.isAfterLast() == false) {
+
+                Signalement s = null;
+
+                String typeDestination = c.getString(c.getColumnIndex(TYPE_DIFFUSION_SIGNALEMENT));
+
+                if (typeDestination.equals(SignalementGroupe.TYPE_DESTINATAIRE))
+                {
+                    s = new SignalementGroupe(0,"","",null,false,null,null,null,null);
+                }
+                else
+                {
+                    s = new SignalementPublic(0,"","",null,false,null,null,null,null);
+                }
+
+                s.setId(c.getInt(c.getColumnIndex(ID_SIGNALEMENT)));
+                s.setContenu(c.getString(c.getColumnIndex(CONTENU_SIGNALEMENT)));
+                s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
+                s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
+                s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
+                s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

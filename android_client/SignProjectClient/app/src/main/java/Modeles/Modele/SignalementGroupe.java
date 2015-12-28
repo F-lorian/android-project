@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class SignalementGroupe extends Signalement{
 
-    public static final String type = "groupe";
+    public static final String TYPE_DESTINATAIRE = "groupe";
     protected ArrayList<Groupe> groupesDestinateurs;
 
     public SignalementGroupe(int id, String contenu, String remarques, Date date, boolean vu, Arret arret, TypeSignalement type, Utilisateur emetteur, ArrayList<Groupe> groupesDestinateurs) {
@@ -39,7 +39,7 @@ public class SignalementGroupe extends Signalement{
                 ", arret=" + arret +
                 ", type=" + type +
                 ", emetteur=" + emetteur +
-                ", type=" + type +
+                ", TYPE_DESTINATAIRE=" + TYPE_DESTINATAIRE +
                 ", groupesDestinateurs=" + groupesDestinateurs +
                 '}';
     }

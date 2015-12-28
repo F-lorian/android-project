@@ -129,10 +129,15 @@ public class ConnectionActivity extends Activity {
                 if (utilisateur != null)
                 {
                     SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
-                    sessionManager.createLoginSession(utilisateur.getId(),utilisateur.getPseudo());
+
+                    /***** REGID GCM A IMPLEMENTER *****/
+                    String regidGCM = "";
+                    sessionManager.createLoginSession(utilisateur.getId(),utilisateur.getPseudo(),regidGCM);
 
                     Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    ConnectionActivity.this.finish();
                 }
                 else
                 {

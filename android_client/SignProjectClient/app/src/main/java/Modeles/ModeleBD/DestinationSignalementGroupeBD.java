@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,9 +22,9 @@ import modeles.modele.Utilisateur;
  */
 public class DestinationSignalementGroupeBD {
 
-    protected static final String TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU = "DESTINATION_SIGNALEMENT_GROUPE_RECU";
+    public static final String TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU = "DESTINATION_SIGNALEMENT_GROUPE_RECU";
 
-    protected static final String TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_A_ENVOYER = "DESTINATION_SIGNALEMENT_GROUPE_A_ENVOYER";
+    public static final String TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_A_ENVOYER = "DESTINATION_SIGNALEMENT_GROUPE_A_ENVOYER";
 
     public static final String ID="id";
     public static final String ID_SIGNALEMENT_GROUPE="id_signalement_groupe";
@@ -118,8 +119,9 @@ public class DestinationSignalementGroupeBD {
                 s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
 
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
-                    s.setDate(new SimpleDateFormat().parse(c.getString(c.getColumnIndex(SignalementBD.DATE_SIGNALEMENT))));
+                    s.setDate(df.parse(c.getString(c.getColumnIndex(SignalementBD.DATE_SIGNALEMENT))));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

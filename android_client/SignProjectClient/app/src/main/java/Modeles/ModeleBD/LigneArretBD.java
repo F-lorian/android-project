@@ -9,9 +9,12 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 import modeles.modele.Arret;
 import modeles.modele.Ligne;
+import utilitaires.EntryImplement;
 
 /**
  * Created by Axel_2 on 11/11/2015.
@@ -192,6 +195,31 @@ public class LigneArretBD {
         c.close();
 
         return a;
+    }
+
+    public Map.Entry<Ligne,Arret> getLigneArret(int id)
+    {
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+LigneBD.TABLE_NAME+", "+ArretBD.TABLE_NAME+" WHERE "+ID_ARRET+"="+ArretBD.ID_ARRET+" AND "+ID_LIGNE+"="+LigneBD.ID_LIGNE+" AND "+ID+"="+id, null);
+
+        Map.Entry<Ligne,Arret> ligneArret = null;
+
+        if (c.moveToFirst()) {
+            Arret a = new Arret(0,"","","",null,null);
+            a.setId(c.getInt(c.getColumnIndex(ArretBD.ID_ARRET)));
+            a.setNom(c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)));
+            a.setCoordonnees(c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)));
+            a.setDirection(c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)));
+
+            Ligne l = new Ligne(0,"","","",null);
+            l.setId(c.getInt(c.getColumnIndex(LigneBD.ID_LIGNE)));
+            l.setNom(c.getString(c.getColumnIndex(LigneBD.NOM_LIGNE)));
+            l.setCoordonnees(c.getString(c.getColumnIndex(LigneBD.COORDONNEES_LIGNE)));
+            l.setDescription(c.getString(c.getColumnIndex(LigneBD.DESCRIPTION_LIGNE)));
+
+            ligneArret = new EntryImplement(l,a);
+        }
+
+        return ligneArret;
     }
 
     public long getCount()

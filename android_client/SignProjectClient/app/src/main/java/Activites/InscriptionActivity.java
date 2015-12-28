@@ -14,6 +14,8 @@ import android.widget.EditText;
 import com.example.florian.signprojectclient.R;
 
 import modeles.modele.Utilisateur;
+import modeles.modeleBD.UtilisateurBD;
+import utilitaires.SessionManager;
 
 /**
  * Created by Axel_2 on 28/11/2015.
@@ -148,8 +150,19 @@ public class InscriptionActivity extends Activity {
                 {
                     //A FAIRE : verif pseudo et mdp BD sur serveur
 
+                    SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
+
+                    //A FAIRE : Récupérer du serveur l'ID et le pseudo au lieu de faire localement comme ci-dessous
+                    Utilisateur utilisateur = new Utilisateur(0,"","",null,null,null);
+
+                    /***** REGID GCM A IMPLEMENTER *****/
+                    String regidGCM = "";
+                    sessionManager.createLoginSession(utilisateur.getId(),utilisateur.getPseudo(),regidGCM);
+
                     Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    InscriptionActivity.this.finish();
                 }
                 else
                 {
