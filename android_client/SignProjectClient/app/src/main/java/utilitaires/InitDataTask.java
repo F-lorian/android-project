@@ -55,7 +55,7 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
 
         this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message));
 
-        this.progressDialog.setCanceledOnTouchOutside(true);
+        this.progressDialog.setCanceledOnTouchOutside(false);
 
     }
 

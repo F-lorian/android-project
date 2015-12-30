@@ -22,11 +22,12 @@ import android.widget.TextView;
 import com.example.florian.signprojectclient.R;
 
 import fragments.FragmentListeSignalementsHoraires;
+import fragments.FragmentListeSignalementsProches;
 import fragments.FragmentListeSignalementsSimples;
 import modeles.modeleBD.LigneArretBD;
 import utilitaires.InitDataTask;
 import utilitaires.JeuDeDonnees;
-import utilitaires.PageAdapterSignalementAutresAccidents;
+import adapters.PageAdapterSignalementAutresAccidents;
 import utilitaires.SessionManager;
 
 /**
@@ -146,7 +147,7 @@ public class AccueilUserActivity extends AppCompatActivity {
 
         switch(menuItem.getItemId()) {
             case R.id.item_signalementsProches:
-                fragment = new FragmentListeSignalementsSimples();
+                fragment = new FragmentListeSignalementsProches();
                 break;
             case R.id.item_signalementsControleurs:
                 args.putString(FragmentListeSignalementsSimples.TYPE_SIGNALEMENT_BUNDLE, getResources().getString(R.string.controleur_spinner));

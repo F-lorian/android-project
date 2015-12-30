@@ -1,4 +1,4 @@
-package utilitaires;
+package adapters;
 
 import android.content.Context;
 import android.os.Bundle;

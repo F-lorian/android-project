@@ -81,6 +81,9 @@
     <string name="dialog_titre_detail_signalement">Détail du signalement</string>
     <string name="title_activity_position_signalement_maps">Position du signalement</string>
 
+    <string name="titre_position_courante">Vous êtes ici</string>
+    <string name="snippet_position_courante_1">Vous êtes à</string>
+    <string name="snippet_position_courante_2">mètre(s) du signalement</string>
 
 
 </resources>

@@ -8,6 +8,6 @@ define("DB_DATABASE", "sign_project");
  
 // Google Cloud Messaging API Key
 // Place your Google API Key
-define("API_ACCESS_KEY", "YOUR-API-ACCESS-KEY-GOES-HERE"); 
+define("API_ACCESS_KEY", "AIzaSyA_O8dXv4VMFnIOxNnrIytx7He6k5EhLEQ"); 
                            
 ?>

@@ -52,9 +52,6 @@ public class FragmentListeSignalementsSimples extends Fragment {
         this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,getArguments().getString(TYPE_SIGNALEMENT_BUNDLE));
         signalementBD.close();
 
-        System.out.println(getArguments().getString(TYPE_SIGNALEMENT_BUNDLE));
-        System.out.println(this.signalements);
-
         this.adapterListViewSimpleSignalement = new AdapterListViewSimpleSignalement(this.getActivity(),this.signalements);
         this.listeSignalements.setAdapter(this.adapterListViewSimpleSignalement);
 
