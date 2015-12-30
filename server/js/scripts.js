@@ -161,6 +161,8 @@ $(document).ready(function () {
         list: '#user_list'
     });
     getUsers();
+    
+    $('#notification').hide();
 });
 
 /*

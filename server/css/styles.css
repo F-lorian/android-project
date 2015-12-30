@@ -44,6 +44,19 @@ a:focus{
     bottom : 0;
 }
 
+
+#notification{
+    /*position : fixed;
+    top : -100%;
+    width: 100%;
+    margin-bottom: 0;
+    transition: bottom 0.2s;*/
+}
+
+#notification.visible{
+    /*top : 0;*/
+}
+
 #result-message{
     margin: 5px;
     margin-left: 0;

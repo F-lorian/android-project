@@ -22,7 +22,7 @@
         function initTab() {
             element.html('');
             element.append('<div class="list-group">'
-                +'<a class="list-group-item list-group-action" onclick="$(\'#panel-users\').toggleClass(\'visible\'); return false;">'
+                +'<a class="list-group-item list-group-action" onclick="$(\'#notification\').slideToggle(100); return false;">'
                     +'<span class="label label-primary inset">'
                         +'<i class="glyphicon glyphicon-plus"></i>'
                     +'</span> envoyer une notification'
@@ -102,7 +102,7 @@
                     toggleSelectable(new_item);
                 };
                 //console.log('setOnDelete('+email+',\'user_list\','+ondelete+');');
-                objects.list.onDelete(email, ondelete);
+                objects.list.onDelete(gcm_regid, ondelete);
             }
 
             return new_item;
