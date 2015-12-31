@@ -18,7 +18,7 @@ function sendNotification() {
 
     console.log(regIDs);
     console.log(message);
-    if (message != "") {
+    if (message != "" && message != " ") {
         $('#notification').unbind('submit');
         if (regIDs != null) {
             regIDs = regIDs.join("|");
@@ -26,8 +26,6 @@ function sendNotification() {
 
         console.log(regIDs);
         console.log(message);
-
-
 
         $.ajax({
             url: "server.php?action=sendNotification",
@@ -49,8 +47,9 @@ function sendNotification() {
             }
         });
     }
-
-    $('#result-message').html("il faut entrer un message");
+    else {
+        $('#result-message').html("il faut entrer un message");
+    } 
 
     return false;
 }
