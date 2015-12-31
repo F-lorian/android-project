@@ -1,6 +1,6 @@
 <?php
 require_once('loader.php');
-require_once('lib/vendor/autoload.php');
+//require_once('lib/vendor/autoload.php');
 
 if (isset($_POST["login"]) && isset($_POST["password"])) {
     adminConnection($_POST["login"], $_POST["password"]);
