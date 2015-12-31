@@ -269,7 +269,31 @@ function userExistPseudo($pseudo) {
     }
 }
 
-function deleteUser($email){
+function userExistRegId($regID) {
+     
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT gcm_regid FROM user WHERE gcm_regid = '$regID' LIMIT 1");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        $NumOfRows = count($result);
+        if ($NumOfRows > 0) {
+            return SUCCESS;
+        } else {
+            return ERROR;
+        }
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function deleteUserByMail($email){
     
     try {
          
@@ -286,7 +310,31 @@ function deleteUser($email){
             }
         }
         return DENIED;
-        //echo $error.': utilisateur introuvable';
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+    
+}
+
+function deleteUserByRegId($regID){
+    
+    try {
+         
+        if(userExistRegId($regID)){
+            $result = array();
+            $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+            $stmt = $dbh->prepare("DELETE FROM user WHERE gcm_regid = '$regID' LIMIT 1");
+            $stmt->execute();
+            
+            if (!userExistRegId($regID)) { 
+                return SUCCESS;
+            } else {
+                return ERROR;
+            }
+        }
+        return DENIED;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";

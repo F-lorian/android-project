@@ -60,8 +60,7 @@ function sendNotificationRequest(){
         
         if($res == SUCCESS){
             echo NOTIFICATION_SEND." ".$target.'<br/> message :'.$message;
-        }
-        else if($res == DENIED){
+        } else if($res == DENIED){
             echo NO_USER_REGISTERED;
         }
         
@@ -71,7 +70,7 @@ function sendNotificationRequest(){
         
         //print_r($res);
         
-    }else{
+    } else {
        echo PARAMETERS_MISSING; 
     }
        
@@ -115,11 +114,14 @@ function registerRequest(){
 }
 
 function deleteUserRequest(){
-    $email  = $_POST["email"];
     
-    if (isset($email)) {
-        $res = deleteUser($email);
-        
+    if (isset($_POST["regID"])) {
+        $res = deleteUserByRegId($_POST["regID"]);
+    } else if ($_POST["email"]) {
+        $res = deleteUserByMail($_POST["email"]);
+    } 
+    
+    if(isset($res)){
         if($res == SUCCESS){
             echo USER_DELETED;
         }
@@ -129,6 +131,7 @@ function deleteUserRequest(){
         else if($res == DENIED){
             echo USER_NOT_FOUND;
         }
+        
     } else {
         echo PARAMETERS_MISSING;
     }

@@ -95,7 +95,7 @@ function getUsers() {
             if (res.length > 0) {
 
                 for (var i = 0; i < res.length; i++) {
-                    var new_item = list.addRow(res[i].pseudo, res[i].email, res[i].gcm_regid);
+                    var new_item = list.addRow([res[i].pseudo, res[i].email, res[i].gcm_regid]);
 
                     if (list.rowSelected(res[i].gcm_regid)) {
                         list.toggleSelectable(new_item);
@@ -124,22 +124,13 @@ function deleteUser(user) {
             url: "server.php?action=deleteUser",
             type: 'POST',
             data: {
-                email: user
+                regID: user
             },
             beforeSend: function () {
 
             },
             success: function (data, textStatus, xhr) {
-                if (data == "true") {
-                    $('#result-message').html('utilisateur ' + user + ' supprimé');
-                    $('.list-group-item.selectable').each(function () {
-                        if ($(this).attr('mail') == user) {
-                            $(this).prev('.list-group-option').remove();
-                            $(this).prev('.list-group-options').remove();
-                            this.remove();
-                        }
-                    });
-                }
+                $('#result-message').html(data + ' : ' + list.delRow(user));
                 console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -157,8 +148,13 @@ $(document).ready(function () {
     //$('#user_list').myList();
     //var selection_list = $('#user_list').myList();
     //list = $('#users').myTab({list: selection_list});
+    var cols = ['pseudo','mail','registrationID'];
+
     list = $('#users').myTab({
-        list: '#user_list'
+        list: '#user_list',
+        cols: ['pseudo','mail','registrationID'],
+        primary: 'registrationID',
+        visible: 'pseudo'
     });
     getUsers();
     
