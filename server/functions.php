@@ -96,9 +96,9 @@ function connection($email, $password) {
             $_SESSION['id'] = $result[0]['id'];
             $_SESSION['pseudo'] = $result[0]['pseudo'];
 			$_SESSION['mail'] = $result[0]['email'];
-            return SUCCESS;
+            return $result[0]['id'];
         } else {
-            return ERROR;
+            return DENIED;
         }
         
     } catch (PDOException $e) {
@@ -110,14 +110,20 @@ function connection($email, $password) {
 function register($pseudo, $email, $password, $gcm_regid) {
         
     try {
+        
+        if(userExistPseudo($pseudo) || userExistMail($email)){
+            return DENIED;
+        }
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("INSERT INTO gcm_users (name, email, gcm_regid, created_at) VALUES ('$pseudo', '$email', '$gcm_regid', NOW())");
         $stmt->execute();
         $dbh = null;
         
-        if (userExistMail($email)) { 
-            return SUCCESS;
+        
+        $check = getUserByPseudo($pseudo);
+        if (count($check) == 1) { 
+            return $check[0]['id'];
         } else {
             return ERROR;
         }
@@ -136,6 +142,27 @@ function getUserByEmail($email) {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT * FROM user WHERE email = '$email' LIMIT 1");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    } 
+}
+
+/**
+ * Get user by pseudo
+ */
+function getUserByPseudo($pseudo) {
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo = '$pseudo' LIMIT 1");
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $result[] = $row;
@@ -178,7 +205,7 @@ function getAllUsers($page) {
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM user");
+        $stmt = $dbh->prepare("SELECT email, pseudo, gcm_regid FROM user");
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $result[] = $row;

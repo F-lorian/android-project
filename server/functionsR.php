@@ -76,6 +76,16 @@ function sendNotificationRequest(){
        
 }
 
+function getReplyMessage($state, $message, $data){
+    
+    $d = json_encode($data);
+    return '{'
+        .'"state":'.$state.','
+        .'"message":"'.$message.'",'
+        .'"data":'.$d.','
+        .'}';
+}
+
 function registerRequest(){
     // return json response 
     $json = array();
@@ -95,10 +105,10 @@ function registerRequest(){
 
         // Store user details in db
         $res = register($name, $email, $password, $gcm_regid);
-        if(res){
-            echo USER_ADDED;
+        if(res == ERROR){
+            echo getReplyMessage(ERROR, USER_ADD_FAIL, array());
         } else {
-            echo USER_ADD_FAIL;
+            echo getReplyMessage(SUCCESS, USER_ADDED, array('pseudo'=>$pseudo, 'id'=>$res));
         }
 
 /*       $registration_ids = array($gcm_regid);
@@ -145,14 +155,14 @@ function connectionRequest(){
     if (isset($pseudo) && isset($password)) {
         $res = connection($pseudo, $password);
         
-        if($res == SUCCESS){
-            echo CONNECTION_SUCCESS;
+        if($res == DENIED){
+            echo getReplyMessage(DENIED, CONNECTION_DENIED, array());
         }
-        else if($res == ERROR){
-            echo CONNECTION_DENIED;
+        else {
+            echo getReplyMessage(SUCCESS, CONNECTION_SUCCESS, array('pseudo'=>$pseudo, 'id'=>$res));
         }
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 
