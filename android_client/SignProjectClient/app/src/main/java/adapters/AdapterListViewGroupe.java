@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -79,6 +81,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
         }
 
         TextView nom = (TextView) layoutItem.findViewById(R.id.nom_adapter_groupe);
+        ImageView iv = (ImageView) layoutItem.findViewById(R.id.image_type);
         TextView type = (TextView) layoutItem.findViewById(R.id.type_adapter_groupe);
         LinearLayout groupe = (LinearLayout) layoutItem.findViewById(R.id.layout_groupe);
 
@@ -87,6 +90,15 @@ public class AdapterListViewGroupe extends BaseAdapter {
         nom.setTextColor(Color.BLACK);
 
         String typeGroupe = this.groupes.get(position).getType();
+        System.out.println("typeGroupe : "+typeGroupe);
+        if(typeGroupe.equals(this.mContext.getResources().getString(R.string.type_public))){
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_eye));
+        }
+        else if(typeGroupe.equals(this.mContext.getResources().getString(R.string.type_prive))){
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_closed_eye));
+        }
+
+
         type.setText(typeGroupe);
 
         groupe.setTag(position);

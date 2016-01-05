@@ -30,14 +30,20 @@ android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/layout_type_groupe"
             android:layout_width="match_parent"
-            android:layout_height="25sp"
+            android:layout_height="20sp"
             android:orientation="horizontal"
             android:gravity="center">
+
+            <ImageView
+                android:id="@+id/image_type"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
+                android:src="@drawable/ic_eye"/>
 
             <TextView
                 android:id="@+id/type_adapter_groupe"
                 android:layout_width="match_parent"
-                android:layout_height="25sp"
+                android:layout_height="20sp"
                 android:text="PUBLIC"
                 android:textSize="15sp"/>
         </LinearLayout>

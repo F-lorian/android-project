@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/ajouter_groupe_toolbar"
+        android:id="@+id/toolbar_ajouter_groupe"
         android:orderInCategory="100"
         android:title="@string/action_toolbar_ajouter_groupe"
-        android:icon="@drawable/ic_action_send_now"
+        android:icon="@drawable/ic_check"
         app:showAsAction="ifRoom" />
 </menu>

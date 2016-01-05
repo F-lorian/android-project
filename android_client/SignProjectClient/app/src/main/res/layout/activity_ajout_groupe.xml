@@ -91,30 +91,6 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutBtnConnection"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_boutons_formulaire"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_formulaire">
-                <Button
-                    android:background="@android:color/holo_green_light"
-                    android:id="@+id/BtnValider"
-                    android:layout_width="@dimen/largeur_boutons_formulaire"
-                    android:layout_height="match_parent"
-                    android:hint="@string/btn_valider"
-                    android:textSize="@dimen/texte_size_bouton"/>
-                <Button
-                    android:layout_marginLeft="@dimen/margin_between_field"
-                    android:background="@android:color/holo_red_light"
-                    android:id="@+id/BtnAnnuler"
-                    android:layout_width="@dimen/largeur_boutons_formulaire"
-                    android:layout_height="match_parent"
-                    android:hint="@string/btn_Annuler"
-                    android:textSize="@dimen/texte_size_bouton"/>
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>
