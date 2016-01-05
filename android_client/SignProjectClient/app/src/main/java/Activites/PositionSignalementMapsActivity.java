@@ -1,8 +1,5 @@
 package activites;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,7 +19,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -32,6 +28,7 @@ import adapters.AdapterListViewSimpleSignalement;
 import modeles.modele.Arret;
 import modeles.modele.Ligne;
 import modeles.modeleBD.LigneArretBD;
+import utilitaires.Config;
 
 public class PositionSignalementMapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
@@ -127,11 +124,11 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
         signalement.title(a.getNom());
         signalement.snippet(this.typeSignalement.toUpperCase());
 
-        if (this.typeSignalement.equals(this.getResources().getString(R.string.controleur_spinner))) {
+        if (this.typeSignalement.equals(Config.CONTROLEUR)) {
             signalement.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_controleur));
-        } else if (this.typeSignalement.equals(this.getResources().getString(R.string.horaire_spinner))) {
+        } else if (this.typeSignalement.equals(Config.HORAIRES)) {
             signalement.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_time));
-        } else if (this.typeSignalement.equals(this.getResources().getString(R.string.accident_spinner))) {
+        } else if (this.typeSignalement.equals(Config.ACCIDENTS)) {
             signalement.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_accident));
         } else {
             signalement.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_autre));
@@ -151,16 +148,16 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
         }
 
         if (l.getNom().equals("Ligne 1")) {
-            ligne.color(Color.rgb(54, 68, 219));
+            ligne.color(Config.LIGNE_1_COLOR);
         } else if (l.getNom().equals("Ligne 2")) {
-            ligne.color(Color.rgb(240, 134, 65));
+            ligne.color(Config.LIGNE_2_COLOR);
         } else if (l.getNom().equals("Ligne 3")) {
-            ligne.color(Color.rgb(68, 175, 98));
+            ligne.color(Config.LIGNE_3_COLOR);
         } else {
-            ligne.color(Color.rgb(75, 54, 34));
+            ligne.color(Config.LIGNE_4_COLOR);
         }
 
-        ligne.width(8);
+        ligne.width(Config.LIGNE_WIDTH);
 
         return this.mMap.addPolyline(ligne);
     }
@@ -210,7 +207,7 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
     }
 
     public void abonnementNetwork() {
-        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME, Config.DISTANCE_MAJ_MIN_DISTANCE, this);
     }
 
     public void desabonnementNetwork() {

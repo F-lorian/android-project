@@ -21,6 +21,7 @@ import modeles.modele.SignalementPublic;
 import modeles.modeleBD.DestinationSignalementGroupeBD;
 import modeles.modeleBD.DestinationSignalementPublicBD;
 import modeles.modeleBD.SignalementBD;
+import utilitaires.Config;
 
 /**
  * Created by Axel_2 on 30/11/2015.
@@ -30,7 +31,6 @@ public class FragmentListeSignalementsSimples extends Fragment {
     ListView listeSignalements;
     FloatingActionButton fabAjoutSignalement;
     ArrayList<Signalement> signalements;
-    public static final String TYPE_SIGNALEMENT_BUNDLE = "TYPE_SIGNALEMENT";
     AdapterListViewSimpleSignalement adapterListViewSimpleSignalement;
     Thread mTimeUpdateThread;
 
@@ -49,7 +49,7 @@ public class FragmentListeSignalementsSimples extends Fragment {
 
         SignalementBD signalementBD = new SignalementBD(this.getActivity());
         signalementBD.open();
-        this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,getArguments().getString(TYPE_SIGNALEMENT_BUNDLE));
+        this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,getArguments().getString(Config.TYPE_SIGNALEMENT));
         signalementBD.close();
 
         this.adapterListViewSimpleSignalement = new AdapterListViewSimpleSignalement(this.getActivity(),this.signalements);
@@ -59,6 +59,7 @@ public class FragmentListeSignalementsSimples extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AjoutSignalementActivity.class);
+                intent.putExtra(Config.TYPE_SIGNALEMENT,FragmentListeSignalementsSimples.this.getArguments().getString(Config.TYPE_SIGNALEMENT));
                 startActivity(intent);
             }
         });

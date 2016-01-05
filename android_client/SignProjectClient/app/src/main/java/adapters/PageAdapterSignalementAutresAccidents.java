@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.example.florian.signprojectclient.R;
 
 import fragments.FragmentListeSignalementsSimples;
+import utilitaires.Config;
 
 /**
  * Created by Axel_2 on 25/12/2015.
@@ -22,7 +23,7 @@ public class PageAdapterSignalementAutresAccidents extends FragmentStatePagerAda
     {
         super(fm);
         this.c=context;
-        this.tabTitles = new String[] { this.c.getResources().getString(R.string.accident_spinner), this.c.getResources().getString(R.string.autres_spinner)};
+        this.tabTitles = new String[] { Config.ACCIDENTS, Config.AUTRES};
         this.nbPages=this.tabTitles.length;
     }
 
@@ -34,12 +35,12 @@ public class PageAdapterSignalementAutresAccidents extends FragmentStatePagerAda
 
         switch (position) {
             case 0:
-                args.putString(FragmentListeSignalementsSimples.TYPE_SIGNALEMENT_BUNDLE, this.tabTitles[position]);
+                args.putString(Config.TYPE_SIGNALEMENT, this.tabTitles[position]);
                 FragmentListeSignalementsSimples fragmentSignalementsAccidents = new FragmentListeSignalementsSimples();
                 fragmentSignalementsAccidents.setArguments(args);
                 return fragmentSignalementsAccidents;
             case 1:
-                args.putString(FragmentListeSignalementsSimples.TYPE_SIGNALEMENT_BUNDLE, this.tabTitles[position]);
+                args.putString(Config.TYPE_SIGNALEMENT, this.tabTitles[position]);
                 FragmentListeSignalementsSimples fragmentSignalementsAutres = new FragmentListeSignalementsSimples();
                 fragmentSignalementsAutres.setArguments(args);
                 return fragmentSignalementsAutres;

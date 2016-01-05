@@ -44,10 +44,10 @@ public class JeuDeDonnees {
         TypeSignalementBD var = new TypeSignalementBD(c);
         var.open();
 
-        var.add(new TypeSignalement(0, "Controleur"));
-        var.add(new TypeSignalement(0,"Horaires"));
-        var.add(new TypeSignalement(0, "Accidents"));
-        var.add(new TypeSignalement(0, "Autres"));
+        var.add(new TypeSignalement(0, Config.CONTROLEUR));
+        var.add(new TypeSignalement(0,Config.HORAIRES));
+        var.add(new TypeSignalement(0, Config.ACCIDENTS));
+        var.add(new TypeSignalement(0, Config.AUTRES));
 
         var.close();
     }

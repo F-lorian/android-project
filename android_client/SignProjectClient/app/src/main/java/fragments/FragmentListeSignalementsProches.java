@@ -27,6 +27,7 @@ import modeles.modele.SignalementPublic;
 import modeles.modeleBD.DestinationSignalementGroupeBD;
 import modeles.modeleBD.DestinationSignalementPublicBD;
 import modeles.modeleBD.SignalementBD;
+import utilitaires.Config;
 
 /**
  * Created by Axel_2 on 24/12/2015.
@@ -42,8 +43,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
 
     LocationManager locationManager;
 
-    /** A modifier ! ***/
-    static final float DISTANCE_MAX = 50000;
+
 
     public FragmentListeSignalementsProches()
     {
@@ -166,7 +166,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
                                         long diff = dt2.getTime() - signalement.getDate().getTime();
                                         long diffDays = diff / (60 * 60 * 1000 * 24);
 
-                                        if ((FragmentListeSignalementsProches.this.horairesSignalements.get(signalement).size() == 0 && signalement.getType().getType().equals(FragmentListeSignalementsProches.this.getResources().getString(R.string.horaire_spinner))) || (diffDays >= 1))
+                                        if ((FragmentListeSignalementsProches.this.horairesSignalements.get(signalement).size() == 0 && signalement.getType().getType().equals(Config.HORAIRES)) || (diffDays >= 1))
                                         {
                                             SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsProches.this.getActivity());
                                             signalementBD.open();
@@ -224,7 +224,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
     public void onLocationChanged(Location location) {
         SignalementBD signalementBD = new SignalementBD(this.getActivity());
         signalementBD.open();
-        this.signalements = signalementBD.getSignalementsProches(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,location,this.DISTANCE_MAX);
+        this.signalements = signalementBD.getSignalementsProches(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,location,Config.DISTANCE_MAX_SIGNALEMENTS_PROCHES);
         signalementBD.close();
 
         System.out.println(this.signalements + " on location changed ");
@@ -254,7 +254,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
     }
 
     public void abonnementNetwork() {
-        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, this);
+        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES, this);
     }
 
     public void desabonnementNetwork() {

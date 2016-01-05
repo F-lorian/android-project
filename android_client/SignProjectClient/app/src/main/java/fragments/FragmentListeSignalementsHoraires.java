@@ -24,6 +24,7 @@ import modeles.modele.SignalementPublic;
 import modeles.modeleBD.DestinationSignalementGroupeBD;
 import modeles.modeleBD.DestinationSignalementPublicBD;
 import modeles.modeleBD.SignalementBD;
+import utilitaires.Config;
 
 /**
  * Created by Axel_2 on 24/12/2015.
@@ -64,6 +65,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AjoutSignalementActivity.class);
+                intent.putExtra(Config.TYPE_SIGNALEMENT,Config.HORAIRES);
                 startActivity(intent);
             }
         });

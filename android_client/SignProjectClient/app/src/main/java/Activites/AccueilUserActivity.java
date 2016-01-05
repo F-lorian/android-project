@@ -26,6 +26,7 @@ import fragments.FragmentListeSignalementsHoraires;
 import fragments.FragmentListeSignalementsProches;
 import fragments.FragmentListeSignalementsSimples;
 import modeles.modeleBD.LigneArretBD;
+import utilitaires.Config;
 import utilitaires.InitDataTask;
 import utilitaires.JeuDeDonnees;
 import adapters.PageAdapterSignalementAutresAccidents;
@@ -71,6 +72,9 @@ public class AccueilUserActivity extends AppCompatActivity {
         headerNav.setText(headerNav.getText().toString() + " " + sessionManager.getUserPseudo());
 
         this.oldMenuItem = null;
+
+        MenuItem mi = nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
+        this.selectDrawerItem(mi);
 
         this.InitilisationDesDonnees();
     }
@@ -151,7 +155,7 @@ public class AccueilUserActivity extends AppCompatActivity {
                 fragment = new FragmentListeSignalementsProches();
                 break;
             case R.id.item_signalementsControleurs:
-                args.putString(FragmentListeSignalementsSimples.TYPE_SIGNALEMENT_BUNDLE, getResources().getString(R.string.controleur_spinner));
+                args.putString(Config.TYPE_SIGNALEMENT, Config.CONTROLEUR);
                 fragment = new FragmentListeSignalementsSimples();
                 break;
             case R.id.item_signalementsHoraires:

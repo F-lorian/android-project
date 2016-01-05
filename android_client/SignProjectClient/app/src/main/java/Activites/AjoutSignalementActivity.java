@@ -47,6 +47,7 @@ import modeles.modeleBD.LigneArretBD;
 import modeles.modeleBD.SignalementBD;
 import modeles.modeleBD.TypeSignalementBD;
 import modeles.modeleBD.UtilisateurBD;
+import utilitaires.Config;
 import utilitaires.SessionManager;
 import utilitaires.UtilisateursDestinationSignalementCompletionView;
 
@@ -103,6 +104,8 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         this.spinnerTypeSignalement = (Spinner) findViewById(R.id.spinnerAjoutSignalement);
         AdapterSpinnerTypeSignalement adapterSpinnerTypeSignalement = new AdapterSpinnerTypeSignalement(this,this.typeSignalements);
         this.spinnerTypeSignalement.setAdapter(adapterSpinnerTypeSignalement);
+
+        this.spinnerTypeSignalement.setSelection(this.getIndiceByTypeSignalementValue(this.getIntent().getStringExtra(Config.TYPE_SIGNALEMENT)));
 
         LigneArretBD ligneArretBD = new LigneArretBD(this);
         ligneArretBD.open();
@@ -351,7 +354,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
     public void updateViewOnSelectSpinnerTypeItem(String type)
     {
-        if (type.equals(getResources().getString(R.string.horaire_spinner)))
+        if (type.equals(Config.HORAIRES))
         {
             View horaire = findViewById(R.id.layoutPrincipaleHoraireAjoutSignalement);
 
@@ -595,5 +598,20 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         }
 
         return arrayListDirection;
+    }
+
+    public int getIndiceByTypeSignalementValue(String typeSignalementValue)
+    {
+        int ind = 0;
+
+        for (int i = 0; i<this.typeSignalements.size(); i++)
+        {
+            if (this.typeSignalements.get(i).getType().equals(typeSignalementValue))
+            {
+                return i;
+            }
+        }
+
+        return ind;
     }
 }

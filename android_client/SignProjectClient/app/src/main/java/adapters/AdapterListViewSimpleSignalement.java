@@ -25,6 +25,7 @@ import java.util.List;
 
 import activites.PositionSignalementMapsActivity;
 import modeles.modele.Signalement;
+import utilitaires.Config;
 
 /**
  * Created by Axel_2 on 25/12/2015.
@@ -83,11 +84,11 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
         String typeSignalement = this.signalements.get(position).getType().getType();
         titre.setText(typeSignalement.toUpperCase());
 
-        if (typeSignalement.equals(this.mContext.getResources().getString(R.string.controleur_spinner)))
+        if (typeSignalement.equals(Config.CONTROLEUR))
         {
             titre.setTextColor(Color.RED);
         }
-        else if (typeSignalement.equals(this.mContext.getResources().getString(R.string.autres_spinner)) || typeSignalement.equals(this.mContext.getResources().getString(R.string.accident_spinner)))
+        else if (typeSignalement.equals(Config.AUTRES) || typeSignalement.equals(Config.ACCIDENTS))
         {
             titre.setTextColor(Color.BLUE);
         }
