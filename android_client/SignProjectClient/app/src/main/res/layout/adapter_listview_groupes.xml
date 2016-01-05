@@ -31,8 +31,7 @@ android:layout_height="wrap_content">
             android:id="@+id/layout_type_groupe"
             android:layout_width="match_parent"
             android:layout_height="20sp"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/image_type"
@@ -42,10 +41,19 @@ android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/type_adapter_groupe"
+                android:layout_width="250sp"
+                android:layout_height="20sp"
+                android:text="Public"
+                android:textSize="15sp"/>
+            <TextView
+                android:id="@+id/user_adapter_etat"
                 android:layout_width="match_parent"
                 android:layout_height="20sp"
-                android:text="PUBLIC"
-                android:textSize="15sp"/>
+                android:text="Membre"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:background="@android:color/holo_green_light"
+                android:textColor="@android:color/white"/>
         </LinearLayout>
 
 

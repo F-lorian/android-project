@@ -3,6 +3,7 @@ package modeles.modeleBD;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.text.DateFormat;
@@ -80,7 +81,7 @@ public class GroupeBD {
         long id = db.insert(TABLE_NAME,null,values);
 
         if(id != -1){
-
+            groupe.setId((int) id);
             GroupeUtilisateurBD groupUtilisateurBD = new GroupeUtilisateurBD(this.context);
             groupUtilisateurBD.open();
             groupUtilisateurBD.add(groupe.getAdmin().getId(), id, GroupeUtilisateurBD.ETAT_APPARTIENT);
@@ -190,7 +191,8 @@ public class GroupeBD {
         // sélection de tous les enregistrements de la table
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+GroupeUtilisateurBD.TABLE_NAME
                 + " WHERE "+ID_GROUPE+"="+GroupeUtilisateurBD.ID_GROUPE
-                + " AND "+UtilisateurBD.ID_UTILISATEUR+"="+GroupeUtilisateurBD.ID_GROUPE
+                + " AND "+UtilisateurBD.ID_UTILISATEUR+"="+GroupeUtilisateurBD.ID_UTILISATEUR
+                + " AND "+GroupeUtilisateurBD.ID_UTILISATEUR+"="+idUser
                 //+ " AND "+GroupeUtilisateurBD.ETAT_GROUPE+"="+GroupeUtilisateurBD.ETAT_APPARTIENT
                 //+ "' ORDER BY datetime("+DATE_SIGNALEMENT+") DESC"  ajouter la date d'ajout de l'utilisateur au groupe
                 , null);
@@ -231,6 +233,51 @@ public class GroupeBD {
         c.close();
 
         return groupes;
+    }
+
+    public ArrayList<Groupe> searchGroupes(String search){
+        // sélection de tous les enregistrements de la table
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME
+                + " WHERE "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR
+                + " AND "+NOM_GROUPE+" LIKE '%"+search+"%'"
+                + " AND "+TYPE_GROUPE+"='"+Groupe.typePublic+"'"
+                //+ " AND "+GroupeUtilisateurBD.ETAT_GROUPE+"="+GroupeUtilisateurBD.ETAT_APPARTIENT
+                //+ "' ORDER BY datetime("+DATE_SIGNALEMENT+") DESC"  ajouter la date d'ajout de l'utilisateur au groupe
+                , null);
+
+        ArrayList<Groupe> groupes = new ArrayList<Groupe>();
+
+        if (c.moveToFirst()) {
+            while (c.isAfterLast() == false) {
+
+                Groupe g = new Groupe();
+
+                int id = c.getInt(c.getColumnIndex(ID_GROUPE));
+                String nom = c.getString(c.getColumnIndex(NOM_GROUPE));
+                String type = c.getString(c.getColumnIndex(TYPE_GROUPE));
+                String Description = c.getString(c.getColumnIndex(DESCRIPTION_GROUPE));
+                Utilisateur admin = new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null);
+
+                g.setId(id);
+                g.setNom(nom);
+                g.setType(type);
+                g.setDescription(Description);
+                g.setAdmin(admin);
+
+                groupes.add(g);
+                c.moveToNext();
+            }
+        }
+
+        c.close();
+
+        return groupes;
+
+    }
+
+    public long getCount()
+    {
+        return DatabaseUtils.queryNumEntries(this.db, TABLE_NAME);
     }
 
 

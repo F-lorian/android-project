@@ -23,6 +23,23 @@
             android:gravity="center"
             android:layout_margin="15dp">
 
+            <Button
+                android:id="@+id/action_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/btn_quitter_groupe"
+                android:textSize="@dimen/texte_size_bouton"/>
+
+            <TextView
+                android:id="@+id/info_groupe"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="@string/ajout_en_attente"
+                android:textSize="@dimen/texte_size_libelle_formulaire"
+                android:gravity="center"
+                android:background="@android:color/holo_orange_dark"
+                android:textColor="@android:color/primary_text_dark"/>
+
             <TextView
                 android:id="@+id/nom_groupe"
                 android:layout_width="match_parent"
@@ -50,4 +67,5 @@
 
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

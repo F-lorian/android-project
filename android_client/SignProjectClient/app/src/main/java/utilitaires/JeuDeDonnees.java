@@ -59,7 +59,7 @@ public class JeuDeDonnees {
 
         var.add(new Groupe(0, "groupe1", Groupe.typePublic, null, null, new Utilisateur(1, "", "", null, null, null)));
         var.add(new Groupe(0,"groupe2",Groupe.typePublic,null,null,new Utilisateur(2,"","",null,null,null)));
-        var.add(new Groupe(0,"groupe3",Groupe.typePrivé,null,null,new Utilisateur(3,"","",null,null,null)));
+        var.add(new Groupe(0,"groupe3",Groupe.typePrive,null,null,new Utilisateur(3,"","",null,null,null)));
         var.add(new Groupe(0,"groupe4",Groupe.typePublic,null,null,new Utilisateur(4,"","",null,null,null)));
 
         var.close();

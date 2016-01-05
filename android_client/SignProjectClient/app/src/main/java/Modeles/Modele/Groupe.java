@@ -9,14 +9,14 @@ public class Groupe {
 
     protected int id;
     protected String nom;
-    protected String type; // Enum type = {public, privée}
+    protected String type; // Enum type = {public, privé}
     protected String description;
     protected ArrayList<SignalementGroupe> signalements;
     protected ArrayList<Utilisateur> membres;
     protected Utilisateur admin;
 
-    public static final String typePublic = "public";
-    public static final String typePrivé = "privé";
+    public static final String typePublic = "Public";
+    public static final String typePrive = "Privé";
 
     public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin) {
         this.id = id;

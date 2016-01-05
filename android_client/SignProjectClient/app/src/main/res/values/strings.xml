@@ -99,5 +99,12 @@
     <string name="message_alert_dialog_erreur_ajout_groupe_bd">Erreur lors de l\'enregistrement du groupe</string>
     <string name="groupe_ajoute">Groupe créé</string>
     <string name="membres">Membres</string>
+    <string name="membre">Membre</string>
+    <string name="admin">Admin</string>
+    <string name="btn_quitter_groupe">quitter le groupe</string>
+    <string name="btn_supprimer_groupe">supprimer le groupe</string>
+    <string name="btn_rejoindre_groupe">rejoindre le groupe</string>
+    <string name="ajout_en_attente">Demande d\'ajout en attente</string>
+    <string name="hint_recherche_groupe">Taper un nom de groupe</string>
 
 </resources>

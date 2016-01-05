@@ -31,6 +31,8 @@ import activites.GroupeActivity;
 import activites.PositionSignalementMapsActivity;
 import modeles.modele.Groupe;
 import modeles.modele.Signalement;
+import modeles.modeleBD.GroupeUtilisateurBD;
+import utilitaires.SessionManager;
 
 /**
  * Created by Florian on 05/01/2016.
@@ -83,6 +85,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
         TextView nom = (TextView) layoutItem.findViewById(R.id.nom_adapter_groupe);
         ImageView iv = (ImageView) layoutItem.findViewById(R.id.image_type);
         TextView type = (TextView) layoutItem.findViewById(R.id.type_adapter_groupe);
+        TextView etat_utilisateur = (TextView) layoutItem.findViewById(R.id.user_adapter_etat);
         LinearLayout groupe = (LinearLayout) layoutItem.findViewById(R.id.layout_groupe);
 
         String nomGroupe = this.groupes.get(position).getNom();
@@ -97,7 +100,6 @@ public class AdapterListViewGroupe extends BaseAdapter {
         else if(typeGroupe.equals(this.mContext.getResources().getString(R.string.type_prive))){
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_closed_eye));
         }
-
 
         type.setText(typeGroupe);
 
@@ -117,6 +119,35 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
             }
         });
+
+        SessionManager sessionManager = new SessionManager(mContext);
+        if(this.groupes.get(position).getAdmin().getId() == sessionManager.getUserId()){
+            etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
+        }
+
+        int id_groupe = this.groupes.get(position).getId();
+        int id_admin = this.groupes.get(position).getAdmin().getId();
+        int idUser = sessionManager.getUserId();
+
+        GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(mContext);
+
+        if (id_admin == idUser) {
+            etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
+            //etat_utilisateur.setBackgroundColor(ContextCompat.getColor(mContext, R.color.wallet_holo_blue_light));//rouge
+        } else {
+
+            String s = groupeUtilisateurBD.isInGroup(idUser, id_groupe);
+            if (s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
+                etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
+                //etat_utilisateur.setBackgroundColor(ContextCompat.getColor(mContext, R.color.wallet_holo_blue_light));//vert
+            } else if (s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
+                etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
+                //etat_utilisateur.setBackgroundColor(ContextCompat.getColor(mContext, R.color.wallet_holo_blue_light));//orange
+            } else {
+                etat_utilisateur.setVisibility(View.GONE);
+            }
+        }
+
 
         return layoutItem;
 
