@@ -1,37 +1,26 @@
 package fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.florian.signprojectclient.R;
 
-import java.util.ArrayList;
-
-import activites.AjoutGroupeActivity;
-import activites.GroupeActivity;
 import adapters.AdapterListViewGroupe;
-import modeles.modele.Groupe;
-import modeles.modeleBD.GroupeBD;
-import utilitaires.SessionManager;
 
 /**
- * Created by Florian on 04/01/2016.
+ * Created by Florian on 05/01/2016.
  */
-public class FragmentListeGroupes extends Fragment {
+public class FragmentGroupe extends Fragment {
 
-    ListView listeGroupes;
-    FloatingActionButton FabAjoutGroupe;
-    ArrayList<Groupe> groupes;
+    TextView nom;
+    TextView description;
     AdapterListViewGroupe adapterListViewGroupe;
 
-    public FragmentListeGroupes()
+    public FragmentGroupe()
     {
 
     }
@@ -39,11 +28,12 @@ public class FragmentListeGroupes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_liste_groupes, container, false);
+        View view = inflater.inflate(R.layout.activity_groupe, container, false);
 
-        this.listeGroupes = (ListView) view.findViewById(R.id.listeGroupes);
-        this.FabAjoutGroupe = (FloatingActionButton) view.findViewById(R.id.FabAjoutGroupe);
+        this.nom = (TextView) view.findViewById(R.id.nom_groupe);
+        this.description = (TextView) view.findViewById(R.id.description_groupe);
 
+        /*
         SessionManager sessionManager = new SessionManager(this.getActivity());
         GroupeBD groupeBD = new GroupeBD(this.getActivity());
         groupeBD.open();
@@ -62,9 +52,10 @@ public class FragmentListeGroupes extends Fragment {
                 startActivity(intent);
             }
         });
-
+        */
         return view;
 
     }
 
 }
+

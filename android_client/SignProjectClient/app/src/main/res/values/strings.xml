@@ -87,6 +87,7 @@
     <string name="snippet_position_courante_2">mètre(s) du signalement</string>
 
     <string name="titre_toolbar_ajout_groupe">Nouveau groupe</string>
+    <string name="titre_toolbar_groupe">Groupe</string>
     <string name="action_toolbar_ajouter_groupe">Ajouter</string>
     <string name="nom">Nom</string>
     <string name="visibilite">Visibilité</string>
@@ -97,4 +98,6 @@
     <string name="erreur_description_groupe">Doit être inférieur à 500 caractères</string>
     <string name="message_alert_dialog_erreur_ajout_groupe_bd">Erreur lors de l\'enregistrement du groupe</string>
     <string name="groupe_ajoute">Groupe créé</string>
+    <string name="membres">Membres</string>
+
 </resources>

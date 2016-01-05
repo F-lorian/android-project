@@ -18,4 +18,5 @@
     <dimen name="margin_right_text_spinner">50dp</dimen>
     <dimen name="margin_top_dynamic_field">15dp</dimen>
     <dimen name="hauteur_textview_liste_signalement">35dp</dimen>
+    <dimen name="hauteur_description_groupe">50dp</dimen>
 </resources>

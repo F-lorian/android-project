@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import activites.AjoutGroupeActivity;
+import activites.GroupeActivity;
 import activites.PositionSignalementMapsActivity;
 import modeles.modele.Groupe;
 import modeles.modele.Signalement;
@@ -36,8 +41,8 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
     private LayoutInflater mInflater;
 
-    public static final String ID_LIGNE_ARRET = "ID_LIGNE_ARRET";
-    public static final String TYPE_SIGNALEMENT = "TYPE_SIGNALEMENT";
+    public static final String ID_GROUPE = "id";
+
 
     public AdapterListViewGroupe(Context mContext, List<Groupe> groupes) {
         this.mContext = mContext;
@@ -84,17 +89,23 @@ public class AdapterListViewGroupe extends BaseAdapter {
         String typeGroupe = this.groupes.get(position).getType();
         type.setText(typeGroupe);
 
-        /*
+        groupe.setTag(position);
         groupe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context c = AdapterListViewGroupe.this.mContext;
 
+                int indice = ((Integer)v.getTag()).intValue();
+                int id = groupes.get(indice).getId();
+
                 //aller vers l'activité pour voir un groupe
+                Intent intent = new Intent(c, GroupeActivity.class);
+                intent.putExtra(ID_GROUPE, id);
+                c.startActivity(intent);
 
             }
         });
-        */
+
         return layoutItem;
 
     }

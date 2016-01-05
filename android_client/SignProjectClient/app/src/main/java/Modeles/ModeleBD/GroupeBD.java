@@ -116,12 +116,34 @@ public class GroupeBD {
         return db.delete(TABLE_NAME, where, whereArgs);
     }
 
-    public Groupe getGroupe(int id) {
+    public Groupe getGroupeAdmin(int id) {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
         Groupe g = new Groupe(0,"","",null,null,null);
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
+        if (c.moveToFirst()) {
+            g.setId(c.getInt(c.getColumnIndex(ID_GROUPE)));
+            g.setNom(c.getString(c.getColumnIndex(NOM_GROUPE)));
+            g.setType(c.getString(c.getColumnIndex(TYPE_GROUPE)));
+            g.setDescription(c.getString(c.getColumnIndex(DESCRIPTION_GROUPE)));
+            g.setAdmin(new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+
+
+        }
+
+        c.close();
+
+        return g;
+    }
+
+    public Groupe getGroupe(int id) {
+        // Retourne l'enregistrement dont l'id est passé en paramètre
+
+        System.out.println("ID : "+id);
+        Groupe g = new Groupe(0,"","",null,null,null);
+
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
         if (c.moveToFirst()) {
             g.setId(c.getInt(c.getColumnIndex(ID_GROUPE)));
             g.setNom(c.getString(c.getColumnIndex(NOM_GROUPE)));
