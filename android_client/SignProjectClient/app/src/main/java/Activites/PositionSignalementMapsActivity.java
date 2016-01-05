@@ -43,6 +43,9 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
     private Polyline ligne;
     private Marker currentPosition;
     private LocationManager locationManager;
+    private Location bestCurrentLocation;
+
+    private static final int MAX_TIME_BEST_CURRENT_LOCATION = 1000 * 60 * 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,12 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
 
         this.locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         this.abonnementNetwork();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.desabonnementNetwork();
     }
 
     @Override
@@ -175,13 +184,30 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
     @Override
     public void onLocationChanged(Location location) {
 
-        float[] results = new float[1];
-        Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                this.arret.getPosition().latitude, this.arret.getPosition().longitude, results);
-        String distance = getResources().getString(R.string.snippet_position_courante_1) + " " + results[0] + " " + getResources().getString(R.string.snippet_position_courante_2);
-        this.currentPosition.setSnippet(distance);
-        this.currentPosition.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-        this.currentPosition.showInfoWindow();
+        if (this.isBetterLocation(location, this.bestCurrentLocation))
+        {
+            this.bestCurrentLocation = location;
+
+            if (this.currentPosition != null)
+            {
+                this.currentPosition.remove();
+            }
+
+            float[] results = new float[1];
+            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+                    this.arret.getPosition().latitude, this.arret.getPosition().longitude, results);
+
+            String distance = getResources().getString(R.string.snippet_position_courante_1) + " " + results[0] + " " + getResources().getString(R.string.snippet_position_courante_2);
+
+
+
+            MarkerOptions markerOptionsCurrentPosition = new MarkerOptions();
+            markerOptionsCurrentPosition.title(getResources().getString(R.string.titre_position_courante));
+            markerOptionsCurrentPosition.snippet(distance);
+            markerOptionsCurrentPosition.position(new LatLng(location.getLatitude(), location.getLongitude()));
+            this.currentPosition = this.mMap.addMarker(markerOptionsCurrentPosition);
+            this.currentPosition.showInfoWindow();
+        }
 
     }
 
@@ -207,10 +233,65 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
     }
 
     public void abonnementNetwork() {
-        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME, Config.DISTANCE_MAJ_MIN_DISTANCE, this);
+        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_NETWORK, this);
     }
 
     public void desabonnementNetwork() {
         this.locationManager.removeUpdates(this);
+    }
+
+
+    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return true;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > MAX_TIME_BEST_CURRENT_LOCATION;
+        boolean isSignificantlyOlder = timeDelta < -MAX_TIME_BEST_CURRENT_LOCATION;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved
+        if (isSignificantlyNewer) {
+            System.out.println("isSignificantlyNewer");
+            return true;
+            // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            System.out.println("isMoreAccurate");
+            return true;
+        } else if (isNewer && !isLessAccurate) {
+            System.out.println("isNewer && !isLessAccurate");
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            System.out.println("isNewer && !isSignificantlyLessAccurate && isFromSameProvider");
+            return true;
+        }
+        return false;
+    }
+
+    /** Checks whether two providers are the same */
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
     }
 }

@@ -43,8 +43,6 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
 
     LocationManager locationManager;
 
-
-
     public FragmentListeSignalementsProches()
     {
 
@@ -64,8 +62,6 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
         this.signalements = signalementBD.getSignalements(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
         signalementBD.close();
 
-        System.out.println(this.signalements);
-
         this.initData();
 
         this.adapterExpandableListViewHoraire = new AdapterExpandableListViewHoraire(getActivity(),this.signalements,this.horairesSignalements);
@@ -81,6 +77,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
 
         this.expandAll();
         this.updateHoraireThread();
+        this.abonnementNetwork();
 
         return view;
     }
@@ -88,6 +85,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
     @Override
     public void onDetach() {
         super.onDetach();
+        this.desabonnementNetwork();
         mTimeUpdateThread.interrupt();
     }
 
@@ -230,6 +228,11 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
         System.out.println(this.signalements + " on location changed ");
 
         this.initData();
+
+        this.adapterExpandableListViewHoraire.setSignalementsHoraires(this.signalements);
+        this.adapterExpandableListViewHoraire.setListOfChilds(this.horairesSignalements);
+
+        this.adapterExpandableListViewHoraire.notifyDataSetChanged();
     }
 
     @Override
@@ -254,10 +257,11 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
     }
 
     public void abonnementNetwork() {
-        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES, this);
+        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK, this);
     }
 
     public void desabonnementNetwork() {
         this.locationManager.removeUpdates(this);
     }
+
 }

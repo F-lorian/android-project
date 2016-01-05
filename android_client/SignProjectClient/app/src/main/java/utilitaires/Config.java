@@ -24,11 +24,12 @@ public class Config {
     public static final int LIGNE_3_COLOR = Color.rgb(68, 175, 98);
     public static final int LIGNE_4_COLOR = Color.rgb(75, 54, 34);
 
-    public static final long DISTANCE_MAJ_MIN_TIME = 1000;
-    public static final float DISTANCE_MAJ_MIN_DISTANCE = 0;
+    public static final long DISTANCE_MAJ_MIN_TIME_NETWORK = 2000;
+    public static final float DISTANCE_MAJ_MIN_DISTANCE_NETWORK = 0;
 
-    public static final long DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES = 5000;
-    public static final float DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES = 0;
+
+    public static final long DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES_NETWORK = 5000;
+    public static final float DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK = 0;
 
     public static final float DISTANCE_MAX_SIGNALEMENTS_PROCHES = 3000;
 

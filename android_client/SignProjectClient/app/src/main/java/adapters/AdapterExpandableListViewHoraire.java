@@ -3,6 +3,7 @@ package adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -39,6 +40,14 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
         this.context = c;
         this.signalementsHoraires = signalements;
         this.listOfChilds = childs;
+    }
+
+    public void setSignalementsHoraires(List<Signalement> signalementsHoraires) {
+        this.signalementsHoraires = signalementsHoraires;
+    }
+
+    public void setListOfChilds(HashMap<Signalement, List<String>> listOfChilds) {
+        this.listOfChilds = listOfChilds;
     }
 
     @Override
@@ -207,4 +216,5 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
     }
+
 }
