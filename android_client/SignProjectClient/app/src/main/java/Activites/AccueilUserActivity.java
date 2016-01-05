@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.florian.signprojectclient.R;
 
+import fragments.FragmentListeGroupes;
 import fragments.FragmentListeSignalementsHoraires;
 import fragments.FragmentListeSignalementsProches;
 import fragments.FragmentListeSignalementsSimples;
@@ -157,7 +158,7 @@ public class AccueilUserActivity extends AppCompatActivity {
                 fragment = new FragmentListeSignalementsHoraires();
                 break;
             case R.id.item_mesGroupes:
-                fragment = new FragmentListeSignalementsSimples();
+                fragment = new FragmentListeGroupes();
                 break;
             case R.id.item_rejoindreGroupe:
                 fragment = new FragmentListeSignalementsSimples();

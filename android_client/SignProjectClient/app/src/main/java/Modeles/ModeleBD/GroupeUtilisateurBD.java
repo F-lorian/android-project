@@ -57,7 +57,7 @@ public class GroupeUtilisateurBD {
         db.close();
     }
 
-    public long add(int idUtilisateur, int idGroupe, String etat) {
+    public long add(long idUtilisateur, long idGroupe, String etat) {
         // Ajout d'un enregistrement dans la table
 
         ContentValues values = new ContentValues();

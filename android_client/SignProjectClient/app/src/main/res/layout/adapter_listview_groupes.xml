@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_groupe"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp">
+
+        <LinearLayout
+            android:id="@+id/layout_nom_groupe"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/nom_adapter_groupe"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:text="GROUPE"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_type_groupe"
+            android:layout_width="match_parent"
+            android:layout_height="25sp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/type_adapter_groupe"
+                android:layout_width="match_parent"
+                android:layout_height="25sp"
+                android:text="PUBLIC"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -6,6 +6,7 @@
 
     <string name="champ_pseudo">Votre pseudo</string>
     <string name="champ_mdp">Votre mot de passe</string>
+    <string name="btn_valider">Valider</string>
     <string name="btn_seConnecter">Se connecter</string>
     <string name="btn_Annuler">Annuler</string>
     <string name="champ_confirmer_mdp">Confirmer votre mot de passe</string>
@@ -85,5 +86,15 @@
     <string name="snippet_position_courante_1">Vous êtes à</string>
     <string name="snippet_position_courante_2">mètre(s) du signalement</string>
 
-
+    <string name="titre_toolbar_ajout_groupe">Nouveau groupe</string>
+    <string name="action_toolbar_ajouter_groupe">Ajouter</string>
+    <string name="nom">Nom</string>
+    <string name="visibilite">Visibilité</string>
+    <string name="description">Description</string>
+    <string name="type_public">Public</string>
+    <string name="type_prive">Privé</string>
+    <string name="erreur_nom_groupe">Doit être supérieur à 6 lettres, ne peut contenir que des lettres, des chiffres et les caractères _ et -</string>
+    <string name="erreur_description_groupe">Doit être inférieur à 500 caractères</string>
+    <string name="message_alert_dialog_erreur_ajout_groupe_bd">Erreur lors de l\'enregistrement du groupe</string>
+    <string name="groupe_ajoute">Groupe créé</string>
 </resources>

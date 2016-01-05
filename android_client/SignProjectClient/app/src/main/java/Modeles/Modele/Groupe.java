@@ -10,6 +10,7 @@ public class Groupe {
     protected int id;
     protected String nom;
     protected String type; // Enum type = {public, privée}
+    protected String description;
     protected ArrayList<SignalementGroupe> signalements;
     protected ArrayList<Utilisateur> membres;
     protected Utilisateur admin;
@@ -26,6 +27,9 @@ public class Groupe {
         this.admin = admin;
     }
 
+    public Groupe(){
+
+    }
 
     public int getId() {
         return id;
@@ -49,6 +53,14 @@ public class Groupe {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ArrayList<SignalementGroupe> getSignalements() {
@@ -78,5 +90,17 @@ public class Groupe {
     @Override
     public String toString() {
         return nom;
+    }
+
+    public static boolean nomValide(String nom)
+    {
+        // chiffre ou MAJ ou MINUS de 6 à 16 caractere
+        return nom.matches("^[0-9A-Za-z_-]{6,16}$");
+    }
+
+    public static boolean descriptionValide(String description)
+    {
+        // chiffre ou MAJ ou MINUS de 6 à 16 caractere
+        return description.matches("[0-9A-Za-z_-]{0,500}$");
     }
 }
