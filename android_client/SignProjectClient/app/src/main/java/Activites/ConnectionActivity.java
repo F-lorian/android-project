@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,12 +16,15 @@ import com.example.florian.signprojectclient.R;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.UtilisateurBD;
+import utilitaires.Config;
 import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
@@ -135,35 +139,11 @@ public class ConnectionActivity extends Activity {
 
                 List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
                 pairsPost.add(new BasicNameValuePair("pseudo",ConnectionActivity.this.pseudo.getText().toString()));
-                pairsPost.add(new BasicNameValuePair("password",ConnectionActivity.this.mdp.getText().toString()));
+                pairsPost.add(new BasicNameValuePair("password", ConnectionActivity.this.mdp.getText().toString()));
                 pairsPost.add(new BasicNameValuePair("regId", ""));
 
-                PostRequest postRequest = new PostRequest("connection",pairsPost);
-                postRequest.sendRequest();
-                System.out.println(postRequest.getResultat());
-
-                if (utilisateur != null)
-                {
-
-                    SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
-
-                    /***** REGID GCM A IMPLEMENTER *****/
-                    String regidGCM = "";
-                    sessionManager.createLoginSession(utilisateur.getId(),utilisateur.getPseudo(),regidGCM);
-
-                    Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    ConnectionActivity.this.finish();
-                }
-                else
-                {
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pseudo_mdp));
-                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                    alertInscriptionInvalide.show();
-                }
-
-
+                RequestPostTask requestPostTask = new RequestPostTask("connection",pairsPost);
+                requestPostTask.execute();
             }
         });
 
@@ -206,5 +186,56 @@ public class ConnectionActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    class RequestPostTask extends AsyncTask<Void,Void,Void> {
+
+        private PostRequest postRequest;
+
+        public RequestPostTask(String action, List pairs){
+            this.postRequest = new PostRequest(action,pairs);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            this.postRequest.sendRequest();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+//<string name="message_alert_dialog_inscription_impossible">Inscription impossible</string>
+            JSONObject jsonObject = null;
+
+            try {
+                jsonObject = new JSONObject(this.postRequest.getResultat());
+
+                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                {
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pseudo_mdp));
+                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                    alertInscriptionInvalide.show();
+                }
+                else
+                {
+                    SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
+
+                    /***** REGID GCM A IMPLEMENTER *****/
+                    String regidGCM = "";
+                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"), jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"), regidGCM);
+
+                    Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    ConnectionActivity.this.finish();
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
 }

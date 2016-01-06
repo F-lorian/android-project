@@ -33,4 +33,13 @@ public class Config {
     public static final float DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK = 0;
 
     public static final float DISTANCE_MAX_SIGNALEMENTS_PROCHES = 3000;
+
+
+    public static final String JSON_STATE = "state";
+    public static final String JSON_MESSAGE = "message";
+    public static final String JSON_DATA= "data";
+
+    public static final String JSON_SUCCESS = "success";
+    public static final String JSON_DENIED = "denied";
+    public static final String JSON_ERROR = "error";
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,12 +16,15 @@ import com.example.florian.signprojectclient.R;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.UtilisateurBD;
+import utilitaires.Config;
 import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
@@ -163,23 +167,9 @@ public class InscriptionActivity extends Activity {
                     pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
                     pairsPost.add(new BasicNameValuePair("regId",""));
 
-                    PostRequest postRequest = new PostRequest("register",pairsPost);
-                    postRequest.sendRequest();
-                    System.out.println(postRequest.getResultat());
+                    RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost);
+                    requestPostTask.execute();
 
-                    SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
-
-                    //A FAIRE : Récupérer du serveur l'ID et le pseudo au lieu de faire localement comme ci-dessous
-                    Utilisateur utilisateur = new Utilisateur(0,"","",null,null,null);
-
-                    /***** REGID GCM A IMPLEMENTER *****/
-                    String regidGCM = "";
-                    sessionManager.createLoginSession(utilisateur.getId(),utilisateur.getPseudo(),regidGCM);
-
-                    Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    InscriptionActivity.this.finish();
                 }
                 else
                 {
@@ -229,5 +219,56 @@ public class InscriptionActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    class RequestPostTask extends AsyncTask<Void,Void,Void> {
+
+        private PostRequest postRequest;
+
+        public RequestPostTask(String action, List pairs){
+            this.postRequest = new PostRequest(action,pairs);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            this.postRequest.sendRequest();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            JSONObject jsonObject = null;
+
+            try {
+                jsonObject = new JSONObject(this.postRequest.getResultat());
+
+                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                {
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_impossible));
+                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                    alertInscriptionInvalide.show();
+                }
+                else
+                {
+                    SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
+
+                    /***** REGID GCM A IMPLEMENTER *****/
+                    String regidGCM = "";
+                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"),jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"),regidGCM);
+
+                    Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    InscriptionActivity.this.finish();
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
 }
