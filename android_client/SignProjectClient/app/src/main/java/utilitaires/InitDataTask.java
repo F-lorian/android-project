@@ -14,6 +14,8 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import activites.AccueilUserActivity;
 
@@ -27,16 +29,20 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
     protected String urlKml;
     protected boolean reussi;
 
-    public InitDataTask(Activity activity, String urlKml){
+    public InitDataTask(Activity activity){
         this.activity = activity;
-        this.urlKml = urlKml;
+        this.urlKml = Config.KML_URL;
         this.reussi = true;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
+
+        InputStream is = null;
+
         try {
-            InputStream is = this.activity.getAssets().open(urlKml);
+            //is = this.activity.getAssets().open(urlKml);
+            is = this.downloadUrl();
             ParserKMLToBD parserKMLToBD = new ParserKMLToBD();
             parserKMLToBD.parse(is);
 
@@ -46,10 +52,17 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
             e.printStackTrace();
+        } finally {
+            if (is != null)
+            {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-
         return null;
-
     }
 
     @Override
@@ -89,6 +102,11 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
                     });
         }
 
+    }
+
+    private InputStream downloadUrl() throws IOException {
+        URL url = new URL(this.urlKml);
+        return url.openStream();
     }
 
 

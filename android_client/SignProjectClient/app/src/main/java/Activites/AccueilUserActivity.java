@@ -44,6 +44,8 @@ public class AccueilUserActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private MenuItem oldMenuItem;
 
+    //<string name="message_alert_dialog_inscription_impossible">Inscription impossible</string>
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,7 +234,7 @@ public class AccueilUserActivity extends AppCompatActivity {
 
         if (la.getCount() <= 0)
         {
-            InitDataTask initDataTask = new InitDataTask(this,"tam.kml");
+            InitDataTask initDataTask = new InitDataTask(this);
             initDataTask.execute();
         }
         else

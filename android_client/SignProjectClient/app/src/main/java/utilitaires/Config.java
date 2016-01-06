@@ -7,6 +7,7 @@ import android.graphics.Color;
  */
 public class Config {
 
+    public static final String KML_URL = "http://florian-m.fr/sign-project/tam.kml";
     public static final String SERVEUR_URL = "http://florian-m.fr/sign-project/server.php";
     public static final String API_KEY = "AIzaSyA_O8dXv4VMFnIOxNnrIytx7He6k5EhLEQ";
 

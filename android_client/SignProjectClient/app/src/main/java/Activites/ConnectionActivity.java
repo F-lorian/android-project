@@ -204,7 +204,7 @@ public class ConnectionActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-//<string name="message_alert_dialog_inscription_impossible">Inscription impossible</string>
+
             JSONObject jsonObject = null;
 
             try {
