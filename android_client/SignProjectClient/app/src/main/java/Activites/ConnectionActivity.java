@@ -13,8 +13,15 @@ import android.widget.EditText;
 
 import com.example.florian.signprojectclient.R;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.UtilisateurBD;
+import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
 /**
@@ -126,8 +133,18 @@ public class ConnectionActivity extends Activity {
                 Utilisateur utilisateur = utilisateurBD.getUtilisateur(pseudo.getText().toString());
                 utilisateurBD.close();
 
+                List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+                pairsPost.add(new BasicNameValuePair("pseudo",ConnectionActivity.this.pseudo.getText().toString()));
+                pairsPost.add(new BasicNameValuePair("password",ConnectionActivity.this.mdp.getText().toString()));
+                pairsPost.add(new BasicNameValuePair("regId", ""));
+
+                PostRequest postRequest = new PostRequest("connection",pairsPost);
+                postRequest.sendRequest();
+                System.out.println(postRequest.getResultat());
+
                 if (utilisateur != null)
                 {
+
                     SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
 
                     /***** REGID GCM A IMPLEMENTER *****/

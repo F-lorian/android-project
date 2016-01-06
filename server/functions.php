@@ -80,7 +80,7 @@ function isLogged(){
 }
 
 
-function connection($email, $password) {
+function connection($pseudo, $password, $regId) {
         
     try {
         $result = array();
@@ -96,10 +96,19 @@ function connection($email, $password) {
             $_SESSION['id'] = $result[0]['id'];
             $_SESSION['pseudo'] = $result[0]['pseudo'];
 			$_SESSION['mail'] = $result[0]['email'];
+			
+			if ($result[0]['gcm_regid'] != $regId)
+			{
+				$stmt = $dbh->prepare("UPDATE user u SET u.gcm_regid='$regId' WHERE u.pseudo='$pseudo'");
+				$stmt->execute();
+			}
+			
             return $result[0]['id'];
         } else {
             return DENIED;
         }
+		
+		$dbh = null;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -116,8 +125,9 @@ function register($pseudo, $email, $password, $gcm_regid) {
         }
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("INSERT INTO gcm_users (name, email, gcm_regid, created_at) VALUES ('$pseudo', '$email', '$gcm_regid', NOW())");
-        $stmt->execute();
+        //$stmt = $dbh->prepare("INSERT INTO user (name, email, password, gcm_regid, created_at) VALUES ('$pseudo', '$email', '$password', '$gcm_regid', NOW())");
+		$stmt = $dbh->prepare("INSERT INTO user (name, email, password, gcm_regid) VALUES ('$pseudo', '$email', '$password', '$gcm_regid')");
+		$stmt->execute();
         $dbh = null;
         
         

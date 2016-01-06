@@ -151,9 +151,10 @@ function deleteUserRequest(){
 function connectionRequest(){
     $pseudo  = $_POST["pseudo"];
     $password  = $_POST["password"];
+	$regId = $_POST["regId"];
     
     if (isset($pseudo) && isset($password)) {
-        $res = connection($pseudo, $password);
+        $res = connection($pseudo, $password, $regId);
         
         if($res == DENIED){
             echo getReplyMessage(DENIED, CONNECTION_DENIED, array());

@@ -13,8 +13,15 @@ import android.widget.EditText;
 
 import com.example.florian.signprojectclient.R;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.UtilisateurBD;
+import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
 /**
@@ -148,7 +155,17 @@ public class InscriptionActivity extends Activity {
 
                 if (mdp.getText().toString().equals(confirmeMdp.getText().toString()))
                 {
+
                     //A FAIRE : verif pseudo et mdp BD sur serveur
+                    List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+                    pairsPost.add(new BasicNameValuePair("pseudo",InscriptionActivity.this.pseudo.getText().toString()));
+                    pairsPost.add(new BasicNameValuePair("email",""));
+                    pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
+                    pairsPost.add(new BasicNameValuePair("regId",""));
+
+                    PostRequest postRequest = new PostRequest("register",pairsPost);
+                    postRequest.sendRequest();
+                    System.out.println(postRequest.getResultat());
 
                     SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
 
