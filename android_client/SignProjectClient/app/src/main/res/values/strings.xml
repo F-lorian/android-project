@@ -28,6 +28,7 @@
     <string name="btn_alert_dialog_erreur">Fermer</string>
     <string name="message_alert_dialog_erreur_egaux_mdp">les mots de passes doivent être égaux</string>
     <string name="message_alert_dialog_erreur_pseudo_mdp">Pseudo ou mot de passe incorrect</string>
+    <string name="message_alert_dialog_inscription_impossible">Inscription impossible</string>
     <string name="message_alert_dialog_erreur_chargement">Les données n\'ont pas pu être chargées. Veuillez réessayer ultérieurement</string>
     <string name="message_alert_dialog_erreur_horaire_signalement">Aucun horaire ajouté</string>
     <string name="message_alert_dialog_erreur_groupe_signalement">Aucun groupe selectionné</string>
@@ -38,6 +39,9 @@
 
     <string name="progress_dialog_titre">Chargement...</string>
     <string name="progress_dialog_message">Initialisation en cours</string>
+    <string name="progress_dialog_message_connection">Connection en cours</string>
+    <string name="progress_dialog_message_inscription">Inscription en cours</string>
+    <string name="progress_dialog_message_deconnection">Deconnection en cours</string>
     <string name="popup_progress_dialog_termine">Chargement terminé</string>
 
     <string name="texte_header_nav">Bienvenue</string>
