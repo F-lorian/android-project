@@ -16,6 +16,7 @@ public class Config {
     public static final String AUTRES = "Autres";
 
     public static final String TYPE_SIGNALEMENT = "TYPE_SIGNALEMENT";
+    public static final String ID_GROUPE = "ID";
 
     public static final float LIGNE_WIDTH = 8;
 
@@ -32,6 +33,4 @@ public class Config {
     public static final float DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK = 0;
 
     public static final float DISTANCE_MAX_SIGNALEMENTS_PROCHES = 3000;
-
-
 }

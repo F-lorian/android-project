@@ -32,6 +32,7 @@ import activites.PositionSignalementMapsActivity;
 import modeles.modele.Groupe;
 import modeles.modele.Signalement;
 import modeles.modeleBD.GroupeUtilisateurBD;
+import utilitaires.Config;
 import utilitaires.SessionManager;
 
 /**
@@ -44,9 +45,6 @@ public class AdapterListViewGroupe extends BaseAdapter {
     private Context mContext;
 
     private LayoutInflater mInflater;
-
-    public static final String ID_GROUPE = "id";
-
 
     public AdapterListViewGroupe(Context mContext, List<Groupe> groupes) {
         this.mContext = mContext;
@@ -94,14 +92,14 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
         String typeGroupe = this.groupes.get(position).getType();
         System.out.println("typeGroupe : "+typeGroupe);
-        if(typeGroupe.equals(this.mContext.getResources().getString(R.string.type_public))){
+        if(typeGroupe.equals(Groupe.TYPE_PUBLIC)){
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_eye));
         }
-        else if(typeGroupe.equals(this.mContext.getResources().getString(R.string.type_prive))){
+        else if(typeGroupe.equals(Groupe.TYPE_PRIVE)){
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_closed_eye));
         }
 
-        type.setText(typeGroupe);
+        type.setText(Groupe.getStringWithType(typeGroupe));
 
         groupe.setTag(position);
         groupe.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +112,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
                 //aller vers l'activité pour voir un groupe
                 Intent intent = new Intent(c, GroupeActivity.class);
-                intent.putExtra(ID_GROUPE, id);
+                intent.putExtra(Config.ID_GROUPE, id);
                 c.startActivity(intent);
 
             }
@@ -133,16 +131,13 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
         if (id_admin == idUser) {
             etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
-            //etat_utilisateur.setBackgroundColor(ContextCompat.getColor(mContext, R.color.wallet_holo_blue_light));//rouge
         } else {
 
             String s = groupeUtilisateurBD.isInGroup(idUser, id_groupe);
             if (s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                 etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
-                //etat_utilisateur.setBackgroundColor(ContextCompat.getColor(mContext, R.color.wallet_holo_blue_light));//vert
             } else if (s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                 etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
-                //etat_utilisateur.setBackgroundColor(ContextCompat.getColor(mContext, R.color.wallet_holo_blue_light));//orange
             } else {
                 etat_utilisateur.setVisibility(View.GONE);
             }

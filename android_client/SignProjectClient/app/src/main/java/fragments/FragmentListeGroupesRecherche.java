@@ -50,8 +50,6 @@ public class FragmentListeGroupesRecherche extends Fragment {
         this.valider = (ImageButton) view.findViewById(R.id.button_recherche_groupe);
 
 
-
-
         this.valider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

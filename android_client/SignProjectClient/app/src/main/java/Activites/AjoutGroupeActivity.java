@@ -35,6 +35,7 @@ import modeles.modeleBD.GroupeBD;
 import modeles.modeleBD.LigneArretBD;
 import modeles.modeleBD.SignalementBD;
 import modeles.modeleBD.UtilisateurBD;
+import utilitaires.Config;
 import utilitaires.SessionManager;
 import utilitaires.UtilisateursDestinationSignalementCompletionView;
 
@@ -49,12 +50,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
     private Spinner spinnerType;
     private EditText editTextDescription;
 
-    public static final String TYPE_PUBLIC_GROUPE="@string/type_public";
-    public static final String TYPE_PRIVE_GROUPE="@string/type_prive";
-
     private ArrayList<String> typeGroupes;
-
-    private static float alphaBtnValider = 64f/255f;
 
     private AlertDialog.Builder buildAlertContenuInvalide;
 
@@ -75,8 +71,8 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         this.editTextDescription = (EditText) findViewById(R.id.champDescriptionGroupe);
 
         this.typeGroupes = new ArrayList<String>();
-        this.typeGroupes.add(this.getResources().getString(R.string.type_public));
-        this.typeGroupes.add(this.getResources().getString(R.string.type_prive));
+        this.typeGroupes.add(getResources().getString(R.string.type_public));
+        this.typeGroupes.add(getResources().getString(R.string.type_prive));
 
         this.spinnerType = (Spinner) findViewById(R.id.spinnerTypeGroupe);
         AdapterSpinnerTypeGroupe adapterSpinnerTypeGroupe = new AdapterSpinnerTypeGroupe(this,this.typeGroupes);
@@ -152,7 +148,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         // The action bar home/up action should open or close the drawer.
         switch (item.getItemId()) {
             case R.id.toolbar_ajouter_groupe:
-                onValid();
+                valid();
                 break;
             case android.R.id.home:
                 this.finish();
@@ -163,7 +159,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onValid() {
+    public void valid() {
         int indiceType = spinnerType.getSelectedItemPosition();
 
         Groupe groupe = new Groupe();
@@ -185,7 +181,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         }else{
 
             groupe.setNom(nom);
-            groupe.setType(type);
+            groupe.setType(Groupe.getTypeWithString(type));
             groupe.setDescription(description);
 /*
                     buildAlertContenuInvalide.setMessage(description);

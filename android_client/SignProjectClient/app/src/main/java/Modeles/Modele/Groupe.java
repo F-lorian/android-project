@@ -15,8 +15,8 @@ public class Groupe {
     protected ArrayList<Utilisateur> membres;
     protected Utilisateur admin;
 
-    public static final String typePublic = "Public";
-    public static final String typePrive = "Privé";
+    public static final String TYPE_PUBLIC = "public";
+    public static final String TYPE_PRIVE = "prive";
 
     public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin) {
         this.id = id;
@@ -102,5 +102,25 @@ public class Groupe {
     {
         // chiffre ou MAJ ou MINUS de 6 à 16 caractere
         return description.matches("[0-9A-Za-z_-]{0,500}$");
+    }
+
+    public static String getTypeWithString(String type){
+        String s = "";
+        if(type.equals("@string/type_public")){
+            s = TYPE_PUBLIC;
+        }else if(type.equals("@string/type_prive")){
+            s = TYPE_PRIVE;
+        }
+        return s;
+    }
+
+    public static String getStringWithType(String type){
+        String s = "";
+        if(type.equals(TYPE_PUBLIC)){
+            s = "@string/type_public";
+        }else if(type.equals(TYPE_PRIVE)){
+            s = "@string/type_prive";
+        }
+        return s;
     }
 }

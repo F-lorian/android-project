@@ -87,6 +87,7 @@
     <string name="snippet_position_courante_2">mètre(s) du signalement</string>
 
     <string name="titre_toolbar_ajout_groupe">Nouveau groupe</string>
+    <string name="titre_toolbar_modifier_groupe">Modifier groupe</string>
     <string name="titre_toolbar_groupe">Groupe</string>
     <string name="action_toolbar_ajouter_groupe">Ajouter</string>
     <string name="nom">Nom</string>
@@ -102,8 +103,10 @@
     <string name="membre">Membre</string>
     <string name="admin">Admin</string>
     <string name="btn_quitter_groupe">quitter le groupe</string>
+    <string name="btn_modifier_groupe">modifier le groupe</string>
     <string name="btn_supprimer_groupe">supprimer le groupe</string>
     <string name="btn_rejoindre_groupe">rejoindre le groupe</string>
+    <string name="btn_annuler_demande">annuler la demande</string>
     <string name="ajout_en_attente">Demande d\'ajout en attente</string>
     <string name="hint_recherche_groupe">Taper un nom de groupe</string>
 

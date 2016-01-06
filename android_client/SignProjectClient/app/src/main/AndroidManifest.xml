@@ -60,6 +60,10 @@
             android:name="activites.GroupeActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="activites.ModificationGroupeActivity"
+            android:label="@string/app_name" >
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

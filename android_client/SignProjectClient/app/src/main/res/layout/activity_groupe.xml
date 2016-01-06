@@ -24,10 +24,38 @@
             android:layout_margin="15dp">
 
             <Button
-                android:id="@+id/action_button_group"
+                android:id="@+id/action_modifier_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/btn_modifier_groupe"
+                android:textSize="@dimen/texte_size_bouton"/>
+
+            <Button
+                android:id="@+id/action_supprimer_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/btn_supprimer_groupe"
+                android:textSize="@dimen/texte_size_bouton"/>
+
+            <Button
+                android:id="@+id/action_quitter_button_group"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/btn_quitter_groupe"
+                android:textSize="@dimen/texte_size_bouton"/>
+
+            <Button
+                android:id="@+id/action_rejoindre_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/btn_rejoindre_groupe"
+                android:textSize="@dimen/texte_size_bouton"/>
+
+            <Button
+                android:id="@+id/action_annuler_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/btn_annuler_demande"
                 android:textSize="@dimen/texte_size_bouton"/>
 
             <TextView

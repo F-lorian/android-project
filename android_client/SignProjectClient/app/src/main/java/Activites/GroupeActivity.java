@@ -1,5 +1,8 @@
 package activites;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
@@ -18,6 +22,7 @@ import modeles.modele.Groupe;
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.GroupeBD;
 import modeles.modeleBD.GroupeUtilisateurBD;
+import utilitaires.Config;
 import utilitaires.SessionManager;
 
 /**
@@ -28,29 +33,38 @@ public class GroupeActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView nom;
     private TextView description;
-    private Button action;
+    private Button supprimer;
+    private Button modifier;
+    private Button rejoindre;
+    private Button quitter;
+    private Button annuler_demande;
     private TextView info;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groupe);
 
-        // Set a Toolbar to replace the ActionBar.
-        this.toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setTitle(getResources().getString(R.string.titre_toolbar_groupe));
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        this.nom = (TextView) findViewById(R.id.nom_groupe);
-        this.description = (TextView) findViewById(R.id.description_groupe);
-        this.action = (Button) findViewById(R.id.action_button_group);
-        this.info = (TextView) findViewById(R.id.info_groupe);
-
-        int id_groupe = getIntent().getIntExtra(AdapterListViewGroupe.ID_GROUPE, -1);
+        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
 
         if (id_groupe != -1) {
+            setContentView(R.layout.activity_groupe);
+
+            // Set a Toolbar to replace the ActionBar.
+            this.toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            getSupportActionBar().setTitle(getResources().getString(R.string.titre_toolbar_groupe));
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            this.nom = (TextView) findViewById(R.id.nom_groupe);
+            this.description = (TextView) findViewById(R.id.description_groupe);
+            this.supprimer = (Button) findViewById(R.id.action_supprimer_button_group);
+            this.quitter = (Button) findViewById(R.id.action_quitter_button_group);
+            this.modifier = (Button) findViewById(R.id.action_modifier_button_group);
+            this.rejoindre = (Button) findViewById(R.id.action_rejoindre_button_group);
+            this.annuler_demande = (Button) findViewById(R.id.action_annuler_button_group);
+            this.info = (TextView) findViewById(R.id.info_groupe);
+
             GroupeBD groupeBD = new GroupeBD(this);
             groupeBD.open();
             Groupe groupe = groupeBD.getGroupe(id_groupe);
@@ -60,24 +74,72 @@ public class GroupeActivity extends AppCompatActivity {
             GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
             int idUser = sessionManager.getUserId();
             if (groupe.getAdmin().getId() == idUser) {
-                action.setText(getResources().getString(R.string.btn_supprimer_groupe));
-                info.setVisibility(View.GONE);
+                //onclick
+                this.info.setVisibility(View.GONE);
+                this.rejoindre.setVisibility(View.GONE);
+                this.quitter.setVisibility(View.GONE);
+                this.annuler_demande.setVisibility(View.GONE);
+
+                this.modifier.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        edit();
+                    }
+                });
+                this.supprimer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delete();
+                    }
+                });
+
             } else {
                 if (groupeUtilisateurBD.isInGroup(idUser, id_groupe).equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
-                    action.setText(getResources().getString(R.string.btn_quitter_groupe));
-                    info.setVisibility(View.GONE);
+                    //onclick
+                    this.info.setVisibility(View.GONE);
+                    this.modifier.setVisibility(View.GONE);
+                    this.supprimer.setVisibility(View.GONE);
+                    this.rejoindre.setVisibility(View.GONE);
+                    this.annuler_demande.setVisibility(View.GONE);
+
+                    this.quitter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            quit();
+                        }
+                    });
+
                 } else if (groupeUtilisateurBD.isInGroup(idUser, id_groupe).equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
-                    action.setVisibility(View.GONE);
+                    this.quitter.setVisibility(View.GONE);
+                    this.modifier.setVisibility(View.GONE);
+                    this.supprimer.setVisibility(View.GONE);
+                    this.rejoindre.setVisibility(View.GONE);
+
+                    this.annuler_demande.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cancelDemand();
+                        }
+                    });
+
                 } else {
-                    info.setVisibility(View.GONE);
-                    action.setText(getResources().getString(R.string.btn_rejoindre_groupe));
-                    action.setBackgroundColor(ContextCompat.getColor(this, R.color.wallet_holo_blue_light));
+                    this.quitter.setVisibility(View.GONE);
+                    this.modifier.setVisibility(View.GONE);
+                    this.supprimer.setVisibility(View.GONE);
+                    this.info.setVisibility(View.GONE);
+                    this.annuler_demande.setVisibility(View.GONE);
+
+                    this.rejoindre.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendDemand();
+                        }
+                    });
                 }
             }
 
-            nom.setText(groupe.getNom());
-            description.setText(groupe.getDescription());
-
+            this.nom.setText(groupe.getNom());
+            this.description.setText(groupe.getDescription());
         }
     }
 
@@ -92,5 +154,38 @@ public class GroupeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void edit() {
+
+        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+
+        Intent intent = new Intent(this, ModificationGroupeActivity.class);
+        intent.putExtra(Config.ID_GROUPE, id_groupe);
+        startActivity(intent);
+
+    }
+    public void delete() {
+
+        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+
+    }
+    public void quit() {
+
+        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+
+    }
+    public void sendDemand() {
+
+        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+
+
+    }
+
+    public void cancelDemand() {
+
+        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+
+
     }
 }

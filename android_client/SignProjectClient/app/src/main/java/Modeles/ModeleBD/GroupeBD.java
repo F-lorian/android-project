@@ -240,7 +240,7 @@ public class GroupeBD {
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME
                 + " WHERE "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR
                 + " AND "+NOM_GROUPE+" LIKE '%"+search+"%'"
-                + " AND "+TYPE_GROUPE+"='"+Groupe.typePublic+"'"
+                + " AND "+TYPE_GROUPE+"='"+Groupe.TYPE_PUBLIC+"'"
                 //+ " AND "+GroupeUtilisateurBD.ETAT_GROUPE+"="+GroupeUtilisateurBD.ETAT_APPARTIENT
                 //+ "' ORDER BY datetime("+DATE_SIGNALEMENT+") DESC"  ajouter la date d'ajout de l'utilisateur au groupe
                 , null);
