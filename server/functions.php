@@ -48,9 +48,20 @@ function adminConnection($login, $password){
 
 
 	//Deconnexion
-function deconnexion(){
+function deconnection($id, $pseudo){
     session_destroy(); // on detruit la session
-    header("location:" . ABSOLUTE_ROOT); // on redirige vers l'accueil
+    //header("location:" . ABSOLUTE_ROOT); // on redirige vers l'accueil
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("UPDATE user u SET u.online = false WHERE u.pseudo='$pseudo' AND u.id='$id''");
+        $stmt->execute();
+        $dbh = null;
+    
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
 }
 
 function sendNotification($registrationIds, $message){
@@ -87,28 +98,29 @@ function connection($pseudo, $password, $regId) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo = '$pseudo' AND password = '$password'");
         $stmt->execute();
-        while ($row = $stmt->fetch()) {
+        /*while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
 
-        $NumOfRows = count($result);
+        $NumOfRows = count($result);*/
+        
+        $NumOfRows = $stmt->rowCount();
+        
         if ($NumOfRows == 1) {
             $_SESSION['id'] = $result[0]['id'];
             $_SESSION['pseudo'] = $result[0]['pseudo'];
 			$_SESSION['mail'] = $result[0]['email'];
 			
-			if ($result[0]['gcm_regid'] != $regId)
-			{
-				$stmt = $dbh->prepare("UPDATE user u SET u.gcm_regid='$regId' WHERE u.pseudo='$pseudo'");
-				$stmt->execute();
-			}
+            $stmt = $dbh->prepare("UPDATE user u SET u.gcm_regid='$regId', u.online='false' WHERE pseudo = '$pseudo'");
+            $dbh = null;
 			
             return $result[0]['id'];
         } else {
+            $dbh = null;
             return DENIED;
         }
 		
-		$dbh = null;
+		
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";

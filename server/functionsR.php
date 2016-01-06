@@ -2,6 +2,7 @@
 
 define("CONNECTION_SUCCESS", "connection");
 define("CONNECTION_DENIED", "compte introuvable");
+define("LOG_OUT", "deconnexion réussie");
 
 define("USER_ADDED", "utilisateur ajouté");
 define("USER_DELETED", "utilisateur supprimé");
@@ -150,6 +151,17 @@ function connectionRequest(){
         else {
             echo getReplyMessage(SUCCESS, CONNECTION_SUCCESS, array('pseudo'=>$_POST["pseudo"], 'id'=>$res));
         }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+
+function deconnectionRequest(){
+    if (isset($_POST["pseudo"]) && isset($_POST["id"])) {
+        $res = deconnection($_POST["id"], $_POST["pseudo"]);
+        echo getReplyMessage(SUCCESS, LOG_OUT, array());
+   
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
