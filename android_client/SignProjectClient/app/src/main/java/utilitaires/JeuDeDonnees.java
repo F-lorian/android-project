@@ -21,8 +21,8 @@ public class JeuDeDonnees {
         {
             addUtilisateurs(c);
             addTypeSignalements(c);
-            addGroupes(c);
-            addGroupeUtilisateurs(c);
+            //addGroupes(c);
+            //addGroupeUtilisateurs(c);
         }
     }
 

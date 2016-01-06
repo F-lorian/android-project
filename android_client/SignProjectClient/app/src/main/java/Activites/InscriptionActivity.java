@@ -2,6 +2,7 @@ package activites;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -167,7 +168,7 @@ public class InscriptionActivity extends Activity {
                     pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
                     pairsPost.add(new BasicNameValuePair("regId",""));
 
-                    RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost);
+                    RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost,InscriptionActivity.this);
                     requestPostTask.execute();
 
                 }
@@ -224,9 +225,12 @@ public class InscriptionActivity extends Activity {
     class RequestPostTask extends AsyncTask<Void,Void,Void> {
 
         private PostRequest postRequest;
+        private ProgressDialog progressDialog;
+        private Activity activity;
 
-        public RequestPostTask(String action, List pairs){
+        public RequestPostTask(String action, List pairs, Activity activity){
             this.postRequest = new PostRequest(action,pairs);
+            this.activity = activity;
         }
 
         @Override
@@ -236,16 +240,31 @@ public class InscriptionActivity extends Activity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message_inscription));
+
+            this.progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
 
+            progressDialog.dismiss();
             JSONObject jsonObject = null;
 
             try {
                 jsonObject = new JSONObject(this.postRequest.getResultat());
 
-                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
                 {
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_impossible));
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                    alertInscriptionInvalide.show();
+                }
+                else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                {
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
                     AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                     alertInscriptionInvalide.show();
                 }

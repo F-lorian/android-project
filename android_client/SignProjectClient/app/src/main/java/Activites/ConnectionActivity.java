@@ -2,6 +2,7 @@ package activites;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -142,7 +143,7 @@ public class ConnectionActivity extends Activity {
                 pairsPost.add(new BasicNameValuePair("password", ConnectionActivity.this.mdp.getText().toString()));
                 pairsPost.add(new BasicNameValuePair("regId", ""));
 
-                RequestPostTask requestPostTask = new RequestPostTask("connection",pairsPost);
+                RequestPostTask requestPostTask = new RequestPostTask("connection",pairsPost,ConnectionActivity.this);
                 requestPostTask.execute();
             }
         });
@@ -191,9 +192,12 @@ public class ConnectionActivity extends Activity {
     class RequestPostTask extends AsyncTask<Void,Void,Void> {
 
         private PostRequest postRequest;
+        private ProgressDialog progressDialog;
+        private Activity activity;
 
-        public RequestPostTask(String action, List pairs){
+        public RequestPostTask(String action, List pairs, Activity activity){
             this.postRequest = new PostRequest(action,pairs);
+            this.activity = activity;
         }
 
         @Override
@@ -203,8 +207,18 @@ public class ConnectionActivity extends Activity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message_connection));
+
+            this.progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
 
+            progressDialog.dismiss();
             JSONObject jsonObject = null;
 
             try {

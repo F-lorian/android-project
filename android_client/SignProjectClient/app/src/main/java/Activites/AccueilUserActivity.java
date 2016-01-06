@@ -1,5 +1,8 @@
 package activites;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +24,12 @@ import android.widget.TextView;
 
 import com.example.florian.signprojectclient.R;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import fragments.FragmentListeGroupes;
 import fragments.FragmentListeGroupesRecherche;
 import fragments.FragmentListeSignalementsHoraires;
@@ -31,6 +40,7 @@ import utilitaires.Config;
 import utilitaires.InitDataTask;
 import utilitaires.JeuDeDonnees;
 import adapters.PageAdapterSignalementAutresAccidents;
+import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
 /**
@@ -43,8 +53,6 @@ public class AccueilUserActivity extends AppCompatActivity {
     public NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private MenuItem oldMenuItem;
-
-    //<string name="message_alert_dialog_inscription_impossible">Inscription impossible</string>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +99,9 @@ public class AccueilUserActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_settings:
+                this.deconnection();
                 return true;
         }
 
@@ -194,6 +205,11 @@ public class AccueilUserActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        this.deconnection();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
     }
@@ -220,14 +236,11 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        // A FAIRE : Signaler au serveur la déconnection !!!
         super.onDestroy();
     }
 
     public void InitilisationDesDonnees()
     {
-        JeuDeDonnees j = new JeuDeDonnees(this);
-
         LigneArretBD la = new LigneArretBD(this);
 
         la.open();
@@ -276,5 +289,49 @@ public class AccueilUserActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    class RequestPostTask extends AsyncTask<Void,Void,Void> {
+
+        private PostRequest postRequest;
+        private ProgressDialog progressDialog;
+        private Activity activity;
+
+        public RequestPostTask(String action, List pairs, Activity activity){
+            this.postRequest = new PostRequest(action,pairs);
+            this.activity = activity;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            this.postRequest.sendRequest();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message_deconnection));
+
+            this.progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            this.progressDialog.dismiss();
+            this.activity.finish();
+        }
+    }
+
+    private void deconnection()
+    {
+        SessionManager sessionManager = new SessionManager(this);
+        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+        pairsPost.add(new BasicNameValuePair("pseudo",sessionManager.getUserPseudo()));
+        pairsPost.add(new BasicNameValuePair("id", sessionManager.getUserId()+""));
+
+        RequestPostTask requestPostTask = new RequestPostTask("deconnection",pairsPost,this);
+        requestPostTask.execute();
     }
 }
