@@ -98,13 +98,11 @@ function connection($pseudo, $password, $regId) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo = '$pseudo' AND password = '$password'");
         $stmt->execute();
-        /*while ($row = $stmt->fetch()) {
+        while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
-
-        $NumOfRows = count($result);*/
-        
-        $NumOfRows = $stmt->rowCount();
+        $NumOfRows = count($result);
+        //$NumOfRows = $stmt->rowCount();
         
         if ($NumOfRows == 1) {
             $_SESSION['id'] = $result[0]['id'];

@@ -138,7 +138,7 @@ public class GroupeUtilisateurBD {
     public String isInGroup(int idUtilisateur, int idGroupe) {
         // sélection de tous les enregistrements de la table
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_UTILISATEUR+"="+idUtilisateur+" AND "+ID_GROUPE+"="+idGroupe+" AND "+ETAT_GROUPE+"='"+ETAT_APPARTIENT, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_UTILISATEUR+"="+idUtilisateur+" AND "+ID_GROUPE+"="+idGroupe+" AND "+ETAT_GROUPE+"='"+ETAT_APPARTIENT+"'", null);
 
         ArrayList<Groupe> groupes = new ArrayList<Groupe>();
 

@@ -62,6 +62,7 @@ public class FragmentListeGroupesRecherche extends Fragment {
                 FragmentListeGroupesRecherche.this.groupes = groupeBD.searchGroupes(s);
 
                 System.out.println("nb groupes : "+groupeBD.getCount());
+                System.out.println("id user : "+sessionManager.getUserId());
                 groupeBD.close();
 
                 FragmentListeGroupesRecherche.this.adapterListViewGroupe = new AdapterListViewGroupe(FragmentListeGroupesRecherche.this.getActivity(),FragmentListeGroupesRecherche.this.groupes);

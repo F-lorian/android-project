@@ -17,6 +17,9 @@ if(isset($dbh)){
             case "connection":
                 connectionRequest();
                 break;
+            case "deconnection":
+                deconnectionRequest();
+                break;
             case "getUserByEmail":
                 getUserByEmailRequest();
                 break;

@@ -81,7 +81,7 @@ public class GroupeActivity extends AppCompatActivity {
             groupeBD.close();
 
             SessionManager sessionManager = new SessionManager(this);
-            GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
+
             int idUser = sessionManager.getUserId();
             if (groupe.getAdmin().getId() == idUser) {
                 //onclick
@@ -102,7 +102,13 @@ public class GroupeActivity extends AppCompatActivity {
                 });
 
             } else {
-                if (groupeUtilisateurBD.isInGroup(idUser, id_groupe).equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
+
+                GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
+                groupeUtilisateurBD.open();
+                String s = groupeUtilisateurBD.isInGroup(idUser, id_groupe);
+                groupeUtilisateurBD.close();
+
+                if (s != null && s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                     //onclick
                     this.layout_admin.setVisibility(View.GONE);
                     this.rejoindre.setVisibility(View.GONE);
@@ -115,7 +121,7 @@ public class GroupeActivity extends AppCompatActivity {
                         }
                     });
 
-                } else if (groupeUtilisateurBD.isInGroup(idUser, id_groupe).equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
+                } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                     this.layout_admin.setVisibility(View.GONE);
                     this.rejoindre.setVisibility(View.GONE);
 
