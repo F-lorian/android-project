@@ -8,6 +8,7 @@ define("USER_DELETED", "utilisateur supprimé");
 define("USER_ADD_FAIL", "erreur lors de l'ajout de l'utilisateur");
 define("USER_DELETE_FAIL", "erreur lors de la suppression de l'utilisateur");
 define("USER_EXIST", "l'utilisateur existe");
+define("PSEUDO_EXIST", "ce pseudo est déjà utilisé");
 define("USER_NOT_FOUND", "utilisateur introuvable");
 define("USER_IS_IN_GROUP", "l'utilisateur est dans ce groupe");
 define("USER_IS_NOT_IN_GROUP", "l'utilisateur n'est pas dans ce groupe");
@@ -80,35 +81,26 @@ function getReplyMessage($state, $message, $data){
     
     $d = json_encode($data);
     return '{'
-        .'"state":'.$state.','
+        .'"state":"'.$state.'",'
         .'"message":"'.$message.'",'
-        .'"data":'.$d.','
+        .'"data":'.$d
         .'}';
 }
 
 function registerRequest(){
-    // return json response 
-    $json = array();
-
-    $pseudo  = $_POST["pseudo"];
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-    $gcm_regid = $_POST["regId"];
     
-    $success = "true";
-    $error = "erreur lors de l'inscription";
-    
-    if (isset($pseudo) 
-         && isset($email) 
-         && isset($password) 
-         && isset($gcm_regid)) {
+    if (isset($_POST["pseudo"]) 
+         && isset($_POST["password"]) 
+         && isset($_POST["regId"])) {
 
         // Store user details in db
-        $res = register($name, $email, $password, $gcm_regid);
-        if(res == ERROR){
+        $res = register($_POST["pseudo"], $_POST["password"], $_POST["regId"]);
+        if($res == ERROR){
             echo getReplyMessage(ERROR, USER_ADD_FAIL, array());
+        } else if($res == DENIED){
+            echo getReplyMessage(DENIED, PSEUDO_EXIST, array());
         } else {
-            echo getReplyMessage(SUCCESS, USER_ADDED, array('pseudo'=>$pseudo, 'id'=>$res));
+            echo getReplyMessage(SUCCESS, USER_ADDED, array('pseudo'=>$_POST["pseudo"], 'id'=>$res));
         }
 
 /*       $registration_ids = array($gcm_regid);
@@ -119,7 +111,7 @@ function registerRequest(){
 
         echo $result;*/
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 
@@ -133,34 +125,30 @@ function deleteUserRequest(){
     
     if(isset($res)){
         if($res == SUCCESS){
-            echo USER_DELETED;
+            echo getReplyMessage(SUCCESS, USER_DELETED, array());
         }
         else if($res == ERROR){
-            echo USER_DELETE_FAIL;
+            echo getReplyMessage(ERROR, USER_DELETE_FAIL, array());
         }
         else if($res == DENIED){
-            echo USER_NOT_FOUND;
+            echo getReplyMessage(DENIED, USER_NOT_FOUND, array());
         }
         
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
     
 }
 
 function connectionRequest(){
-    $pseudo  = $_POST["pseudo"];
-    $password  = $_POST["password"];
-	$regId = $_POST["regId"];
-    
-    if (isset($pseudo) && isset($password)) {
-        $res = connection($pseudo, $password, $regId);
+    if (isset($_POST["pseudo"]) && isset($_POST["password"])) {
+        $res = connection($_POST["pseudo"], $_POST["password"], $_POST["regId"]);
         
         if($res == DENIED){
             echo getReplyMessage(DENIED, CONNECTION_DENIED, array());
         }
         else {
-            echo getReplyMessage(SUCCESS, CONNECTION_SUCCESS, array('pseudo'=>$pseudo, 'id'=>$res));
+            echo getReplyMessage(SUCCESS, CONNECTION_SUCCESS, array('pseudo'=>$_POST["pseudo"], 'id'=>$res));
         }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
@@ -171,11 +159,10 @@ function connectionRequest(){
  * Get user by email
  */
 function getUserByEmailRequest() {
-    $email  = $_POST["email"];
-    if (isset($email)) {
-        echo (json_encode(getUserByEmail($email)));
+    if (isset($_POST["email"])) {
+        echo (json_encode(getUserByEmail($_POST["email"])));
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 
@@ -183,95 +170,85 @@ function getUserByEmailRequest() {
  * search user
  */
 function searchUserRequest() {
-    $w  = $_POST["w"];
-    $page  = $_POST["page"];
-    if (isset($w)) {
-       echo (json_encode(searchUser($w, $page)));
+    if (isset($_POST["w"])) {
+       echo (json_encode(searchUser($_POST["w"], $_POST["page"])));
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 
 function getAllUsersRequest() {
-    $page  = $_POST["page"];
-    echo (json_encode(getAllUsers($page)));
+    if (isset($_POST["page"])) {
+        echo (json_encode(getAllUsers($_POST["page"])));
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
 }
 
 function userExistRequest(){
-    $email  = $_POST["email"];
-    $pseudo  = $_POST["pseudo"];
-    
-    if (isset($pseudo)) {
-        $res = userExistPseudo($pseudo);
-    } else if (isset($email)) {
-        $res = userExistMail($email);
+    if (isset($_POST["pseudo"])) {
+        $res = userExistPseudo($_POST["pseudo"]);
+    } else if (isset($_POST["email"])) {
+        $res = userExistMail($_POST["email"]);
     } 
     
     if(isset($res)){
         if($res == SUCCESS){
-            echo USER_EXIST;
+            echo getReplyMessage(SUCCESS, USER_EXIST, array());
         }
-        else if($res == ERROR){
-            echo USER_NOT_FOUND;
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, USER_NOT_FOUND, array());
         } 
         
     } else {
-        echo PARAMETERS_MISSING;
-    }
-    
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    } 
 }
 
 function groupExistRequest(){
-    $group  = $_POST["name"];
-    $creator = $_POST["creator"];
-    
-    if (isset($name) && isset($creator)) {
-        $res = groupExist($name, $creator); 
+    if (isset($_POST["name"]) && isset($_POST["creator"])) {
+        $res = groupExist($_POST["name"], $_POST["creator"]); 
         
         if($res == SUCCESS){
-            echo GROUP_EXIST;
+            echo getReplyMessage(SUCCESS, GROUP_EXIST, array());
         }
-        else if($res == ERROR){
-            echo GROUP_NOT_FOUND;
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, GROUP_NOT_FOUND, array());
         }
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 
 function isInGroupRequest(){
-    $user_id  = $_POST["user_id"];
-    $group_id = $_POST["group_id"];
     
-    if (isset($user_id) && isset($group_id)) {
-        $res = isInGroup($user_id, $group_id);
+    if (isset($_POST["user_id"]) && isset($_POST["group_id"])) {
+        $res = isInGroup($_POST["user_id"], $_POST["group_id"]);
         
         if($res == SUCCESS){
-            echo USER_IS_IN_GROUP;
+            echo getReplyMessage(SUCCESS, USER_IS_IN_GROUP, array());
         }
-        else if($res == ERROR){
-            echo USER_IS_NOT_IN_GROUP;
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, USER_IS_NOT_IN_GROUP, array());
         }
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 
 function addToGroupRequest(){
-    $user_id  = $_POST["user_id"];
-    $group_id = $_POST["group_id"];
     
-    if (isset($user_id) && isset($group_id)) {
-        $res = addToGroup($user_id, $group_id);
+    if (isset($_POST["user_id"]) && isset($_POST["group_id"])) {
+        $res = addToGroup($_POST["user_id"], $_POST["group_id"]);
         
         if($res == SUCCESS){
-            echo ADDED_TO_GROUP;
+            echo getReplyMessage(SUCCESS, ADDED_TO_GROUP, array());
         }
         else if($res == ERROR){
-            echo ADD_TO_GROUP_FAIL;
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
         }
     } else {
-        echo PARAMETERS_MISSING;
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
 ?>

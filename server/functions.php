@@ -1,9 +1,9 @@
 <?php
 require_once('notification.php');
 
-define("SUCCESS", true);
-define("ERROR", false);
-define("DENIED", null);
+define("SUCCESS", "success");
+define("ERROR", "error");
+define("DENIED", "denied");
 
 
 function isLoggedAdmin(){
@@ -116,17 +116,17 @@ function connection($pseudo, $password, $regId) {
     }
 }
 
-function register($pseudo, $email, $password, $gcm_regid) {
+function register($pseudo, $password, $gcm_regid) {
         
     try {
         
-        if(userExistPseudo($pseudo) || userExistMail($email)){
+        if(userExistPseudo($pseudo) == SUCCESS){
             return DENIED;
         }
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         //$stmt = $dbh->prepare("INSERT INTO user (name, email, password, gcm_regid, created_at) VALUES ('$pseudo', '$email', '$password', '$gcm_regid', NOW())");
-		$stmt = $dbh->prepare("INSERT INTO user (name, email, password, gcm_regid) VALUES ('$pseudo', '$email', '$password', '$gcm_regid')");
+		$stmt = $dbh->prepare("INSERT INTO user (pseudo, password, gcm_regid) VALUES ('$pseudo', '$password', '$gcm_regid')");
 		$stmt->execute();
         $dbh = null;
         
@@ -297,7 +297,7 @@ function userExistPseudo($pseudo) {
         if ($NumOfRows > 0) {
             return SUCCESS;
         } else {
-            return ERROR;
+            return DENIED;
         }
         
     } catch (PDOException $e) {
@@ -423,7 +423,7 @@ function groupExist($name, $creator) {
         if ($NumOfRows > 0) {
             return SUCCESS;
         } else {
-            return ERROR;
+            return DENIED;
         }
  
     } catch (PDOException $e) {
@@ -471,7 +471,7 @@ function isInGroup($user_id, $group_id){
         if (count($result) > 0) { 
             return SUCCESS;
         } else {
-            return ERROR;
+            return DENIED;
         }
         
     } catch (PDOException $e) {
