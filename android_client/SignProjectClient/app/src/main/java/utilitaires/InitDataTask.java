@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
@@ -13,6 +14,8 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import activites.AccueilUserActivity;
 
 /**
  * Created by Axel_2 on 07/12/2015.
@@ -68,6 +71,8 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
         if (this.reussi)
         {
             Toast.makeText(this.activity, this.activity.getResources().getString(R.string.popup_progress_dialog_termine), Toast.LENGTH_LONG).show();
+            MenuItem mi = ((AccueilUserActivity)this.activity).nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
+            ((AccueilUserActivity)this.activity).selectDrawerItem(mi);
         }
         else
         {

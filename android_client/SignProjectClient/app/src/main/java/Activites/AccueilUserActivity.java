@@ -40,7 +40,7 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
-    private NavigationView nvDrawer;
+    public NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private MenuItem oldMenuItem;
 
@@ -74,9 +74,8 @@ public class AccueilUserActivity extends AppCompatActivity {
 
         this.oldMenuItem = null;
 
-        MenuItem mi = nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
-        this.selectDrawerItem(mi);
-
+        //MenuItem mi = nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
+        //this.selectDrawerItem(mi);
         this.InitilisationDesDonnees();
     }
 
@@ -235,6 +234,11 @@ public class AccueilUserActivity extends AppCompatActivity {
         {
             InitDataTask initDataTask = new InitDataTask(this,"tam.kml");
             initDataTask.execute();
+        }
+        else
+        {
+            MenuItem mi = nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
+            this.selectDrawerItem(mi);
         }
 
         la.close();
