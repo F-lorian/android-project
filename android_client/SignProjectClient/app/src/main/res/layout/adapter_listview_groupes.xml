@@ -41,7 +41,7 @@ android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/image_type"
-                android:layout_width="25sp"
+                android:layout_width="wrap_content"
                 android:layout_height="25sp"
                 android:src="@drawable/ic_eye"
                 android:background="#dbdbdb"/>
@@ -53,7 +53,6 @@ android:layout_height="wrap_content">
                 android:text="Public"
                 android:textSize="15sp"
                 android:background="#dbdbdb"
-                android:paddingLeft="2sp"
                 android:layout_marginTop="2sp"/>
             <TextView
                 android:id="@+id/user_adapter_etat"

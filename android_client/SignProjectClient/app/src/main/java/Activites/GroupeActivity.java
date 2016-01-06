@@ -3,6 +3,8 @@ package activites;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +46,9 @@ public class GroupeActivity extends AppCompatActivity {
     private LinearLayout layout_admin;
     private LinearLayout layout_membre;
     private LinearLayout layout_en_attente;
+    private TextView type ;
+    private ImageView image_type ;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +80,9 @@ public class GroupeActivity extends AppCompatActivity {
 
             this.layout_en_attente = (LinearLayout) findViewById(R.id.layout_en_attente);
             this.annuler_demande = (Button) findViewById(R.id.action_annuler_button_group);
+
+            this.type = (TextView) findViewById(R.id.type_groupe);
+            this.image_type = (ImageView) findViewById(R.id.image_type);
 
             GroupeBD groupeBD = new GroupeBD(this);
             groupeBD.open();
@@ -148,6 +157,17 @@ public class GroupeActivity extends AppCompatActivity {
 
             this.nom.setText(groupe.getNom());
             this.description.setText(groupe.getDescription());
+
+            String typeGroupe = groupe.getType();
+
+            if(typeGroupe.equals(Groupe.TYPE_PUBLIC)){
+                this.image_type.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_eye));
+                this.type.setText(getResources().getString(R.string.type_public));
+            } else if(typeGroupe.equals(Groupe.TYPE_PRIVE)){
+                this.image_type.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_closed_eye));
+                this.type.setText(getResources().getString(R.string.type_prive));
+            }
+            //this.image_type.setColorFilter(0x0106000b, PorterDuff.Mode.MULTIPLY);
         }
     }
 

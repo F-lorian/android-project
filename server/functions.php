@@ -54,7 +54,7 @@ function deconnection($id, $pseudo){
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("UPDATE user u SET u.online = false WHERE u.pseudo='$pseudo' AND u.id='$id''");
+        $stmt = $dbh->prepare("UPDATE user u SET u.online = 0 WHERE u.pseudo='$pseudo' AND u.id=$id");
         $stmt->execute();
         $dbh = null;
     
@@ -109,7 +109,10 @@ function connection($pseudo, $password, $regId) {
             $_SESSION['pseudo'] = $result[0]['pseudo'];
 			$_SESSION['mail'] = $result[0]['email'];
 			
-            $stmt = $dbh->prepare("UPDATE user u SET u.gcm_regid='$regId', u.online='false' WHERE pseudo = '$pseudo'");
+            //$stmt = $dbh->prepare("UPDATE user u SET u.gcm_regid='$regId', u.online = 1 WHERE pseudo = '$pseudo'");
+            $stmt = $dbh->prepare("UPDATE user u SET u.gcm_regid='$regId', u.online = 1 WHERE u.pseudo = '$pseudo'");
+            $stmt->execute();
+            
             $dbh = null;
 			
             return $result[0]['id'];

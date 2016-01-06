@@ -107,6 +107,7 @@
     <string name="membres">Membres</string>
     <string name="membre">Membre</string>
     <string name="admin">Admin</string>
+    <string name="en_attente">En attente</string>
     <string name="btn_quitter_groupe">quitter</string>
     <string name="btn_modifier_groupe">modifier</string>
     <string name="btn_supprimer_groupe">supprimer</string>

@@ -92,7 +92,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
         String typeGroupe = this.groupes.get(position).getType();
         String typeString = "";
-        System.out.println("typeGroupe : "+typeGroupe);
+
         if(typeGroupe.equals(Groupe.TYPE_PUBLIC)){
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_eye));
             typeString = mContext.getResources().getString(R.string.type_public);
@@ -130,17 +130,21 @@ public class AdapterListViewGroupe extends BaseAdapter {
         int id_admin = this.groupes.get(position).getAdmin().getId();
         int idUser = sessionManager.getUserId();
 
-        GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(mContext);
+
 
         if (id_admin == idUser) {
             etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
         } else {
 
+            GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(mContext);
+            groupeUtilisateurBD.open();
             String s = groupeUtilisateurBD.isInGroup(idUser, id_groupe);
-            if (s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
+            groupeUtilisateurBD.close();
+
+            if (s != null && s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                 etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
-            } else if (s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
-                etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
+            } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
+                etat_utilisateur.setText(mContext.getResources().getString(R.string.en_attente));
             } else {
                 etat_utilisateur.setVisibility(View.GONE);
             }

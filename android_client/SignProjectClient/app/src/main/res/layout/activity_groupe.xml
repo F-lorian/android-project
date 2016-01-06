@@ -127,14 +127,49 @@
                     android:gravity="center_horizontal"
                     android:layout_marginTop="20dp">
 
-                    <TextView
-                        android:id="@+id/nom_groupe"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/nom"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/texte_size_libelle_formulaire"/>
+                        android:orientation="horizontal"
+                        android:gravity="left"
+                        android:background="#dbdbdb"
+                        android:padding="10sp">
 
+                        <TextView
+                            android:id="@+id/nom_groupe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nom"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/texte_size_libelle_formulaire"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right"
+                            android:background="#dbdbdb">
+
+                            <ImageView
+                                android:id="@+id/image_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25sp"
+                                android:src="@drawable/ic_eye"
+                                android:background="@android:color/white"/>
+
+                            <TextView
+                                android:id="@+id/type_groupe"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25sp"
+                                android:text="Public"
+                                android:textSize="15sp"
+                                android:gravity="center"
+                                android:paddingLeft="5sp"
+                                android:paddingRight="5sp"
+                                android:background="@android:color/darker_gray"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/description_groupe"
                         android:layout_width="wrap_content"
