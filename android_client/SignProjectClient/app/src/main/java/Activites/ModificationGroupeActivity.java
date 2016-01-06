@@ -74,7 +74,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             AdapterSpinnerTypeGroupe adapterSpinnerTypeGroupe = new AdapterSpinnerTypeGroupe(this,this.typeGroupes);
             this.spinnerType.setAdapter(adapterSpinnerTypeGroupe);
 
-            this.spinnerType.setSelection(this.getIndiceByType(Groupe.getStringWithType(this.groupe.getType())));
+            this.spinnerType.setSelection(getIndiceByType(this.groupe.getType()));
             this.editTextNom.setText(this.groupe.getNom());
             this.editTextDescription.setText(this.groupe.getDescription());
 
@@ -177,8 +177,16 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             alertInscriptionInvalide.show();*/
 
         }else{
+
+            String typeCons = "";
+            if(type.equals(getResources().getString(R.string.type_public))){
+                typeCons = Groupe.TYPE_PUBLIC;
+            } else if(type.equals(getResources().getString(R.string.type_prive))){
+                typeCons = Groupe.TYPE_PRIVE;
+            }
+
             this.groupe.setNom(nom);
-            this.groupe.setType(Groupe.getTypeWithString(type));
+            this.groupe.setType(typeCons);
             this.groupe.setDescription(description);
 /*
                     buildAlertContenuInvalide.setMessage(description);
@@ -214,9 +222,15 @@ public class ModificationGroupeActivity extends AppCompatActivity {
         }
     }
 
-    public int getIndiceByType(String typeGroupe)
+    public int getIndiceByType(String typeCons)
     {
         int ind = 0;
+        String typeGroupe = "";
+        if(typeCons.equals(Groupe.TYPE_PUBLIC)){
+            typeGroupe = getResources().getString(R.string.type_public);
+        } else if(typeCons.equals(Groupe.TYPE_PRIVE)){
+            typeGroupe = getResources().getString(R.string.type_prive);
+        }
 
         for (int i = 0; i<this.typeGroupes.size(); i++)
         {

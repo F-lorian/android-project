@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,10 @@ public class GroupeActivity extends AppCompatActivity {
     private Button rejoindre;
     private Button quitter;
     private Button annuler_demande;
-    private TextView info;
+    private LinearLayout info;
+    private LinearLayout layout_admin;
+    private LinearLayout layout_membre;
+    private LinearLayout layout_en_attente;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +62,18 @@ public class GroupeActivity extends AppCompatActivity {
 
             this.nom = (TextView) findViewById(R.id.nom_groupe);
             this.description = (TextView) findViewById(R.id.description_groupe);
-            this.supprimer = (Button) findViewById(R.id.action_supprimer_button_group);
-            this.quitter = (Button) findViewById(R.id.action_quitter_button_group);
-            this.modifier = (Button) findViewById(R.id.action_modifier_button_group);
+
             this.rejoindre = (Button) findViewById(R.id.action_rejoindre_button_group);
+
+            this.layout_admin = (LinearLayout) findViewById(R.id.layout_admin);
+            this.modifier = (Button) findViewById(R.id.action_modifier_button_group);
+            this.supprimer = (Button) findViewById(R.id.action_supprimer_button_group);
+
+            this.layout_membre = (LinearLayout) findViewById(R.id.layout_membre);
+            this.quitter = (Button) findViewById(R.id.action_quitter_button_group);
+
+            this.layout_en_attente = (LinearLayout) findViewById(R.id.layout_en_attente);
             this.annuler_demande = (Button) findViewById(R.id.action_annuler_button_group);
-            this.info = (TextView) findViewById(R.id.info_groupe);
 
             GroupeBD groupeBD = new GroupeBD(this);
             groupeBD.open();
@@ -75,11 +85,9 @@ public class GroupeActivity extends AppCompatActivity {
             int idUser = sessionManager.getUserId();
             if (groupe.getAdmin().getId() == idUser) {
                 //onclick
-                this.info.setVisibility(View.GONE);
+                this.layout_membre.setVisibility(View.GONE);
+                this.layout_en_attente.setVisibility(View.GONE);
                 this.rejoindre.setVisibility(View.GONE);
-                this.quitter.setVisibility(View.GONE);
-                this.annuler_demande.setVisibility(View.GONE);
-
                 this.modifier.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -96,11 +104,9 @@ public class GroupeActivity extends AppCompatActivity {
             } else {
                 if (groupeUtilisateurBD.isInGroup(idUser, id_groupe).equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                     //onclick
-                    this.info.setVisibility(View.GONE);
-                    this.modifier.setVisibility(View.GONE);
-                    this.supprimer.setVisibility(View.GONE);
+                    this.layout_admin.setVisibility(View.GONE);
                     this.rejoindre.setVisibility(View.GONE);
-                    this.annuler_demande.setVisibility(View.GONE);
+                    this.layout_en_attente.setVisibility(View.GONE);
 
                     this.quitter.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -110,9 +116,7 @@ public class GroupeActivity extends AppCompatActivity {
                     });
 
                 } else if (groupeUtilisateurBD.isInGroup(idUser, id_groupe).equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
-                    this.quitter.setVisibility(View.GONE);
-                    this.modifier.setVisibility(View.GONE);
-                    this.supprimer.setVisibility(View.GONE);
+                    this.layout_admin.setVisibility(View.GONE);
                     this.rejoindre.setVisibility(View.GONE);
 
                     this.annuler_demande.setOnClickListener(new View.OnClickListener() {
@@ -123,11 +127,9 @@ public class GroupeActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    this.quitter.setVisibility(View.GONE);
-                    this.modifier.setVisibility(View.GONE);
-                    this.supprimer.setVisibility(View.GONE);
-                    this.info.setVisibility(View.GONE);
-                    this.annuler_demande.setVisibility(View.GONE);
+                    this.layout_admin.setVisibility(View.GONE);
+                    this.layout_membre.setVisibility(View.GONE);
+                    this.layout_en_attente.setVisibility(View.GONE);
 
                     this.rejoindre.setOnClickListener(new View.OnClickListener() {
                         @Override

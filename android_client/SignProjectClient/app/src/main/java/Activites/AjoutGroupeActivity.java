@@ -180,8 +180,15 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
         }else{
 
+            String typeCons = "";
+            if(type.equals(getResources().getString(R.string.type_public))){
+                typeCons = Groupe.TYPE_PUBLIC;
+            } else if(type.equals(getResources().getString(R.string.type_prive))){
+                typeCons = Groupe.TYPE_PRIVE;
+            }
+
             groupe.setNom(nom);
-            groupe.setType(Groupe.getTypeWithString(type));
+            groupe.setType(typeCons);
             groupe.setDescription(description);
 /*
                     buildAlertContenuInvalide.setMessage(description);

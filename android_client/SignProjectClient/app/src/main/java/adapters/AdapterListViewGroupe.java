@@ -91,15 +91,18 @@ public class AdapterListViewGroupe extends BaseAdapter {
         nom.setTextColor(Color.BLACK);
 
         String typeGroupe = this.groupes.get(position).getType();
+        String typeString = "";
         System.out.println("typeGroupe : "+typeGroupe);
         if(typeGroupe.equals(Groupe.TYPE_PUBLIC)){
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_eye));
+            typeString = mContext.getResources().getString(R.string.type_public);
         }
         else if(typeGroupe.equals(Groupe.TYPE_PRIVE)){
             iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_closed_eye));
+            typeString = mContext.getResources().getString(R.string.type_prive);
         }
 
-        type.setText(Groupe.getStringWithType(typeGroupe));
+        type.setText(typeString);
 
         groupe.setTag(position);
         groupe.setOnClickListener(new View.OnClickListener() {
