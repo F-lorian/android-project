@@ -65,8 +65,26 @@ public class GroupeUtilisateurBD {
         values.put(ID_GROUPE, idGroupe);
         values.put(ETAT_GROUPE, etat);
 
+        System.out.println(" ADD : ");
+        System.out.println("idUtilisateur : " + idUtilisateur);
+        System.out.println("idGroupe : " + idGroupe);
+        System.out.println("etat : " + etat);
+
         // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
         return db.insert(TABLE_NAME, null, values);
+    }
+
+    public long update(long idUtilisateur, long idGroupe, String etat) {
+        // Ajout d'un enregistrement dans la table
+
+        ContentValues values = new ContentValues();
+        values.put(ETAT_GROUPE, etat);
+
+        // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
+        String where = ID_UTILISATEUR+" = ?"+ID_GROUPE+" = ?";
+        String[] whereArgs = {idUtilisateur+"", idGroupe+""};
+
+        return db.update(TABLE_NAME, values, where, whereArgs);
     }
 
     public int delete(int idUtilisateur, int idGroupe) {
@@ -138,7 +156,7 @@ public class GroupeUtilisateurBD {
     public String isInGroup(int idUtilisateur, int idGroupe) {
         // sélection de tous les enregistrements de la table
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_UTILISATEUR+"="+idUtilisateur+" AND "+ID_GROUPE+"="+idGroupe+" AND "+ETAT_GROUPE+"='"+ETAT_APPARTIENT+"'", null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_UTILISATEUR+"="+idUtilisateur+" AND "+ID_GROUPE+"="+idGroupe, null);
 
         ArrayList<Groupe> groupes = new ArrayList<Groupe>();
 

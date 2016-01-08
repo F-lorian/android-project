@@ -37,31 +37,38 @@ android:layout_height="wrap_content">
             android:orientation="horizontal"
             android:paddingLeft="5sp"
             android:paddingRight="5sp"
+            android:gravity="center_vertical"
             android:background="#dbdbdb">
 
             <ImageView
                 android:id="@+id/image_type"
                 android:layout_width="wrap_content"
-                android:layout_height="25sp"
+                android:layout_height="20sp"
                 android:src="@drawable/ic_eye"
-                android:background="#dbdbdb"/>
+                android:background="@android:color/white"/>
 
             <TextView
                 android:id="@+id/type_adapter_groupe"
-                android:layout_width="250sp"
-                android:layout_height="25sp"
+                android:layout_width="wrap_content"
+                android:layout_height="20sp"
                 android:text="Public"
                 android:textSize="15sp"
-                android:background="#dbdbdb"
-                android:layout_marginTop="2sp"/>
+                android:gravity="center"
+                android:paddingLeft="5sp"
+                android:paddingRight="5sp"
+                android:background="@android:color/darker_gray"
+                android:textColor="@android:color/white"/>
+
             <TextView
                 android:id="@+id/user_adapter_etat"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="20sp"
-                android:layout_margin="3sp"
                 android:text="Membre"
                 android:textSize="15sp"
                 android:gravity="center"
+                android:layout_marginLeft="5sp"
+                android:paddingLeft="5sp"
+                android:paddingRight="5sp"
                 android:background="#ff9d00"
                 android:textColor="@android:color/white"/>
         </LinearLayout>

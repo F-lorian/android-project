@@ -91,8 +91,8 @@ public class GroupeActivity extends AppCompatActivity {
 
             SessionManager sessionManager = new SessionManager(this);
 
-            int idUser = sessionManager.getUserId();
-            if (groupe.getAdmin().getId() == idUser) {
+            int id_user = sessionManager.getUserId();
+            if (groupe.getAdmin().getId() == id_user) {
                 //onclick
                 this.layout_membre.setVisibility(View.GONE);
                 this.layout_en_attente.setVisibility(View.GONE);
@@ -114,8 +114,10 @@ public class GroupeActivity extends AppCompatActivity {
 
                 GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
                 groupeUtilisateurBD.open();
-                String s = groupeUtilisateurBD.isInGroup(idUser, id_groupe);
+                String s = groupeUtilisateurBD.isInGroup(id_user, id_groupe);
                 groupeUtilisateurBD.close();
+
+                System.out.println("ETAT : "+s);
 
                 if (s != null && s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                     //onclick
@@ -132,6 +134,7 @@ public class GroupeActivity extends AppCompatActivity {
 
                 } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                     this.layout_admin.setVisibility(View.GONE);
+                    this.layout_membre.setVisibility(View.GONE);
                     this.rejoindre.setVisibility(View.GONE);
 
                     this.annuler_demande.setOnClickListener(new View.OnClickListener() {
@@ -143,9 +146,8 @@ public class GroupeActivity extends AppCompatActivity {
 
                 } else {
                     this.layout_admin.setVisibility(View.GONE);
-                    this.layout_membre.setVisibility(View.GONE);
                     this.layout_en_attente.setVisibility(View.GONE);
-
+                    this.layout_membre.setVisibility(View.GONE);
                     this.rejoindre.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -205,14 +207,60 @@ public class GroupeActivity extends AppCompatActivity {
     }
     public void sendDemand() {
 
+        SessionManager sessionManager = new SessionManager(this);
+        int id_user = sessionManager.getUserId();
         int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
 
+        GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
+        groupeUtilisateurBD.open();
+        long id = groupeUtilisateurBD.add(id_user, id_groupe, GroupeUtilisateurBD.ETAT_ATTENTE);
+        String s = groupeUtilisateurBD.isInGroup(id_user, id_groupe);
+        System.out.println("ETAT : " + GroupeUtilisateurBD.ETAT_ATTENTE);
+        System.out.println("ETAT APRES : " + s);
+        System.out.println("id_user : " + id_user);
+        System.out.println("id_groupe : " + id_groupe);
+        System.out.println("id : " + id);
+        groupeUtilisateurBD.close();
+
+        if(id != -1){
+            this.rejoindre.setVisibility(View.GONE);
+            this.layout_en_attente.setVisibility(View.VISIBLE);
+            this.annuler_demande.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelDemand();
+                }
+            });
+        }
 
     }
 
     public void cancelDemand() {
 
+        SessionManager sessionManager = new SessionManager(this);
+        int id_user = sessionManager.getUserId();
         int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+
+        GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
+        groupeUtilisateurBD.open();
+        long nb_rows = groupeUtilisateurBD.delete(id_user, id_groupe);
+        String s = groupeUtilisateurBD.isInGroup(id_user, id_groupe);
+        System.out.println("ETAT APRES : " + s);
+        System.out.println("id_user : " + id_user);
+        System.out.println("id_groupe : " + id_groupe);
+        System.out.println("nb_rows : " + nb_rows);
+        groupeUtilisateurBD.close();
+
+        if(nb_rows > 0){
+            this.rejoindre.setVisibility(View.VISIBLE);
+            this.layout_en_attente.setVisibility(View.GONE);
+            this.rejoindre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sendDemand();
+                }
+            });
+        }
 
 
     }
