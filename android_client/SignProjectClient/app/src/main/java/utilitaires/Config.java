@@ -1,6 +1,9 @@
 package utilitaires;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
  * Created by Axel_2 on 29/12/2015.
@@ -43,4 +46,10 @@ public class Config {
     public static final String JSON_SUCCESS = "success";
     public static final String JSON_DENIED = "denied";
     public static final String JSON_ERROR = "error";
+
+    public static boolean isNetworkAvailable(Context c) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

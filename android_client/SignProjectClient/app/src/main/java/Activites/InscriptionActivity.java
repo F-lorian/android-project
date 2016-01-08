@@ -160,17 +160,23 @@ public class InscriptionActivity extends Activity {
 
                 if (mdp.getText().toString().equals(confirmeMdp.getText().toString()))
                 {
+                    if (Config.isNetworkAvailable(InscriptionActivity.this))
+                    {
+                        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+                        pairsPost.add(new BasicNameValuePair("pseudo",InscriptionActivity.this.pseudo.getText().toString()));
+                        pairsPost.add(new BasicNameValuePair("email",""));
+                        pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
+                        pairsPost.add(new BasicNameValuePair("regId",""));
 
-                    //A FAIRE : verif pseudo et mdp BD sur serveur
-                    List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-                    pairsPost.add(new BasicNameValuePair("pseudo",InscriptionActivity.this.pseudo.getText().toString()));
-                    pairsPost.add(new BasicNameValuePair("email",""));
-                    pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
-                    pairsPost.add(new BasicNameValuePair("regId",""));
-
-                    RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost,InscriptionActivity.this);
-                    requestPostTask.execute();
-
+                        RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost,InscriptionActivity.this);
+                        requestPostTask.execute();
+                    }
+                    else
+                    {
+                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                        alertInscriptionInvalide.show();
+                    }
                 }
                 else
                 {

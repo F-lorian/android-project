@@ -132,19 +132,23 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                //A FAIRE : verif pseudo et mdp BD sur serveur
-                UtilisateurBD utilisateurBD = new UtilisateurBD(ConnectionActivity.this);
-                utilisateurBD.open();
-                Utilisateur utilisateur = utilisateurBD.getUtilisateur(pseudo.getText().toString());
-                utilisateurBD.close();
+                if (Config.isNetworkAvailable(ConnectionActivity.this))
+                {
+                    List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+                    pairsPost.add(new BasicNameValuePair("pseudo",ConnectionActivity.this.pseudo.getText().toString()));
+                    pairsPost.add(new BasicNameValuePair("password", ConnectionActivity.this.mdp.getText().toString()));
+                    pairsPost.add(new BasicNameValuePair("regId", ""));
 
-                List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-                pairsPost.add(new BasicNameValuePair("pseudo",ConnectionActivity.this.pseudo.getText().toString()));
-                pairsPost.add(new BasicNameValuePair("password", ConnectionActivity.this.mdp.getText().toString()));
-                pairsPost.add(new BasicNameValuePair("regId", ""));
+                    RequestPostTask requestPostTask = new RequestPostTask("connection",pairsPost,ConnectionActivity.this);
+                    requestPostTask.execute();
+                }
+                else
+                {
+                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                    alertInscriptionInvalide.show();
+                }
 
-                RequestPostTask requestPostTask = new RequestPostTask("connection",pairsPost,ConnectionActivity.this);
-                requestPostTask.execute();
             }
         });
 
