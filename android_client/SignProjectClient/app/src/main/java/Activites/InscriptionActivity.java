@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import modeles.modele.RequestPostTask;
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
@@ -168,7 +171,46 @@ public class InscriptionActivity extends Activity {
                         pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
                         pairsPost.add(new BasicNameValuePair("regId",""));
 
-                        RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost,InscriptionActivity.this);
+                        Handler mHandler = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+
+                                try {
+                                    JSONObject jsonObject = (JSONObject) msg.obj;
+
+                                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
+                                    {
+                                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                                        alertInscriptionInvalide.show();
+                                    }
+                                    else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                                    {
+                                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
+                                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                                        alertInscriptionInvalide.show();
+                                    }
+                                    else
+                                    {
+                                        SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
+
+                                        /***** REGID GCM A IMPLEMENTER *****/
+                                        String regidGCM = "";
+                                        sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"),jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"),regidGCM);
+
+                                        Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                        InscriptionActivity.this.finish();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        };
+                        RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost, mHandler, InscriptionActivity.this);
                         requestPostTask.execute();
                     }
                     else
@@ -226,74 +268,5 @@ public class InscriptionActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    class RequestPostTask extends AsyncTask<Void,Void,Void> {
-
-        private PostRequest postRequest;
-        private ProgressDialog progressDialog;
-        private Activity activity;
-
-        public RequestPostTask(String action, List pairs, Activity activity){
-            this.postRequest = new PostRequest(action,pairs);
-            this.activity = activity;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            this.postRequest.sendRequest();
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message_inscription));
-
-            this.progressDialog.setCanceledOnTouchOutside(false);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-            progressDialog.dismiss();
-            JSONObject jsonObject = null;
-
-            try {
-                jsonObject = new JSONObject(this.postRequest.getResultat());
-
-                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
-                {
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
-                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                    alertInscriptionInvalide.show();
-                }
-                else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
-                {
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
-                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                    alertInscriptionInvalide.show();
-                }
-                else
-                {
-                    SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
-
-                    /***** REGID GCM A IMPLEMENTER *****/
-                    String regidGCM = "";
-                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"),jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"),regidGCM);
-
-                    Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    InscriptionActivity.this.finish();
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        }
     }
 }

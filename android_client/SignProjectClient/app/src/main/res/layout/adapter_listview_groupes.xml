@@ -15,62 +15,128 @@ android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/layout_nom_groupe"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/hauteur_champs_saisie"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6sp"
+            android:background="#efefef">
 
             <TextView
                 android:id="@+id/nom_adapter_groupe"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
+                android:layout_height="wrap_content"
                 android:text="GROUPE"
-                android:textSize="25sp"
-                android:background="#efefef"
-                android:paddingLeft="10sp"
-                android:paddingTop="6sp"/>
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/description_adapter_groupe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="description..."
+                android:textSize="15sp"
+                android:background="#efefef"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_type_groupe"
             android:layout_width="match_parent"
-            android:layout_height="25sp"
+            android:layout_height="24sp"
             android:orientation="horizontal"
-            android:paddingLeft="5sp"
-            android:paddingRight="5sp"
             android:gravity="center_vertical"
             android:background="#dbdbdb">
 
-            <ImageView
-                android:id="@+id/image_type"
+            <LinearLayout
+                android:id="@+id/layout_type"
                 android:layout_width="wrap_content"
                 android:layout_height="20sp"
-                android:src="@drawable/ic_eye"
-                android:background="@android:color/white"/>
+                android:orientation="horizontal"
+                android:paddingLeft="2sp"
+                android:layout_marginLeft="2sp"
+                android:layout_marginRight="2sp"
+                android:gravity="center_vertical"
+                android:background="@android:color/holo_blue_dark">
 
-            <TextView
-                android:id="@+id/type_adapter_groupe"
-                android:layout_width="wrap_content"
-                android:layout_height="20sp"
-                android:text="Public"
-                android:textSize="15sp"
-                android:gravity="center"
-                android:paddingLeft="5sp"
-                android:paddingRight="5sp"
-                android:background="@android:color/darker_gray"
-                android:textColor="@android:color/white"/>
+                <ImageView
+                    android:id="@+id/image_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16sp"
+                    android:src="@drawable/ic_eye"
+                    android:background="@android:color/white"/>
 
-            <TextView
-                android:id="@+id/user_adapter_etat"
+                <TextView
+                    android:id="@+id/type_adapter_groupe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:text="Public"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingLeft="5sp"
+                    android:paddingRight="5sp"
+                    android:background="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_members"
                 android:layout_width="wrap_content"
                 android:layout_height="20sp"
-                android:text="Membre"
-                android:textSize="15sp"
-                android:gravity="center"
-                android:layout_marginLeft="5sp"
-                android:paddingLeft="5sp"
-                android:paddingRight="5sp"
-                android:background="#ff9d00"
-                android:textColor="@android:color/white"/>
+                android:orientation="horizontal"
+                android:paddingLeft="2sp"
+                android:layout_marginLeft="2sp"
+                android:layout_marginRight="2sp"
+                android:gravity="center_vertical"
+                android:background="@android:color/holo_blue_dark">
+
+                <ImageView
+                    android:id="@+id/image_members"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16sp"
+                    android:src="@drawable/ic_groupe"
+                    android:background="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/members_adapter_groupe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:text="182938"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:paddingLeft="5sp"
+                    android:paddingRight="5sp"
+                    android:textStyle="bold"
+                    android:background="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_state"
+                android:layout_width="wrap_content"
+                android:layout_height="20sp"
+                android:orientation="horizontal"
+                android:paddingLeft="2sp"
+                android:layout_marginLeft="2sp"
+                android:layout_marginRight="2sp"
+                android:gravity="center_vertical"
+                android:background="@android:color/holo_orange_dark">
+                <ImageView
+                    android:id="@+id/image_etat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16sp"
+                    android:src="@drawable/ic_user"
+                    android:background="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/user_adapter_etat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:text="Membre"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:paddingLeft="5sp"
+                    android:paddingRight="5sp"
+                    android:textStyle="bold"
+                    android:background="@android:color/holo_orange_dark"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
         </LinearLayout>
 
 

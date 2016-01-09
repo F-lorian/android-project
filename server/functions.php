@@ -394,14 +394,11 @@ function deleteUserByRegId($regID){
 }
 
 
-function addGroup(){
-    $name  = $_POST["name"];
-    $type = $_POST["type"];
-    $creator = $_POST["user_id"];
+function addGroup($name, $type, $creator){
     
     try {
          
-        if(!groupExist($name, $creator)){
+        if(!groupExist($name)){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("INSERT INTO group (name, type, creator) VALUES ('$name', '$type', '$creator')");
@@ -421,12 +418,12 @@ function addGroup(){
     }
 }
 
-function groupExist($name, $creator) {
+function groupExist($name) {
     try {
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM group WHERE name = '$name' AND creator = '$creator' LIMIT 1");
+        $stmt = $dbh->prepare("SELECT * FROM group WHERE name = '$name' LIMIT 1");
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $result[] = $row;

@@ -23,7 +23,7 @@ define("GROUP_ADDED", "groupe crée");
 define("GROUP_DELETED", "groupe supprimé");
 define("GROUP_ADD_FAIL", "erreur lors de l'ajout au groupe");
 define("GROUP_DELETE_FAIL", "erreur lors de la suppression du groupe");
-define("GROUP_EXIST", "le groupe existe");
+define("GROUP_EXIST", "nom de groupe déjà utilisé");
 define("GROUP_NOT_FOUND", "groupe introuvable");
 
 define("SIGN_ADDED", "signalement ajouté");
@@ -226,6 +226,25 @@ function groupExistRequest(){
         }
         else if($res == DENIED){
             echo getReplyMessage(DENIED, GROUP_NOT_FOUND, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function addGroupRequest(){
+    
+    if (isset($_POST["name"]) && isset($_POST["type"]) && isset($_POST["user_id"])) {
+        $res = addGroup($_POST["name"], $_POST["type"], $_POST["user_id"]);
+        
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, GROUP_ADDED, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, GROUP_EXIST, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, GROUP_ADD_FAIL, array());
         }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());

@@ -30,7 +30,7 @@ if(isset($dbh)){
                 getAllUsersRequest();
                 break;
             case "addGroup":
-                addGroup();
+                addGroupRequest();
                 break;
             case "addToGroup":
                 addToGroup();

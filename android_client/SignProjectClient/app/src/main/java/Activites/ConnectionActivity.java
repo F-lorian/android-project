@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import modeles.modele.RequestPostTask;
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
@@ -79,8 +82,7 @@ public class ConnectionActivity extends Activity {
                 } else {
                     pseudo.setError(null);
 
-                    if (Utilisateur.mdpValide(mdp.getText().toString()))
-                    {
+                    if (Utilisateur.mdpValide(mdp.getText().toString())) {
                         seConnecter.setEnabled(true);
                         seConnecter.setAlpha(1f);
                     }
@@ -103,17 +105,14 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (!Utilisateur.mdpValide(s.toString()))
-                {
+                if (!Utilisateur.mdpValide(s.toString())) {
                     mdp.setError(getResources().getString(R.string.erreur_mdp));
                     seConnecter.setEnabled(false);
                     seConnecter.setAlpha(alphaBtnSeConnecter);
-                }
-                else {
+                } else {
                     mdp.setError(null);
 
-                    if (Utilisateur.pseudoValide(pseudo.getText().toString()))
-                    {
+                    if (Utilisateur.pseudoValide(pseudo.getText().toString())) {
                         seConnecter.setEnabled(true);
                         seConnecter.setAlpha(1f);
                     }
@@ -132,18 +131,45 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (Config.isNetworkAvailable(ConnectionActivity.this))
-                {
+                if (Config.isNetworkAvailable(ConnectionActivity.this)) {
                     List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-                    pairsPost.add(new BasicNameValuePair("pseudo",ConnectionActivity.this.pseudo.getText().toString()));
+                    pairsPost.add(new BasicNameValuePair("pseudo", ConnectionActivity.this.pseudo.getText().toString()));
                     pairsPost.add(new BasicNameValuePair("password", ConnectionActivity.this.mdp.getText().toString()));
                     pairsPost.add(new BasicNameValuePair("regId", ""));
 
-                    RequestPostTask requestPostTask = new RequestPostTask("connection",pairsPost,ConnectionActivity.this);
+                    Handler mHandler = new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+
+                            try {
+                                JSONObject jsonObject = (JSONObject) msg.obj;
+
+                                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
+                                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pseudo_mdp));
+                                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                                    alertInscriptionInvalide.show();
+                                } else {
+                                    SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
+
+                                    /***** REGID GCM A IMPLEMENTER *****/
+                                    String regidGCM = "";
+                                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"), jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"), regidGCM);
+
+                                    Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    ConnectionActivity.this.finish();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    };
+                    RequestPostTask requestPostTask = new RequestPostTask("connection", pairsPost, mHandler, ConnectionActivity.this);
                     requestPostTask.execute();
-                }
-                else
-                {
+                } else {
                     buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
                     AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                     alertInscriptionInvalide.show();
@@ -191,69 +217,5 @@ public class ConnectionActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    class RequestPostTask extends AsyncTask<Void,Void,Void> {
-
-        private PostRequest postRequest;
-        private ProgressDialog progressDialog;
-        private Activity activity;
-
-        public RequestPostTask(String action, List pairs, Activity activity){
-            this.postRequest = new PostRequest(action,pairs);
-            this.activity = activity;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            this.postRequest.sendRequest();
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message_connection));
-
-            this.progressDialog.setCanceledOnTouchOutside(false);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-            progressDialog.dismiss();
-            JSONObject jsonObject = null;
-
-            try {
-                jsonObject = new JSONObject(this.postRequest.getResultat());
-
-                if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
-                {
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pseudo_mdp));
-                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                    alertInscriptionInvalide.show();
-                }
-                else
-                {
-                    SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
-
-                    /***** REGID GCM A IMPLEMENTER *****/
-                    String regidGCM = "";
-                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"), jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"), regidGCM);
-
-                    Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    ConnectionActivity.this.finish();
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        }
     }
 }
