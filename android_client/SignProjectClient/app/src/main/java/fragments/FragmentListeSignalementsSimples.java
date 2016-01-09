@@ -52,14 +52,17 @@ public class FragmentListeSignalementsSimples extends Fragment {
         this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,getArguments().getString(Config.TYPE_SIGNALEMENT));
         signalementBD.close();
 
+        this.updateSignalements();
+
         this.adapterListViewSimpleSignalement = new AdapterListViewSimpleSignalement(this.getActivity(),this.signalements);
+
         this.listeSignalements.setAdapter(this.adapterListViewSimpleSignalement);
 
         this.fabAjoutSignalement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AjoutSignalementActivity.class);
-                intent.putExtra(Config.TYPE_SIGNALEMENT,FragmentListeSignalementsSimples.this.getArguments().getString(Config.TYPE_SIGNALEMENT));
+                intent.putExtra(Config.TYPE_SIGNALEMENT, FragmentListeSignalementsSimples.this.getArguments().getString(Config.TYPE_SIGNALEMENT));
                 startActivity(intent);
             }
         });
@@ -88,44 +91,8 @@ public class FragmentListeSignalementsSimples extends Fragment {
                         FragmentListeSignalementsSimples.this.getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement != null)
-                                {
-                                    Date dt2 = new Date();
-                                    for (int i=0; i<FragmentListeSignalementsSimples.this.signalements.size(); i++)
-                                    {
-                                        long diff = dt2.getTime() - FragmentListeSignalementsSimples.this.signalements.get(i).getDate().getTime();
-                                        long diffDays = diff / (60 * 60 * 1000 * 24);
-
-                                        if (diffDays >= 1)
-                                        {
-                                            Signalement signalement = FragmentListeSignalementsSimples.this.signalements.get(i);
-
-                                            SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsSimples.this.getActivity());
-                                            signalementBD.open();
-                                            signalementBD.deleteSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
-                                            signalementBD.close();
-
-                                            if (signalement instanceof SignalementPublic)
-                                            {
-                                                DestinationSignalementPublicBD destinationSignalementPublicBD = new DestinationSignalementPublicBD(FragmentListeSignalementsSimples.this.getActivity());
-                                                destinationSignalementPublicBD.open();
-                                                destinationSignalementPublicBD.deleteDestinationSignalementUtilisateur(signalement.getId(),destinationSignalementPublicBD.TABLE_NAME_DESTINATION_SIGNALEMENT_UTILISATEUR_RECU);
-                                                destinationSignalementPublicBD.close();
-                                            }
-                                            else
-                                            {
-                                                DestinationSignalementGroupeBD destinationSignalementGroupeBD= new DestinationSignalementGroupeBD(FragmentListeSignalementsSimples.this.getActivity());
-                                                destinationSignalementGroupeBD.open();
-                                                destinationSignalementGroupeBD.deleteDestinationSignalementGroupe(signalement.getId(), destinationSignalementGroupeBD.TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU);
-                                                destinationSignalementGroupeBD.close();
-                                            }
-
-                                            FragmentListeSignalementsSimples.this.signalements.remove(i);
-                                        }
-                                    }
-
-                                    FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.notifyDataSetChanged();
-                                }
+                                FragmentListeSignalementsSimples.this.updateSignalements();
+                                FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.notifyDataSetChanged();
                             }
                         });
                     }
@@ -136,5 +103,46 @@ public class FragmentListeSignalementsSimples extends Fragment {
         };
 
         mTimeUpdateThread.start();
+    }
+
+    private void updateSignalements()
+    {
+        if (this.adapterListViewSimpleSignalement != null)
+        {
+            Date dt2 = new Date();
+            for (int i=0; i<this.signalements.size(); i++)
+            {
+                long diff = dt2.getTime() - this.signalements.get(i).getDate().getTime();
+                long diffDays = diff / (60 * 60 * 1000 * 24);
+
+                if (diffDays >= 1)
+                {
+                    Signalement signalement = this.signalements.get(i);
+
+                    SignalementBD signalementBD = new SignalementBD(this.getActivity());
+                    signalementBD.open();
+                    signalementBD.deleteSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
+                    signalementBD.close();
+
+                    if (signalement instanceof SignalementPublic)
+                    {
+                        DestinationSignalementPublicBD destinationSignalementPublicBD = new DestinationSignalementPublicBD(this.getActivity());
+                        destinationSignalementPublicBD.open();
+                        destinationSignalementPublicBD.deleteDestinationSignalementUtilisateur(signalement.getId(),destinationSignalementPublicBD.TABLE_NAME_DESTINATION_SIGNALEMENT_UTILISATEUR_RECU);
+                        destinationSignalementPublicBD.close();
+                    }
+                    else
+                    {
+                        DestinationSignalementGroupeBD destinationSignalementGroupeBD= new DestinationSignalementGroupeBD(this.getActivity());
+                        destinationSignalementGroupeBD.open();
+                        destinationSignalementGroupeBD.deleteDestinationSignalementGroupe(signalement.getId(), destinationSignalementGroupeBD.TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU);
+                        destinationSignalementGroupeBD.close();
+                    }
+
+                    this.signalements.remove(i);
+                    i--;
+                }
+            }
+        }
     }
 }

@@ -32,14 +32,7 @@ import utilitaires.Config;
 /**
  * Created by Axel_2 on 24/12/2015.
  */
-public class FragmentListeSignalementsProches extends Fragment implements LocationListener{
-
-    ExpandableListView listeSignalements;
-    FloatingActionButton fabAjoutSignalement;
-    ArrayList<Signalement> signalements;
-    HashMap<Signalement,List<String>> horairesSignalements;
-    AdapterExpandableListViewHoraire adapterExpandableListViewHoraire;
-    Thread mTimeUpdateThread;
+public class FragmentListeSignalementsProches extends FragmentListeSignalementsHoraires implements LocationListener{
 
     LocationManager locationManager;
 
@@ -63,8 +56,10 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
         signalementBD.close();
 
         this.initData();
+        this.updateSignalements();
 
         this.adapterExpandableListViewHoraire = new AdapterExpandableListViewHoraire(getActivity(),this.signalements,this.horairesSignalements);
+
         this.listeSignalements.setAdapter(this.adapterExpandableListViewHoraire);
 
         this.fabAjoutSignalement.setOnClickListener(new View.OnClickListener() {
@@ -89,26 +84,6 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
         mTimeUpdateThread.interrupt();
     }
 
-    private void initData()
-    {
-        this.horairesSignalements = new HashMap<Signalement,List<String>>();
-
-        for (int i=0; i<this.signalements.size(); i++)
-        {
-            Signalement signalement = this.signalements.get(i);
-            String[] horaires = signalement.getContenu().split("\n");
-
-            List<String> listHoraires = new ArrayList<>();
-
-            for(int j=2; j<horaires.length; j++)
-            {
-                listHoraires.add(horaires[j]);
-            }
-
-            this.horairesSignalements.put(signalement,listHoraires);
-        }
-    }
-
     private void updateHoraireThread(){
         final int exampleIntervall = 1000;
         mTimeUpdateThread = new Thread() {
@@ -123,75 +98,7 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
                             public void run() {
                                 if (FragmentListeSignalementsProches.this.adapterExpandableListViewHoraire != null)
                                 {
-                                    for (Map.Entry<Signalement,List<String>> entry : FragmentListeSignalementsProches.this.horairesSignalements.entrySet())
-                                    {
-                                        Date dt2 = new Date();
-                                        for (int i=0; i<entry.getValue().size(); i++)
-                                        {
-                                            long diff = dt2.getTime() - entry.getKey().getDate().getTime();
-                                            long diffMinutes = diff / (60 * 1000) % 60;
-                                            long diffHours = diff / (60 * 60 * 1000);
-
-                                            String[] arretHoraire = entry.getValue().get(i).split(" - ");
-
-                                            long minute = -1;
-                                            if (arretHoraire.length == 2)
-                                            {
-                                                minute = Long.valueOf(arretHoraire[1]);
-                                            }
-                                            else
-                                            {
-                                                minute = Long.valueOf(arretHoraire[2]);
-                                            }
-
-                                            if (minute - diffMinutes <= 0 || diffHours >= 1)
-                                            {
-                                                entry.getValue().remove(i);
-                                            }
-                                            else
-                                            {
-                                                entry.getValue().set(i,arretHoraire[0] + " - " + (minute - diffMinutes) + " - " + minute);
-                                            }
-                                        }
-                                    }
-
-                                    Date dt2 = new Date();
-
-                                    for (int i=0;i<FragmentListeSignalementsProches.this.signalements.size();i++)
-                                    {
-                                        Signalement signalement = FragmentListeSignalementsProches.this.signalements.get(i);
-
-                                        long diff = dt2.getTime() - signalement.getDate().getTime();
-                                        long diffDays = diff / (60 * 60 * 1000 * 24);
-
-                                        if ((FragmentListeSignalementsProches.this.horairesSignalements.get(signalement).size() == 0 && signalement.getType().getType().equals(Config.HORAIRES)) || (diffDays >= 1))
-                                        {
-                                            SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsProches.this.getActivity());
-                                            signalementBD.open();
-                                            signalementBD.deleteSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
-                                            signalementBD.close();
-
-                                            if (signalement instanceof SignalementPublic)
-                                            {
-                                                DestinationSignalementPublicBD destinationSignalementPublicBD = new DestinationSignalementPublicBD(FragmentListeSignalementsProches.this.getActivity());
-                                                destinationSignalementPublicBD.open();
-                                                destinationSignalementPublicBD.deleteDestinationSignalementUtilisateur(signalement.getId(),destinationSignalementPublicBD.TABLE_NAME_DESTINATION_SIGNALEMENT_UTILISATEUR_RECU);
-                                                destinationSignalementPublicBD.close();
-                                            }
-                                            else
-                                            {
-                                                DestinationSignalementGroupeBD destinationSignalementGroupeBD= new DestinationSignalementGroupeBD(FragmentListeSignalementsProches.this.getActivity());
-                                                destinationSignalementGroupeBD.open();
-                                                destinationSignalementGroupeBD.deleteDestinationSignalementGroupe(signalement.getId(), destinationSignalementGroupeBD.TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU);
-                                                destinationSignalementGroupeBD.close();
-                                            }
-
-                                            FragmentListeSignalementsProches.this.horairesSignalements.remove(signalement);
-                                            FragmentListeSignalementsProches.this.signalements.remove(i);
-
-                                        }
-                                    }
-
+                                    FragmentListeSignalementsProches.this.updateSignalements();
                                     FragmentListeSignalementsProches.this.adapterExpandableListViewHoraire.notifyDataSetChanged();
                                 }
 
@@ -205,17 +112,6 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
         };
 
         mTimeUpdateThread.start();
-    }
-
-    private void expandAll()
-    {
-        for (int i=0; i<this.adapterExpandableListViewHoraire.getGroupCount(); i++)
-        {
-            if (this.adapterExpandableListViewHoraire.getChildrenCount(i) > 0)
-            {
-                this.listeSignalements.expandGroup(i);
-            }
-        }
     }
 
     @Override
@@ -257,11 +153,11 @@ public class FragmentListeSignalementsProches extends Fragment implements Locati
     }
 
     public void abonnementNetwork() {
-       // this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK, this);
+       this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK, this);
     }
 
     public void desabonnementNetwork() {
-       // this.locationManager.removeUpdates(this);
+       this.locationManager.removeUpdates(this);
     }
 
 }

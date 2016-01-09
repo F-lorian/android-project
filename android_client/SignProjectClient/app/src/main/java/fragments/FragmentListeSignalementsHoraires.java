@@ -38,7 +38,6 @@ public class FragmentListeSignalementsHoraires extends Fragment{
     AdapterExpandableListViewHoraire adapterExpandableListViewHoraire;
     Thread mTimeUpdateThread;
 
-
     public FragmentListeSignalementsHoraires()
     {
         
@@ -57,8 +56,12 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         signalementBD.close();
 
         this.initData();
+        this.updateSignalements();
+
+        System.out.println("***** BEGIN **** " + this.signalements);
 
         this.adapterExpandableListViewHoraire = new AdapterExpandableListViewHoraire(getActivity(),this.signalements,this.horairesSignalements);
+
         this.listeSignalements.setAdapter(this.adapterExpandableListViewHoraire);
 
         this.fabAjoutSignalement.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +85,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         mTimeUpdateThread.interrupt();
     }
 
-    private void initData()
+    protected void initData()
     {
         this.horairesSignalements = new HashMap<Signalement,List<String>>();
 
@@ -115,73 +118,9 @@ public class FragmentListeSignalementsHoraires extends Fragment{
                             public void run() {
                                 if (FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire != null)
                                 {
-                                    for (Map.Entry<Signalement,List<String>> entry : FragmentListeSignalementsHoraires.this.horairesSignalements.entrySet())
-                                    {
-                                        Date dt2 = new Date();
-                                        for (int i=0; i<entry.getValue().size(); i++)
-                                        {
-                                            long diff = dt2.getTime() - entry.getKey().getDate().getTime();
-                                            long diffMinutes = diff / (60 * 1000) % 60;
-                                            long diffHours = diff / (60 * 60 * 1000);
-
-                                            String[] arretHoraire = entry.getValue().get(i).split(" - ");
-
-                                            long minute = -1;
-                                            if (arretHoraire.length == 2)
-                                            {
-                                                minute = Long.valueOf(arretHoraire[1]);
-                                            }
-                                            else
-                                            {
-                                                minute = Long.valueOf(arretHoraire[2]);
-                                            }
-
-                                            if (minute - diffMinutes <= 0 || diffHours >= 1)
-                                            {
-                                                entry.getValue().remove(i);
-                                            }
-                                            else
-                                            {
-                                                entry.getValue().set(i,arretHoraire[0] + " - " + (minute - diffMinutes) + " - " + minute);
-                                            }
-                                        }
-                                    }
-
-                                    for (int i=0;i<FragmentListeSignalementsHoraires.this.signalements.size();i++)
-                                    {
-                                        Signalement signalement = FragmentListeSignalementsHoraires.this.signalements.get(i);
-
-                                        if (FragmentListeSignalementsHoraires.this.horairesSignalements.get(signalement).size() == 0)
-                                        {
-                                            SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsHoraires.this.getActivity());
-                                            signalementBD.open();
-                                            signalementBD.deleteSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
-                                            signalementBD.close();
-
-                                            if (signalement instanceof SignalementPublic)
-                                            {
-                                                DestinationSignalementPublicBD destinationSignalementPublicBD = new DestinationSignalementPublicBD(FragmentListeSignalementsHoraires.this.getActivity());
-                                                destinationSignalementPublicBD.open();
-                                                destinationSignalementPublicBD.deleteDestinationSignalementUtilisateur(signalement.getId(),destinationSignalementPublicBD.TABLE_NAME_DESTINATION_SIGNALEMENT_UTILISATEUR_RECU);
-                                                destinationSignalementPublicBD.close();
-                                            }
-                                            else
-                                            {
-                                                DestinationSignalementGroupeBD destinationSignalementGroupeBD= new DestinationSignalementGroupeBD(FragmentListeSignalementsHoraires.this.getActivity());
-                                                destinationSignalementGroupeBD.open();
-                                                destinationSignalementGroupeBD.deleteDestinationSignalementGroupe(signalement.getId(), destinationSignalementGroupeBD.TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU);
-                                                destinationSignalementGroupeBD.close();
-                                            }
-
-                                            FragmentListeSignalementsHoraires.this.horairesSignalements.remove(signalement);
-                                            FragmentListeSignalementsHoraires.this.signalements.remove(i);
-
-                                        }
-                                    }
-
+                                    FragmentListeSignalementsHoraires.this.updateSignalements();
                                     FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.notifyDataSetChanged();
                                 }
-
                             }
                         });
                     }
@@ -194,11 +133,110 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         mTimeUpdateThread.start();
     }
 
-    private void expandAll()
+    protected void expandAll()
     {
         for (int i=0; i<this.adapterExpandableListViewHoraire.getGroupCount(); i++)
         {
-            this.listeSignalements.expandGroup(i);
+            if (this.adapterExpandableListViewHoraire.getChildrenCount(i) > 0)
+            {
+                this.listeSignalements.expandGroup(i);
+            }
+        }
+    }
+
+    protected void updateSignalements()
+    {
+        this.updateTempsAttentes();
+        this.updateSignalementsHoraires();
+    }
+
+    protected void updateTempsAttentes()
+    {
+        SignalementBD signalementBD = new SignalementBD(this.getActivity());
+        signalementBD.open();
+
+        for (Map.Entry<Signalement,List<String>> entry : this.horairesSignalements.entrySet())
+        {
+
+            if (entry.getValue().size() > 0) {
+
+                Date dt2 = new Date();
+                for (int i = 0; i < entry.getValue().size(); i++) {
+                    long diff = dt2.getTime() - entry.getKey().getDate().getTime();
+                    long diffMinutes = diff / (60 * 1000) % 60;
+                    long diffHours = diff / (60 * 60 * 1000);
+
+                    String[] arretHoraire = entry.getValue().get(i).split(" - ");
+
+                    long minute = -1;
+                    if (arretHoraire.length == 2) {
+                        minute = Long.valueOf(arretHoraire[1]);
+                    } else {
+                        minute = Long.valueOf(arretHoraire[2]);
+                    }
+
+                    if (minute - diffMinutes <= 0 || diffHours >= 1) {
+                        entry.getValue().remove(i);
+                        i--;
+                    } else {
+                        entry.getValue().set(i, arretHoraire[0] + " - " + (minute - diffMinutes) + " - " + minute);
+                    }
+                }
+
+
+                String[] ancienContenuSplit = entry.getKey().getContenu().split("\n");
+                String nouveauContenu = ancienContenuSplit[0] + "\n" + ancienContenuSplit[1];
+
+                for (int i = 0; i < entry.getValue().size(); i++) {
+                    nouveauContenu = nouveauContenu + "\n" + entry.getValue().get(i);
+                }
+
+                entry.getKey().setContenu(nouveauContenu);
+
+                signalementBD.updateSignalement(entry.getKey(), SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
+            }
+        }
+
+        signalementBD.close();
+    }
+
+    protected void updateSignalementsHoraires()
+    {
+        Date dt2 = new Date();
+
+        for (int i=0;i<this.signalements.size();i++)
+        {
+            Signalement signalement = this.signalements.get(i);
+
+            long diff = dt2.getTime() - signalement.getDate().getTime();
+            long diffDays = diff / (60 * 60 * 1000 * 24);
+
+            if ((this.horairesSignalements.get(signalement).size() == 0 && signalement.getType().getType().equals(Config.HORAIRES)) || (diffDays >= 1))
+            {
+                SignalementBD signalementBD = new SignalementBD(this.getActivity());
+                signalementBD.open();
+                signalementBD.deleteSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
+                signalementBD.close();
+
+                if (signalement instanceof SignalementPublic)
+                {
+                    DestinationSignalementPublicBD destinationSignalementPublicBD = new DestinationSignalementPublicBD(this.getActivity());
+                    destinationSignalementPublicBD.open();
+                    destinationSignalementPublicBD.deleteDestinationSignalementUtilisateur(signalement.getId(),destinationSignalementPublicBD.TABLE_NAME_DESTINATION_SIGNALEMENT_UTILISATEUR_RECU);
+                    destinationSignalementPublicBD.close();
+                }
+                else
+                {
+                    DestinationSignalementGroupeBD destinationSignalementGroupeBD = new DestinationSignalementGroupeBD(this.getActivity());
+                    destinationSignalementGroupeBD.open();
+                    destinationSignalementGroupeBD.deleteDestinationSignalementGroupe(signalement.getId(), destinationSignalementGroupeBD.TABLE_NAME_DESTINATION_SIGNALEMENT_GROUPE_RECU);
+                    destinationSignalementGroupeBD.close();
+                }
+
+                this.horairesSignalements.remove(signalement);
+                this.signalements.remove(i);
+
+            }
         }
     }
 

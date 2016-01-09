@@ -122,10 +122,12 @@ public class SignalementBD {
         // modification d'un enregistrement
         // valeur de retour : (int) nombre de lignes affectées par la requête
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
         ContentValues values = new ContentValues();
         values.put(CONTENU_SIGNALEMENT, signalement.getContenu());
         values.put(REMARQUE_SIGNALEMENT, signalement.getRemarques());
-        values.put(DATE_SIGNALEMENT, signalement.getDate().toString());
+        values.put(DATE_SIGNALEMENT, dateFormat.format(signalement.getDate()));
         values.put(ARRET_SIGNALEMENT, signalement.getArret().getId());
         values.put(TYPE_SIGNALEMENT, signalement.getType().getId());
         values.put(EMETTEUR_SIGNALEMENT, signalement.getEmetteur().getId());
