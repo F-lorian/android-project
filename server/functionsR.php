@@ -21,7 +21,7 @@ define("REMOVE_FROM_GROUP_FAIL", "erreur lors du retrait du groupe");
 
 define("GROUP_ADDED", "groupe crée");
 define("GROUP_DELETED", "groupe supprimé");
-define("GROUP_ADD_FAIL", "erreur lors de l'ajout au groupe");
+define("GROUP_ADD_FAIL", "erreur lors de l'ajout du groupe");
 define("GROUP_DELETE_FAIL", "erreur lors de la suppression du groupe");
 define("GROUP_EXIST", "nom de groupe déjà utilisé");
 define("GROUP_NOT_FOUND", "groupe introuvable");
@@ -190,11 +190,11 @@ function searchUserRequest() {
 }
 
 function getAllUsersRequest() {
-    if (isset($_POST["page"])) {
+    //if (isset($_POST["page"])) {
         echo (json_encode(getAllUsers($_POST["page"])));
-    } else {
+    /*} else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
-    }
+    }*/
 }
 
 function userExistRequest(){
@@ -235,7 +235,7 @@ function groupExistRequest(){
 function addGroupRequest(){
     
     if (isset($_POST["name"]) && isset($_POST["type"]) && isset($_POST["user_id"])) {
-        $res = addGroup($_POST["name"], $_POST["type"], $_POST["user_id"]);
+        $res = addGroup($_POST["name"], $_POST["type"], $_POST["user_id"], $_POST["description"]);
         
         if($res == SUCCESS){
             echo getReplyMessage(SUCCESS, GROUP_ADDED, array());
@@ -244,7 +244,7 @@ function addGroupRequest(){
             echo getReplyMessage(DENIED, GROUP_EXIST, array());
         }
         else if($res == ERROR){
-            echo getReplyMessage(ERROR, GROUP_ADD_FAIL, array());
+            echo getReplyMessage(ERROR, GROUP_ADD_FAIL, array($_POST["name"],$_POST["type"],$_POST["user_id"],$_POST["description"]));
         }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
@@ -282,4 +282,16 @@ function addToGroupRequest(){
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
+
+function getGroupsRequest(){
+    
+    if (isset($_POST["user_id"])) {
+        $res = getGroups($_POST["user_id"]);
+        echo json_encode($res);
+
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
 ?>

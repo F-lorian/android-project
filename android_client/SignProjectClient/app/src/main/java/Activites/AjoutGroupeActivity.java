@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -22,11 +24,18 @@ import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import adapters.AdapterSpinnerTypeGroupe;
 import modeles.modele.Arret;
 import modeles.modele.Groupe;
+import modeles.modele.RequestPostTask;
 import modeles.modele.Signalement;
 import modeles.modele.SignalementGroupe;
 import modeles.modele.SignalementPublic;
@@ -38,6 +47,8 @@ import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
 import utilitaires.SessionManager;
 import utilitaires.UtilisateursDestinationSignalementCompletionView;
+
+
 
 /**
  * Created by Florian on 04/01/2016.
@@ -160,13 +171,20 @@ public class AjoutGroupeActivity extends AppCompatActivity {
     }
 
     public void valid() {
+
         int indiceType = spinnerType.getSelectedItemPosition();
+        String nom = this.editTextNom.getText().toString();
+        String type = this.typeGroupes.get(indiceType);
+        String description = this.editTextDescription.getText().toString();
+        String typeConst = "";
+        if(type.equals(getResources().getString(R.string.type_public))){
+            typeConst = Groupe.TYPE_PUBLIC;
+        } else if(type.equals(getResources().getString(R.string.type_prive))){
+            typeConst = Groupe.TYPE_PRIVE;
+        }
+        SessionManager sessionManager = new SessionManager(AjoutGroupeActivity.this);
+        String id_admin = Integer.toString(sessionManager.getUserId());
 
-        Groupe groupe = new Groupe();
-
-        String nom = AjoutGroupeActivity.this.editTextNom.getText().toString();
-        String type = AjoutGroupeActivity.this.typeGroupes.get(indiceType);
-        String description = AjoutGroupeActivity.this.editTextDescription.getText().toString();
 
         if (!Groupe.nomValide(nom)) {
             /*buildAlertContenuInvalide.setMessage(getResources().getString(R.string.erreur_nom_groupe));
@@ -179,49 +197,108 @@ public class AjoutGroupeActivity extends AppCompatActivity {
             alertInscriptionInvalide.show();*/
 
         }else{
+            if (Config.isNetworkAvailable(AjoutGroupeActivity.this))
+            {
+                List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+                pairsPost.add(new BasicNameValuePair("name",nom));
+                pairsPost.add(new BasicNameValuePair("type",typeConst));
+                pairsPost.add(new BasicNameValuePair("user_id",id_admin));
+                pairsPost.add(new BasicNameValuePair("description",description));
 
-            String typeCons = "";
-            if(type.equals(getResources().getString(R.string.type_public))){
-                typeCons = Groupe.TYPE_PUBLIC;
-            } else if(type.equals(getResources().getString(R.string.type_prive))){
-                typeCons = Groupe.TYPE_PRIVE;
+                Handler mHandler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+
+                        try {
+
+                            System.out.println(" MSG : "+(String) msg.obj);
+                            String rp = (String) msg.obj;
+                            JSONObject jsonObject = new JSONObject(rp);
+
+                            if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
+                            {
+                                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                                AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
+                                alertInscriptionInvalide.show();
+                            }
+                            else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                            {
+                                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
+                                AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
+                                alertInscriptionInvalide.show();
+                            }
+                            else
+                            {
+                                int indiceType = spinnerType.getSelectedItemPosition();
+                                String nom = editTextNom.getText().toString();
+                                String type = typeGroupes.get(indiceType);
+                                String description = editTextDescription.getText().toString();
+                                String typeConst = "";
+                                if(type.equals(getResources().getString(R.string.type_public))){
+                                    typeConst = Groupe.TYPE_PUBLIC;
+                                } else if(type.equals(getResources().getString(R.string.type_prive))){
+                                    typeConst = Groupe.TYPE_PRIVE;
+                                }
+                                SessionManager sessionManager = new SessionManager(AjoutGroupeActivity.this);
+                                int id_admin = sessionManager.getUserId();
+
+                                saveLocal(nom, typeConst, description, id_admin);
+
+                                Toast.makeText(AjoutGroupeActivity.this, AjoutGroupeActivity.this.getResources().getString(R.string.groupe_ajoute), Toast.LENGTH_LONG).show();
+                                AjoutGroupeActivity.this.finish();
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
+                RequestPostTask requestPostTask = new RequestPostTask("addGroup",pairsPost, mHandler, AjoutGroupeActivity.this);
+                requestPostTask.execute();
+            }
+            else
+            {
+                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
+                alertInscriptionInvalide.show();
             }
 
-            groupe.setNom(nom);
-            groupe.setType(typeCons);
-            groupe.setDescription(description);
+
+
+        }
+    }
+
+    private void saveLocal(String nom, String typeConst, String description, int id_user){
+
+        Groupe groupe = new Groupe();
+
+        groupe.setNom(nom);
+        groupe.setType(typeConst);
+        groupe.setDescription(description);
 /*
                     buildAlertContenuInvalide.setMessage(description);
                     AlertDialog alertContenuInvalide = buildAlertContenuInvalide.create();
                     alertContenuInvalide.show();
                     System.out.println("description : "+description);
          */
-            SessionManager sessionManager = new SessionManager(AjoutGroupeActivity.this);
-            groupe.setAdmin(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
+        groupe.setAdmin(new Utilisateur(id_user, "", "", null, null, null));
 
-            System.out.println("XXXXXXXXXXXXXXXXXX : "+sessionManager.getUserId());
-            System.out.println(groupe);
+        GroupeBD groupeBD = new GroupeBD(AjoutGroupeActivity.this);
+        groupeBD.open();
+        int id = (int) groupeBD.add(groupe);
+        groupeBD.close();
 
-            GroupeBD groupeBD = new GroupeBD(AjoutGroupeActivity.this);
-            groupeBD.open();
-            int id = (int) groupeBD.add(groupe);
-            groupeBD.close();
-
-            System.out.println("description : " + groupe.getDescription());
-
-            if (id != -1)
-            {
-                groupe.setId(id);
-                Toast.makeText(AjoutGroupeActivity.this, AjoutGroupeActivity.this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
-                AjoutGroupeActivity.this.finish();
-            }
-            else
-            {
-                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
-                AlertDialog alertContenuInvalide = buildAlertContenuInvalide.create();
-                alertContenuInvalide.show();
-            }
-
+        if (id != -1)
+        {
+            groupe.setId(id);
         }
+        /*else
+        {
+            buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
+            AlertDialog alertContenuInvalide = buildAlertContenuInvalide.create();
+            alertContenuInvalide.show();
+        }*/
     }
 }

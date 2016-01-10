@@ -38,6 +38,9 @@ if(isset($dbh)){
             case "removeFromGroup":
                 removeFromGroup();
                 break;
+            case "getGroups":
+                getGroupsRequest();
+                break;
             case "addSignalement":
                 addSignalement();
                 break;

@@ -10,8 +10,10 @@ import android.os.Message;
 
 import com.example.florian.signprojectclient.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.List;
 
@@ -58,16 +60,26 @@ public class RequestPostTask extends AsyncTask<Void,Void,Void> {
         this.result = this.postRequest.getResultat();
         progressDialog.dismiss();
 
-        try {
-            JSONObject jsonObject = new JSONObject(this.result);
-            Message msg=new Message();
+       // try {
 
-            msg.obj=jsonObject;
+            System.out.println("réponse : "+this.result);
+            Message msg=new Message();
+    /*
+            Object json = new JSONTokener(this.result).nextValue();
+            if (json instanceof JSONObject) {
+                json = new JSONObject(this.result);
+            }
+            else if (json instanceof JSONArray){
+                json = new JSONArray(this.result);
+            }
+*/
+            msg.obj=this.result;
+
             mHandler.sendMessage(msg);
 
-        } catch (JSONException e) {
+    /*    } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 

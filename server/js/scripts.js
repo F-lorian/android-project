@@ -94,7 +94,7 @@ function getUsers() {
             if (res.length > 0) {
 
                 for (var i = 0; i < res.length; i++) {
-                    var new_item = list.addRow([res[i].pseudo, res[i].email, res[i].gcm_regid]);
+                    var new_item = list.addRow([res[i].pseudo, res[i].gcm_regid]);
 
                     if (list.rowSelected(res[i].gcm_regid)) {
                         list.toggleSelectable(new_item);
@@ -147,11 +147,11 @@ $(document).ready(function () {
     //$('#user_list').myList();
     //var selection_list = $('#user_list').myList();
     //list = $('#users').myTab({list: selection_list});
-    var cols = ['pseudo','mail','registrationID'];
+    var cols = ['pseudo','registrationID'];
 
     list = $('#users').myTab({
         list: '#user_list',
-        cols: ['pseudo','mail','registrationID'],
+        cols: ['pseudo', 'registrationID'],
         primary: 'registrationID',
         visible: 'pseudo'
     });

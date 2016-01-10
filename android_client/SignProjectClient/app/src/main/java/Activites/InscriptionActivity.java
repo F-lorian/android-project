@@ -176,7 +176,7 @@ public class InscriptionActivity extends Activity {
                             public void handleMessage(Message msg) {
 
                                 try {
-                                    JSONObject jsonObject = (JSONObject) msg.obj;
+                                    JSONObject jsonObject = new JSONObject((String) msg.obj);
 
                                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
                                     {

@@ -142,7 +142,7 @@ public class ConnectionActivity extends Activity {
                         public void handleMessage(Message msg) {
 
                             try {
-                                JSONObject jsonObject = (JSONObject) msg.obj;
+                                JSONObject jsonObject = new JSONObject((String) msg.obj);
 
                                 if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
                                     buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pseudo_mdp));

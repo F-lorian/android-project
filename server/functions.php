@@ -166,6 +166,7 @@ function getUserByEmail($email) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT * FROM user WHERE email = '$email' LIMIT 1");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
@@ -187,10 +188,11 @@ function getUserByPseudo($pseudo) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo = '$pseudo' LIMIT 1");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
-
+            
         return $result;
         
     } catch (PDOException $e) {
@@ -206,8 +208,9 @@ function searchUser($w, $page) {
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM user WHERE email LIKE '%$w%' OR pseudo LIKE '%$w%' OR gcm_regid LIKE '%$w%' ");
+        $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo LIKE '%$w%' OR gcm_regid LIKE '%$w%' ");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
@@ -228,8 +231,9 @@ function getAllUsers($page) {
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT email, pseudo, gcm_regid FROM user");
+        $stmt = $dbh->prepare("SELECT pseudo, gcm_regid FROM user");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
@@ -253,6 +257,7 @@ function getAllUsersGCMID() {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT gcm_regid FROM user");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row[0];
         }
@@ -278,6 +283,7 @@ function userExistMail($email) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT email FROM user WHERE email = '$email' LIMIT 1");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
@@ -302,6 +308,7 @@ function userExistPseudo($pseudo) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT pseudo FROM user WHERE pseudo = '$pseudo' LIMIT 1");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
@@ -326,6 +333,7 @@ function userExistRegId($regID) {
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT gcm_regid FROM user WHERE gcm_regid = '$regID' LIMIT 1");
         $stmt->execute();
+        $dbh = null;
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
@@ -352,7 +360,7 @@ function deleteUserByMail($email){
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("DELETE FROM user WHERE email = '$email' LIMIT 1");
             $stmt->execute();
-            
+            $dbh = null;
             if (!userExistMail($email)) { 
                 return SUCCESS;
             } else {
@@ -377,6 +385,7 @@ function deleteUserByRegId($regID){
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("DELETE FROM user WHERE gcm_regid = '$regID' LIMIT 1");
             $stmt->execute();
+            $dbh = null;
             
             if (!userExistRegId($regID)) { 
                 return SUCCESS;
@@ -394,23 +403,28 @@ function deleteUserByRegId($regID){
 }
 
 
-function addGroup($name, $type, $creator){
+function addGroup($name, $type, $creator, $description){
     
     try {
          
-        if(!groupExist($name)){
+        if(groupExist($name) == DENIED){
+            $creatorInt = (int) $creator;
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-            $stmt = $dbh->prepare("INSERT INTO group (name, type, creator) VALUES ('$name', '$type', '$creator')");
+            //$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $dbh->prepare("INSERT INTO `group` (name, type, creator, description) VALUES ('$name', '$type', ' $creatorInt', '$description')");
             $stmt->execute();
+            $dbh = null;
             
-            if (groupExist($name, $creator)) { 
-                return SUCCESS;
+            $check = getGroup($name);
+            if (count($check) > 0) {
+                addToGroup($creator, $check[0]['id'], 'appartient');
+                return SUCCESS; 
             } else {
                 return ERROR;
             }
         }
-        echo DENIED;
+        return DENIED;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -423,12 +437,13 @@ function groupExist($name) {
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM group WHERE name = '$name' LIMIT 1");
+        $stmt = $dbh->prepare("SELECT * FROM `group` WHERE name = '$name' LIMIT 1");
         $stmt->execute();
+        
         while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
-
+        $dbh = null;
         $NumOfRows = count($result);
         if ($NumOfRows > 0) {
             return SUCCESS;
@@ -442,18 +457,69 @@ function groupExist($name) {
     }
 }
 
-function addToGroup($user_id, $group_id){ 
+
+function getGroup($name){
     
      try {
          
-        if(!isInGroup($user_id, $group_id)){
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM `group` g WHERE g.name = '$name' LIMIT 1");
+        $stmt->execute();
+        $dbh = null;
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+         
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getGroups($user_id){
+    
+     try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id");
+        $stmt->execute();
+        
+
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+         $dbh = null;
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+
+function addToGroup($user_id, $group_id, $state){ 
+    
+     try {
+         $user_idint = (int) $user_id;
+         $group_idint = (int) $group_id;
+         
+        
+        if(isInGroup($user_id, $group_id) == DENIED){
+            
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-            $stmt = $dbh->prepare("INSERT INTO user_in_group (user, group) VALUES ('$user_id', '$group_id')");
+            
+            $stmt = $dbh->prepare("INSERT INTO user_in_group (user, `group`, state) VALUES ('$user_idint', '$group_idint', '$state')");
             $stmt->execute();
+            
             $dbh = null;
             
-            if (isInGroup($user_id, $group_id)) { 
+            if (isInGroup($user_id, $group_id) == SUCCESS) { 
                 return SUCCESS;
             } else {
                 return ERROR;
@@ -470,8 +536,13 @@ function addToGroup($user_id, $group_id){
 
 function isInGroup($user_id, $group_id){
      try {
+         
+        $user_idint = (int) $user_id;
+        $group_idint = (int) $group_id;
         $result = array();
-        $stmt = $dbh->prepare("SELECT * FROM user_in_group WHERE user = '$user_id' AND group = '$group_id' LIMIT 1");
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM user_in_group WHERE user = $user_idint AND `group` = $group_idint LIMIT 1");
+        
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $result[] = $row;
@@ -499,7 +570,7 @@ function removeFromGroup(){
         if(isInGroup($user_id, $group_id)){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-            $stmt = $dbh->prepare("DELETE FROM user_in_group WHERE user = '$user_id' AND group = '$group_id'");
+            $stmt = $dbh->prepare("DELETE FROM user_in_group WHERE user = '$user_id' AND `group` = '$group_id'");
             $stmt->execute();
             $dbh = null;
             
@@ -516,6 +587,7 @@ function removeFromGroup(){
         die();
     }
 }
+
 
 function addSignalement(){
     $content  = $_POST["content"];
