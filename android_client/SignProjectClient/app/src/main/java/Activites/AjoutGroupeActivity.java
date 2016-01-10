@@ -211,7 +211,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
                         try {
 
-                            System.out.println(" MSG : "+(String) msg.obj);
+                            //System.out.println(" MSG : "+(String) msg.obj);
                             String rp = (String) msg.obj;
                             JSONObject jsonObject = new JSONObject(rp);
 

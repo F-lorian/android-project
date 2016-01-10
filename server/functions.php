@@ -479,6 +479,27 @@ function getGroup($name){
     }
 }
 
+function getGroupForUser($group_id, $user_id){
+    
+     try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user u, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = '$group_id' AND ug.`group` = g.id AND ug.user = u.id LIMIT 1");
+        $stmt->execute();
+        $dbh = null;
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+         
+        return $result[0];
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
 function getGroups($user_id){
     
      try {

@@ -283,6 +283,17 @@ function addToGroupRequest(){
     }
 }
 
+function getGroupRequest(){
+    
+    if (isset($_POST["group_id"], $_POST["user_id"])) {
+        $res = getGroupForUser($_POST["group_id"], $_POST["user_id"]);
+        echo json_encode($res);
+
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
 function getGroupsRequest(){
     
     if (isset($_POST["user_id"])) {
