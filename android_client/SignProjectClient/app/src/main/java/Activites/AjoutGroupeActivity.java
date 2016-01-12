@@ -30,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import adapters.AdapterSpinnerTypeGroupe;
 import modeles.modele.Arret;
@@ -182,7 +184,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         } else if(type.equals(getResources().getString(R.string.type_prive))){
             typeConst = Groupe.TYPE_PRIVE;
         }
-        SessionManager sessionManager = new SessionManager(AjoutGroupeActivity.this);
+        SessionManager sessionManager = new SessionManager(this);
         String id_admin = Integer.toString(sessionManager.getUserId());
 
 
@@ -197,66 +199,15 @@ public class AjoutGroupeActivity extends AppCompatActivity {
             alertInscriptionInvalide.show();*/
 
         }else{
-            if (Config.isNetworkAvailable(AjoutGroupeActivity.this))
+            if (Config.isNetworkAvailable(this))
             {
-                List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-                pairsPost.add(new BasicNameValuePair("name",nom));
-                pairsPost.add(new BasicNameValuePair("type",typeConst));
-                pairsPost.add(new BasicNameValuePair("user_id",id_admin));
-                pairsPost.add(new BasicNameValuePair("description",description));
+                Map<String, String> params = new HashMap<>();
+                params.put("name", nom);
+                params.put("type", typeConst);
+                params.put("user_id", id_admin);
+                params.put("description", description);
 
-                Handler mHandler = new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-
-                        try {
-
-                            //System.out.println(" MSG : "+(String) msg.obj);
-                            String rp = (String) msg.obj;
-                            JSONObject jsonObject = new JSONObject(rp);
-
-                            if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
-                            {
-                                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
-                                AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                                alertInscriptionInvalide.show();
-                            }
-                            else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
-                            {
-                                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
-                                AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                                alertInscriptionInvalide.show();
-                            }
-                            else
-                            {
-                                int indiceType = spinnerType.getSelectedItemPosition();
-                                String nom = editTextNom.getText().toString();
-                                String type = typeGroupes.get(indiceType);
-                                String description = editTextDescription.getText().toString();
-                                String typeConst = "";
-                                if(type.equals(getResources().getString(R.string.type_public))){
-                                    typeConst = Groupe.TYPE_PUBLIC;
-                                } else if(type.equals(getResources().getString(R.string.type_prive))){
-                                    typeConst = Groupe.TYPE_PRIVE;
-                                }
-                                SessionManager sessionManager = new SessionManager(AjoutGroupeActivity.this);
-                                int id_admin = sessionManager.getUserId();
-
-                                saveLocal(nom, typeConst, description, id_admin);
-
-                                Toast.makeText(AjoutGroupeActivity.this, AjoutGroupeActivity.this.getResources().getString(R.string.groupe_ajoute), Toast.LENGTH_LONG).show();
-                                AjoutGroupeActivity.this.finish();
-
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                };
-                RequestPostTask requestPostTask = new RequestPostTask("addGroup",pairsPost, mHandler, AjoutGroupeActivity.this);
-                requestPostTask.execute();
+                sendRequest("addGroup", params);
             }
             else
             {
@@ -268,6 +219,83 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    public void sendRequest(String command,Map<String, String> params){
+
+        List<NameValuePair> pairsPost = getPairsPost(params);
+        Handler mHandler = getHandler();
+        RequestPostTask requestPostTask = new RequestPostTask(command, pairsPost, mHandler, this);
+        requestPostTask.execute();
+    }
+
+    public List<NameValuePair> getPairsPost(Map<String, String> params){
+
+        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            String key = entry.getKey();
+            String val = entry.getValue();
+            if(val != null){
+                pairsPost.add(new BasicNameValuePair(key, val));
+            }
+        }
+
+        return pairsPost;
+    }
+
+    public Handler getHandler() {
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+
+                    System.out.println(" MSG : "+(String) msg.obj);
+                    String rp = (String) msg.obj;
+                    JSONObject jsonObject = new JSONObject(rp);
+
+                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
+                    {
+                        buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
+                        alertInscriptionInvalide.show();
+                    }
+                    else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                    {
+                        buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
+                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
+                        alertInscriptionInvalide.show();
+                    }
+                    else
+                    {
+                        int indiceType = spinnerType.getSelectedItemPosition();
+                        String nom = editTextNom.getText().toString();
+                        String type = typeGroupes.get(indiceType);
+                        String description = editTextDescription.getText().toString();
+                        String typeConst = "";
+                        if(type.equals(getResources().getString(R.string.type_public))){
+                            typeConst = Groupe.TYPE_PUBLIC;
+                        } else if(type.equals(getResources().getString(R.string.type_prive))){
+                            typeConst = Groupe.TYPE_PRIVE;
+                        }
+                        SessionManager sessionManager = new SessionManager(AjoutGroupeActivity.this);
+                        int id_admin = sessionManager.getUserId();
+
+                        saveLocal(nom, typeConst, description, id_admin);
+
+                        Toast.makeText(AjoutGroupeActivity.this, AjoutGroupeActivity.this.getResources().getString(R.string.groupe_ajoute), Toast.LENGTH_LONG).show();
+                        AjoutGroupeActivity.this.finish();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        return mHandler;
     }
 
     private void saveLocal(String nom, String typeConst, String description, int id_user){

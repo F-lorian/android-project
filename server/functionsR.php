@@ -24,6 +24,7 @@ define("GROUP_DELETED", "groupe supprimé");
 define("GROUP_ADD_FAIL", "erreur lors de l'ajout du groupe");
 define("GROUP_DELETE_FAIL", "erreur lors de la suppression du groupe");
 define("GROUP_EXIST", "nom de groupe déjà utilisé");
+define("GROUP_FOUND", "groupe trouvé");
 define("GROUP_NOT_FOUND", "groupe introuvable");
 
 define("SIGN_ADDED", "signalement ajouté");
@@ -251,6 +252,22 @@ function addGroupRequest(){
     }
 }
 
+function editGroupRequest(){
+    
+    if (isset($_POST["group_id"]) && isset($_POST["name"]) && isset($_POST["type"])) {
+        $res = editGroup($_POST["group_id"], $_POST["name"], $_POST["type"], $_POST["description"]);
+        
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, GROUP_EDITED, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, GROUP_EXIST, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
 function isInGroupRequest(){
     
     if (isset($_POST["user_id"]) && isset($_POST["group_id"])) {
@@ -284,6 +301,22 @@ function addToGroupRequest(){
 }
 
 function getGroupRequest(){
+    
+    if (isset($_POST["group_id"])) {
+        $res = getGroupById($_POST["group_id"]);
+        
+        if($res != null){
+          echo getReplyMessage(SUCCESS, GROUP_FOUND, $res);
+        } else {
+          echo getReplyMessage(DENIED, GROUP_NOT_FOUND, array('id' => $_POST["group_id"]));  
+        }
+
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function getGroupWithRestrictRequest(){
     
     if (isset($_POST["group_id"], $_POST["user_id"])) {
         $res = getGroupForUser($_POST["group_id"], $_POST["user_id"]);

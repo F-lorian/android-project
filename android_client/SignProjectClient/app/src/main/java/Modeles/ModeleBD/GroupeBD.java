@@ -120,7 +120,7 @@ public class GroupeBD {
     public Groupe getGroupeAdmin(int id) {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
-        Groupe g = new Groupe(0,"","",null,null,null);
+        Groupe g = new Groupe(0,"","",null,null,null,0,0);
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
         if (c.moveToFirst()) {
@@ -142,7 +142,7 @@ public class GroupeBD {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
         System.out.println("ID : "+id);
-        Groupe g = new Groupe(0,"","",null,null,null);
+        Groupe g = new Groupe(0,"","",null,null,null,0,0);
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
         if (c.moveToFirst()) {
@@ -169,7 +169,7 @@ public class GroupeBD {
         if (c.moveToFirst()) {
             while (c.isAfterLast() == false) {
 
-                Groupe g = new Groupe(0,"","",null,null,null);
+                Groupe g = new Groupe(0,"","",null,null,null,0,0);
                 g.setId(c.getInt(c.getColumnIndex(ID_GROUPE)));
                 g.setNom(c.getString(c.getColumnIndex(NOM_GROUPE)));
                 g.setType(c.getString(c.getColumnIndex(TYPE_GROUPE)));

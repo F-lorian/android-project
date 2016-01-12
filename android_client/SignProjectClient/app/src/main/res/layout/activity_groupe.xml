@@ -85,9 +85,9 @@
             <Button
                 android:id="@+id/action_rejoindre_button_group"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40sp"
                 android:hint="@string/btn_rejoindre_groupe"
-                android:textSize="@dimen/texte_size_bouton"
+                android:textSize="15sp"
                 />
 
             <LinearLayout
@@ -121,6 +121,7 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/contenu_groupe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -130,7 +131,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:gravity="left"
                         android:background="#dbdbdb"
                         android:padding="10sp">
@@ -140,43 +141,129 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nom"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/texte_size_libelle_formulaire"/>
+                            android:textSize="25sp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="right"
-                            android:background="#dbdbdb">
+                            android:background="#dbdbdb"
+                            android:layout_marginTop="5sp">
 
-                            <ImageView
-                                android:id="@+id/image_type"
+                            <LinearLayout
+                                android:id="@+id/layout_demandes"
                                 android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:src="@drawable/ic_eye"
-                                android:background="@android:color/white"/>
+                                android:layout_height="20sp"
+                                android:orientation="horizontal"
+                                android:paddingLeft="2sp"
+                                android:layout_marginRight="2sp"
+                                android:gravity="center_vertical"
+                                android:background="@android:color/holo_red_dark">
 
-                            <TextView
-                                android:id="@+id/type_groupe"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:text="Public"
-                                android:textSize="15sp"
-                                android:gravity="center"
-                                android:paddingLeft="5sp"
-                                android:paddingRight="5sp"
-                                android:background="@android:color/darker_gray"
-                                android:textColor="@android:color/white"/>
+                                <ImageView
+                                    android:id="@+id/image_demandes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="16sp"
+                                    android:src="@drawable/ic_new_user_2"
+                                    android:background="@android:color/white"/>
+
+                                <TextView
+                                    android:id="@+id/nb_demandes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20sp"
+                                    android:text="0"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:paddingLeft="5sp"
+                                    android:paddingRight="5sp"
+                                    android:background="@android:color/holo_red_dark"
+                                    android:textColor="@android:color/white"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="right">
+                                <LinearLayout
+                                    android:id="@+id/layout_nb_membres"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20sp"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="2sp"
+                                    android:layout_marginLeft="2sp"
+                                    android:layout_marginRight="2sp"
+                                    android:gravity="center_vertical"
+                                    android:background="@android:color/holo_blue_dark">
+
+                                    <ImageView
+                                        android:id="@+id/image_nb_membres"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="16sp"
+                                        android:src="@drawable/ic_groupe"
+                                        android:background="@android:color/white"/>
+
+                                    <TextView
+                                        android:id="@+id/nb_membres"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="20sp"
+                                        android:text="0"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold"
+                                        android:gravity="center"
+                                        android:paddingLeft="5sp"
+                                        android:paddingRight="5sp"
+                                        android:background="@android:color/holo_blue_dark"
+                                        android:textColor="@android:color/white"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/layout_type"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20sp"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="2sp"
+                                    android:layout_marginLeft="2sp"
+                                    android:layout_marginRight="2sp"
+                                    android:gravity="center_vertical"
+                                    android:background="@android:color/holo_blue_dark">
+
+                                    <ImageView
+                                        android:id="@+id/image_type"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="16sp"
+                                        android:src="@drawable/ic_eye"
+                                        android:background="@android:color/white"/>
+
+                                    <TextView
+                                        android:id="@+id/type_groupe"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="20sp"
+                                        android:text="0"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold"
+                                        android:gravity="center"
+                                        android:paddingLeft="5sp"
+                                        android:paddingRight="5sp"
+                                        android:background="@android:color/holo_blue_dark"
+                                        android:textColor="@android:color/white"/>
+                                </LinearLayout>
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
+
+
+
                     <TextView
                         android:id="@+id/description_groupe"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:layout_below="@+id/description_groupe"
                         android:text="@string/description"
+                        android:background="#efefef"
+                        android:padding="10sp"
                         android:textSize="15sp"/>
 
                     <TextView

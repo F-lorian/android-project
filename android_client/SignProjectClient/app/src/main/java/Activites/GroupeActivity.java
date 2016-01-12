@@ -2,6 +2,7 @@ package activites;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.Image;
@@ -51,17 +52,25 @@ public class GroupeActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView nom;
     private TextView description;
+    private TextView type ;
+    private TextView nb_demandes ;
+    private TextView nb_membres ;
+
     private Button supprimer;
     private Button modifier;
     private Button rejoindre;
     private Button quitter;
     private Button annuler_demande;
+
     private LinearLayout info;
     private LinearLayout layout_admin;
     private LinearLayout layout_membre;
     private LinearLayout layout_en_attente;
-    private TextView type ;
+    private LinearLayout layout_demandes;
+    private LinearLayout contenu_groupe;
+
     private ImageView image_type ;
+
     private Groupe groupe;
 
     private AlertDialog.Builder alert;
@@ -74,6 +83,15 @@ public class GroupeActivity extends AppCompatActivity {
 
         if (id_groupe != -1) {
             setContentView(R.layout.activity_groupe);
+
+            this.alert = new AlertDialog.Builder(this);
+            this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
+            this.alert.setIcon(R.drawable.ic_action_error);
+            this.alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
 
             // Set a Toolbar to replace the ActionBar.
             this.toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,10 +119,19 @@ public class GroupeActivity extends AppCompatActivity {
             this.type = (TextView) findViewById(R.id.type_groupe);
             this.image_type = (ImageView) findViewById(R.id.image_type);
 
+            this.layout_demandes = (LinearLayout) findViewById(R.id.layout_demandes);
+            this.nb_demandes = (TextView) findViewById(R.id.nb_demandes);
+
+            this.nb_membres = (TextView) findViewById(R.id.nb_membres);
+
+            this.contenu_groupe = (LinearLayout) findViewById(R.id.contenu_groupe);
+
             this.layout_membre.setVisibility(View.GONE);
             this.layout_en_attente.setVisibility(View.GONE);
             this.rejoindre.setVisibility(View.GONE);
             this.layout_admin.setVisibility(View.GONE);
+            this.layout_demandes.setVisibility(View.GONE);
+            this.contenu_groupe.setVisibility(View.GONE);
 
             SessionManager sessionManager = new SessionManager(GroupeActivity.this);
             int id_user = sessionManager.getUserId();
@@ -122,7 +149,7 @@ public class GroupeActivity extends AppCompatActivity {
                         try {
 
                             String rp = (String) msg.obj;
-                            System.out.println(" MSG : "+rp);
+                            //System.out.println(" MSG : "+rp);
                             JSONObject jsonObject = new JSONObject(rp);
 
                             if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
@@ -141,12 +168,14 @@ public class GroupeActivity extends AppCompatActivity {
                                 SessionManager sessionManager = new SessionManager(GroupeActivity.this);
                                 int id_user = sessionManager.getUserId();
 
-                                String nom = (String) jsonObject.get("name");
-                                String type = (String) jsonObject.get("type");
-                                String description = (String) jsonObject.get("description");
-                                String state = (String) jsonObject.get("state");
-                                int id =  Integer.parseInt((String) jsonObject.get("id"));
-                                int id_admin = Integer.parseInt((String) jsonObject.get("creator"));
+                                String nom = jsonObject.getString("name");
+                                String type = jsonObject.getString("type");
+                                String description = jsonObject.getString("description");
+                                String state = jsonObject.getString("state");
+                                int id =  jsonObject.getInt("id");
+                                int id_admin = jsonObject.getInt("creator");
+                                int nb_demandes = jsonObject.getInt("member_request");
+                                int nb_membres = jsonObject.getInt("nb_member");
                                 Utilisateur admin = new Utilisateur(id_admin, "", "", null, null, null);
                                 groupe = new Groupe();
                                 groupe.setId(id);
@@ -154,6 +183,8 @@ public class GroupeActivity extends AppCompatActivity {
                                 groupe.setType(type);
                                 groupe.setDescription(description);
                                 groupe.setAdmin(admin);
+                                groupe.setNbDemandes(nb_demandes);
+                                groupe.setNbMembres(nb_membres);
 
                                 displayGroupe(id_user, groupe, state);
 
@@ -165,7 +196,7 @@ public class GroupeActivity extends AppCompatActivity {
 
                     }
                 };
-                RequestPostTask requestPostTask = new RequestPostTask("getGroup",pairsPost, mHandler, GroupeActivity.this);
+                RequestPostTask requestPostTask = new RequestPostTask("getGroupWithRestrict",pairsPost, mHandler, GroupeActivity.this);
                 requestPostTask.execute();
             }
             else
@@ -205,22 +236,41 @@ public class GroupeActivity extends AppCompatActivity {
         if (groupe.getAdmin().getId() == id_user) {
             //onclick
             this.layout_admin.setVisibility(View.VISIBLE);
+
+            if(groupe.getNbDemandes() > 0){
+                this.nb_demandes.setText(groupe.getNbDemandes()+" "+getResources().getString(R.string.demandes));
+                this.layout_demandes.setVisibility(View.VISIBLE);
+            }
+            this.nb_demandes.setVisibility(View.VISIBLE);
+
             this.modifier.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    edit();
+                    if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                        edit();
+                    } else {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+                    }
                 }
             });
             this.supprimer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    delete();
+                    if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                        delete();
+                    } else {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+                    }
                 }
             });
 
         } else {
-            System.out.println("groupe : "+groupe);
-            System.out.println("ETAT : "+state);
+            //System.out.println("groupe : "+groupe);
+            //System.out.println("ETAT : " + state);
 
             if (state != null && state.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                 //onclick
@@ -229,7 +279,13 @@ public class GroupeActivity extends AppCompatActivity {
                 this.quitter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        quit();
+                        if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                            quit();
+                        } else {
+                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                            AlertDialog alertInscriptionInvalide = alert.create();
+                            alertInscriptionInvalide.show();
+                        }
                     }
                 });
 
@@ -239,7 +295,13 @@ public class GroupeActivity extends AppCompatActivity {
                 this.annuler_demande.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        cancelDemand();
+                        if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                            cancelDemand();
+                        } else {
+                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                            AlertDialog alertInscriptionInvalide = alert.create();
+                            alertInscriptionInvalide.show();
+                        }
                     }
                 });
 
@@ -248,7 +310,13 @@ public class GroupeActivity extends AppCompatActivity {
                 this.rejoindre.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sendDemand();
+                        if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                            sendDemand();
+                        } else {
+                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                            AlertDialog alertInscriptionInvalide = alert.create();
+                            alertInscriptionInvalide.show();
+                        }
                     }
                 });
             }
@@ -256,6 +324,7 @@ public class GroupeActivity extends AppCompatActivity {
 
         this.nom.setText(groupe.getNom());
         this.description.setText(groupe.getDescription());
+        this.nb_membres.setText(Integer.toString(groupe.getNbMembres()));
 
         String typeGroupe = groupe.getType();
 
@@ -266,6 +335,8 @@ public class GroupeActivity extends AppCompatActivity {
             this.image_type.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_closed_eye));
             this.type.setText(getResources().getString(R.string.type_prive));
         }
+
+        this.contenu_groupe.setVisibility(View.VISIBLE);
         //this.image_type.setColorFilter(0x0106000b, PorterDuff.Mode.MULTIPLY);
     }
 

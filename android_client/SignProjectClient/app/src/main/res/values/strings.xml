@@ -99,6 +99,7 @@
     <string name="nom">Nom</string>
     <string name="visibilite">Visibilité</string>
     <string name="description">Description</string>
+    <string name="demandes">demandes</string>
     <string name="type_public">Public</string>
     <string name="type_prive">Privé</string>
     <string name="erreur_nom_groupe">Doit être supérieur à 6 lettres, ne peut contenir que des lettres, des chiffres et les caractères _ et -</string>

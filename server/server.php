@@ -44,6 +44,12 @@ if(isset($dbh)){
             case "getGroup":
                 getGroupRequest();
                 break;
+            case "editGroup":
+                editGroupRequest();
+                break;
+            case "getGroupWithRestrict":
+                getGroupWithRestrictRequest();
+                break;
             case "addSignalement":
                 addSignalement();
                 break;

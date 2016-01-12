@@ -16,17 +16,21 @@ public class Groupe {
     protected ArrayList<SignalementGroupe> signalements;
     protected ArrayList<Utilisateur> membres;
     protected Utilisateur admin;
+    protected int nb_membres;
+    protected int nb_demandes;
 
     public static final String TYPE_PUBLIC = "public";
     public static final String TYPE_PRIVE = "private";
 
-    public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin) {
+    public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin, int nb_membres, int nb_demandes) {
         this.id = id;
         this.nom = nom;
         this.type = type;
         this.signalements = signalements;
         this.membres = membres;
         this.admin = admin;
+        this.nb_membres = nb_membres;
+        this.nb_demandes = nb_demandes;
     }
 
     public Groupe(){
@@ -65,6 +69,22 @@ public class Groupe {
         this.description = description;
     }
 
+    public int getNbDemandes() {
+        return nb_demandes;
+    }
+
+    public void setNbDemandes(int nb_demandes) {
+        this.nb_demandes = nb_demandes;
+    }
+
+    public int getNbMembres() {
+        return nb_membres;
+    }
+
+    public void setNbMembres(int nb_membres) {
+        this.nb_membres = nb_membres;
+    }
+
     public ArrayList<SignalementGroupe> getSignalements() {
         return signalements;
     }
@@ -91,7 +111,7 @@ public class Groupe {
 
     @Override
     public String toString() {
-        return nom;
+        return nom+" "+type+" "+description;
     }
 
     public static boolean nomValide(String nom)

@@ -146,7 +146,7 @@ function register($pseudo, $password, $gcm_regid) {
         
         $check = getUserByPseudo($pseudo);
         if (count($check) == 1) { 
-            return $check[0]['id'];
+            return $check['id'];
         } else {
             return ERROR;
         }
@@ -193,7 +193,7 @@ function getUserByPseudo($pseudo) {
             $result[] = $row;
         }
             
-        return $result;
+        return $result[0];
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -416,13 +416,36 @@ function addGroup($name, $type, $creator, $description){
             $stmt->execute();
             $dbh = null;
             
-            $check = getGroup($name);
+            $check = getGroupByName($name);
             if (count($check) > 0) {
-                addToGroup($creator, $check[0]['id'], 'appartient');
-                return SUCCESS; 
+                addToGroup($creator, $check['id'], 'appartient');
+                return SUCCESS;
             } else {
                 return ERROR;
             }
+        }
+        return DENIED;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function editGroup($id_group, $name, $type, $description){
+    
+    try {
+         
+        if(groupExist($name) == DENIED){
+            $id_groupInt = (int) $id_group;
+            $result = array();
+            $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+            //$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $dbh->prepare("UPDATE `group` g SET g.name = '$name', g.type = '$type', g.description = '$description' WHERE g.id = '$id_groupInt'");
+            $stmt->execute();
+            $dbh = null;
+            
+            return SUCCESS;
         }
         return DENIED;
         
@@ -458,7 +481,7 @@ function groupExist($name) {
 }
 
 
-function getGroup($name){
+function getGroupByName($name){
     
      try {
          
@@ -471,7 +494,34 @@ function getGroup($name){
             $result[] = $row;
         }
          
-        return $result;
+        return $result[0];
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getGroupById($id){
+    
+     try {
+         
+        $group_idint = (int) $id;
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM `group` g WHERE g.id = '$group_idint' LIMIT 1");
+        $stmt->execute();
+        $dbh = null;
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+        
+        if(count($result) > 0){
+          return $result[0];
+        } else {
+          return null;
+        }
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -492,7 +542,54 @@ function getGroupForUser($group_id, $user_id){
             $result[] = $row;
         }
          
-        return $result[0];
+        if(count($result) > 0){
+            $nb_member_request = getNbMemberRequest($group_id);
+            $nb_member = getNbMember($group_id);
+            $result[0]["member_request"] = $nb_member_request;
+            $result[0]["nb_member"] = $nb_member;
+            return $result[0];
+        } else {
+            return null;
+        }
+        
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getNbMemberRequest($group_id){
+    try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT count(*) FROM user_in_group ug WHERE ug.`group` = '$group_id' AND ug.state = 'attente'");
+        $stmt->execute();
+        $dbh = null;
+        
+        $number_of_rows = $stmt->fetchColumn(); 
+         
+        return $number_of_rows;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getNbMember($group_id){
+    try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT count(*) FROM user_in_group ug WHERE ug.`group` = '$group_id' AND ug.state = 'appartient'");
+        $stmt->execute();
+        $dbh = null;
+        
+        $number_of_rows = $stmt->fetchColumn(); 
+         
+        return $number_of_rows;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -508,12 +605,16 @@ function getGroups($user_id){
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id");
         $stmt->execute();
-        
+        $dbh = null;
 
         while ($row = $stmt->fetch()) {
+            $nb_member_request = getNbMemberRequest($row['id']);
+            $nb_member = getNbMember($row['id']);
+            $row["member_request"] = $nb_member_request;
+            $row["nb_member"] = $nb_member;
             $result[] = $row;
         }
-         $dbh = null;
+         
         return $result;
         
     } catch (PDOException $e) {

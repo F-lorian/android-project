@@ -83,12 +83,21 @@ public class AdapterListViewGroupe extends BaseAdapter {
         TextView nom = (TextView) layoutItem.findViewById(R.id.nom_adapter_groupe);
         ImageView iv = (ImageView) layoutItem.findViewById(R.id.image_type);
         TextView type = (TextView) layoutItem.findViewById(R.id.type_adapter_groupe);
+        TextView description = (TextView) layoutItem.findViewById(R.id.description_adapter_groupe);
         TextView etat_utilisateur = (TextView) layoutItem.findViewById(R.id.user_adapter_etat);
         LinearLayout groupe = (LinearLayout) layoutItem.findViewById(R.id.layout_groupe);
+        TextView nb_membres = (TextView) layoutItem.findViewById(R.id.members_adapter_groupe);
+        TextView nb_demandes = (TextView) layoutItem.findViewById(R.id.nb_demandes);
+
+        nb_demandes.setVisibility(View.GONE);
 
         String nomGroupe = this.groupes.get(position).getNom();
-        nom.setText(nomGroupe.toUpperCase());
+        //nom.setText(nomGroupe.toUpperCase());
+        nom.setText(nomGroupe);
         nom.setTextColor(Color.BLACK);
+
+        String descriptionGroupe = this.groupes.get(position).getDescription();
+        description.setText(descriptionGroupe);
 
         String typeGroupe = this.groupes.get(position).getType();
         String typeString = "";
@@ -103,6 +112,8 @@ public class AdapterListViewGroupe extends BaseAdapter {
         }
 
         type.setText(typeString);
+
+        nb_membres.setText(Integer.toString(this.groupes.get(position).getNbMembres()));
 
         groupe.setTag(position);
         groupe.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +135,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
         SessionManager sessionManager = new SessionManager(mContext);
         if(this.groupes.get(position).getAdmin().getId() == sessionManager.getUserId()){
             etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
+
         }
 
         int id_groupe = this.groupes.get(position).getId();
@@ -131,9 +143,13 @@ public class AdapterListViewGroupe extends BaseAdapter {
         int idUser = sessionManager.getUserId();
 
 
-
         if (id_admin == idUser) {
             etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
+            int nb =this.groupes.get(position).getNbDemandes();
+            if(nb > 0){
+                nb_demandes.setText("+"+nb);
+                nb_demandes.setVisibility(View.VISIBLE);
+            }
         } else {
 
             GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(mContext);

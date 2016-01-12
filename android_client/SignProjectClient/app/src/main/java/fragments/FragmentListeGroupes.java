@@ -78,10 +78,19 @@ public class FragmentListeGroupes extends Fragment {
             this.FabAjoutGroupe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), AjoutGroupeActivity.class);
-                    startActivity(intent);
-                }
-            });
+                    if (Config.isNetworkAvailable(getActivity())) {
+                        Intent intent = new Intent(getActivity(), AjoutGroupeActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+
+                    {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+                    }
+            }
+        });
 
             List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
             pairsPost.add(new BasicNameValuePair("user_id",id_user));
@@ -145,17 +154,21 @@ public class FragmentListeGroupes extends Fragment {
                 jsonobj = j.getJSONObject(i);
                 Groupe g = new Groupe();
 
-                String nom = (String) jsonobj.get("name");
-                String type = (String) jsonobj.get("type");
-                String description = (String) jsonobj.get("description");
-                int id =  Integer.parseInt((String) jsonobj.get("id"));
-                int id_admin = Integer.parseInt((String) jsonobj.get("creator"));
+                String nom = jsonobj.getString("name");
+                String type = jsonobj.getString("type");
+                String description = jsonobj.getString("description");
+                int id =   jsonobj.getInt("id");
+                int id_admin = jsonobj.getInt("creator");
+                int nb_demandes = jsonobj.getInt("member_request");
+                int nb_membres = jsonobj.getInt("nb_member");
                 Utilisateur admin = new Utilisateur(id_admin, "", "", null, null, null);
                 g.setId(id);
                 g.setNom(nom);
                 g.setType(type);
                 g.setDescription(description);
                 g.setAdmin(admin);
+                g.setNbDemandes(nb_demandes);
+                g.setNbMembres(nb_membres);
 
                     /*
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
