@@ -151,104 +151,103 @@
                             android:background="#dbdbdb"
                             android:layout_marginTop="5sp">
 
-                            <LinearLayout
-                                android:id="@+id/layout_demandes"
-                                android:layout_width="wrap_content"
-                                android:layout_height="20sp"
-                                android:orientation="horizontal"
-                                android:paddingLeft="2sp"
-                                android:layout_marginRight="2sp"
-                                android:gravity="center_vertical"
-                                android:background="@android:color/holo_red_dark">
-
-                                <ImageView
-                                    android:id="@+id/image_demandes"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="16sp"
-                                    android:src="@drawable/ic_new_user_2"
-                                    android:background="@android:color/white"/>
+                                    android:layout_height="24sp"
+                                    android:orientation="horizontal"
+                                    android:padding="4sp"
+                                    android:gravity="center_vertical"
+                                    android:background="@drawable/background_button_red">
 
-                                <TextView
-                                    android:id="@+id/nb_demandes"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="20sp"
-                                    android:text="0"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold"
-                                    android:gravity="center"
-                                    android:paddingLeft="5sp"
-                                    android:paddingRight="5sp"
-                                    android:background="@android:color/holo_red_dark"
-                                    android:textColor="@android:color/white"/>
-                            </LinearLayout>
+                                    <ImageView
+                                        android:id="@+id/image_demandes"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="16sp"
+                                        android:src="@drawable/ic_new_user_2"
+                                        android:background="@android:color/white"/>
+
+                                    <TextView
+                                        android:id="@+id/nb_demandes"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="20sp"
+                                        android:text="0"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold"
+                                        android:gravity="center"
+                                        android:paddingLeft="5sp"
+                                        android:paddingRight="5sp"
+                                        android:textColor="@android:color/white"/>
+                                </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="right">
-                                <LinearLayout
-                                    android:id="@+id/layout_nb_membres"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="20sp"
-                                    android:orientation="horizontal"
-                                    android:paddingLeft="2sp"
-                                    android:layout_marginLeft="2sp"
-                                    android:layout_marginRight="2sp"
-                                    android:gravity="center_vertical"
-                                    android:background="@android:color/holo_blue_dark">
 
-                                    <ImageView
-                                        android:id="@+id/image_nb_membres"
+
+
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
-                                        android:layout_height="16sp"
-                                        android:src="@drawable/ic_groupe"
-                                        android:background="@android:color/white"/>
+                                        android:layout_height="24sp"
+                                        android:orientation="horizontal"
+                                        android:padding="4sp"
+                                        android:layout_marginRight="2sp"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/background_button_blue">
 
-                                    <TextView
-                                        android:id="@+id/nb_membres"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="20sp"
-                                        android:text="0"
-                                        android:textSize="15sp"
-                                        android:textStyle="bold"
-                                        android:gravity="center"
-                                        android:paddingLeft="5sp"
-                                        android:paddingRight="5sp"
-                                        android:background="@android:color/holo_blue_dark"
-                                        android:textColor="@android:color/white"/>
-                                </LinearLayout>
+                                        <ImageView
+                                            android:id="@+id/image_nb_membres"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="16sp"
+                                            android:src="@drawable/ic_groupe"
+                                            android:background="@android:color/white"/>
 
-                                <LinearLayout
-                                    android:id="@+id/layout_type"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="20sp"
-                                    android:orientation="horizontal"
-                                    android:paddingLeft="2sp"
-                                    android:layout_marginLeft="2sp"
-                                    android:layout_marginRight="2sp"
-                                    android:gravity="center_vertical"
-                                    android:background="@android:color/holo_blue_dark">
+                                        <TextView
+                                            android:id="@+id/nb_membres"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="20sp"
+                                            android:text="0"
+                                            android:textSize="15sp"
+                                            android:textStyle="bold"
+                                            android:gravity="center"
+                                            android:paddingLeft="5sp"
+                                            android:paddingRight="5sp"
+                                            android:textColor="@android:color/white"/>
+                                    </LinearLayout>
 
-                                    <ImageView
-                                        android:id="@+id/image_type"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="16sp"
-                                        android:src="@drawable/ic_eye"
-                                        android:background="@android:color/white"/>
 
-                                    <TextView
-                                        android:id="@+id/type_groupe"
+
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="20sp"
-                                        android:text="0"
-                                        android:textSize="15sp"
-                                        android:textStyle="bold"
-                                        android:gravity="center"
-                                        android:paddingLeft="5sp"
-                                        android:paddingRight="5sp"
-                                        android:background="@android:color/holo_blue_dark"
-                                        android:textColor="@android:color/white"/>
-                                </LinearLayout>
+                                        android:orientation="horizontal"
+                                        android:paddingLeft="2sp"
+                                        android:layout_marginTop="2sp"
+                                        android:layout_marginLeft="2sp"
+                                        android:gravity="center_vertical"
+                                        android:background="@android:color/holo_blue_dark">
+
+                                        <ImageView
+                                            android:id="@+id/image_type"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="16sp"
+                                            android:src="@drawable/ic_eye"
+                                            android:background="@android:color/white"/>
+
+                                        <TextView
+                                            android:id="@+id/type_groupe"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="20sp"
+                                            android:text="@string/type_public"
+                                            android:textSize="15sp"
+                                            android:textStyle="bold"
+                                            android:gravity="center"
+                                            android:paddingLeft="5sp"
+                                            android:paddingRight="5sp"
+                                            android:background="@android:color/holo_blue_dark"
+                                            android:textColor="@android:color/white"/>
+                                    </LinearLayout>
+
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>

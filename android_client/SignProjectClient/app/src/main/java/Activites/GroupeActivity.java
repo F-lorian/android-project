@@ -268,6 +268,17 @@ public class GroupeActivity extends AppCompatActivity {
                 }
             });
 
+            this.layout_demandes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    layout_demandes.setBackground(getDrawable(R.drawable.drop_shadow_selected));
+                    alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                    AlertDialog alertInscriptionInvalide = alert.create();
+                    alertInscriptionInvalide.show();
+
+                }
+            });
+
         } else {
             //System.out.println("groupe : "+groupe);
             //System.out.println("ETAT : " + state);
