@@ -14,148 +14,84 @@ android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/layout_nom_groupe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Paragraphe"
             android:orientation="vertical"
-            android:padding="6sp"
-            android:background="#efefef">
+            android:background="@color/fond2">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#efefef">
-
-                <TextView
-                    android:id="@+id/nom_adapter_groupe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GROUPE"
-                    android:textSize="25sp"/>
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/nom_adapter_groupe"
+                style="@style/Title"
+                android:text="GROUPE"/>
 
             <TextView
                 android:id="@+id/description_adapter_groupe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="description..."
-                android:textSize="15sp"
-                android:background="#efefef"/>
+                style="@style/Paragraphe"
+                android:padding="0dip"
+                android:text="description..."/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_type_groupe"
             android:layout_width="match_parent"
-            android:layout_height="24sp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:background="#dbdbdb">
+            android:background="@color/fond1">
 
             <LinearLayout
                 android:id="@+id/layout_type"
-                android:layout_width="wrap_content"
-                android:layout_height="20sp"
-                android:orientation="horizontal"
-                android:paddingLeft="2sp"
-                android:layout_marginLeft="2sp"
-                android:layout_marginRight="2sp"
-                android:gravity="center_vertical"
-                android:background="@android:color/holo_blue_dark">
+                style="@style/DataIndicator"
+                android:background="@color/base_color">
 
                 <ImageView
                     android:id="@+id/image_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="16sp"
-                    android:src="@drawable/ic_eye"
-                    android:background="@android:color/white"/>
+                    style="@style/DataIndicatorImage"
+                    android:src="@drawable/ic_eye"/>
 
                 <TextView
                     android:id="@+id/type_adapter_groupe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20sp"
-                    android:text="@string/type_public"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:paddingLeft="5sp"
-                    android:paddingRight="5sp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    style="@style/DataIndicatorText"
+                    android:text="@string/type_public"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_members"
-                android:layout_width="wrap_content"
-                android:layout_height="20sp"
-                android:orientation="horizontal"
-                android:paddingLeft="2sp"
+                style="@style/DataIndicator"
                 android:layout_marginLeft="2sp"
-                android:layout_marginRight="2sp"
-                android:gravity="center_vertical"
-                android:background="@android:color/holo_blue_dark">
+                android:background="@color/base_color">
 
                 <ImageView
                     android:id="@+id/image_members"
-                    android:layout_width="wrap_content"
-                    android:layout_height="16sp"
-                    android:src="@drawable/ic_groupe"
-                    android:background="@android:color/white"/>
+                    style="@style/DataIndicatorImage"
+                    android:src="@drawable/ic_groupe"/>
 
                 <TextView
                     android:id="@+id/members_adapter_groupe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20sp"
-                    android:text="0"
-                    android:textSize="15sp"
-                    android:gravity="center"
-                    android:paddingLeft="5sp"
-                    android:paddingRight="5sp"
-                    android:textStyle="bold"
-                    android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    style="@style/DataIndicatorText"
+                    android:text="0"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_state"
-                android:layout_width="wrap_content"
-                android:layout_height="20sp"
-                android:orientation="horizontal"
-                android:padding="2sp"
+                style="@style/DataIndicator"
                 android:layout_marginLeft="2sp"
-                android:gravity="center_vertical"
-                android:background="@android:color/holo_orange_dark">
+                android:background="@color/color_info">
                 <ImageView
                     android:id="@+id/image_etat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="16sp"
-                    android:src="@drawable/ic_user"
-                    android:background="@android:color/white"/>
+                    style="@style/DataIndicatorImage"
+                    android:src="@drawable/ic_user"/>
 
                 <TextView
                     android:id="@+id/user_adapter_etat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20sp"
-                    android:text="@string/membre"
-                    android:textSize="15sp"
-                    android:gravity="center"
-                    android:paddingLeft="5sp"
-                    android:paddingRight="5sp"
-                    android:textStyle="bold"
-                    android:background="@android:color/holo_orange_dark"
-                    android:textColor="@android:color/white"/>
+                    style="@style/DataIndicatorText"
+                    android:text="@string/membre"/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/nb_demandes"
-                android:layout_width="wrap_content"
-                android:layout_height="20sp"
+                style="@style/DataIndicator"
                 android:text="+3"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:paddingLeft="5sp"
-                android:paddingRight="5sp"
-                android:gravity="center"
-                android:background="@android:color/holo_red_dark"
-                android:textColor="@android:color/white"/>
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/color_important"/>
         </LinearLayout>
 
 

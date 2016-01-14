@@ -19,4 +19,53 @@
         <item name="android:src">@drawable/ic_btn_round_plus</item>
         <item name="android:contentDescription">@string/description_plus_button</item>
     </style>
+
+    <style name="Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
+    <style name="Paragraphe">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
+    <style name="Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/title_size</item>
+    </style>
+
+    <style name="DataIndicator">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DataIndicatorButton" parent="DataIndicator">
+        <item name="android:layout_height">28dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="DataIndicatorText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">3dp</item>
+    </style>
+
+    <style name="DataIndicatorImage">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 </resources>
