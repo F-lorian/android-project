@@ -1,8 +1,12 @@
 package activites;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +45,7 @@ import utilitaires.InitDataTask;
 import utilitaires.JeuDeDonnees;
 import adapters.PageAdapterSignalementAutresAccidents;
 import utilitaires.PostRequest;
+import utilitaires.RequestPostTask;
 import utilitaires.SessionManager;
 
 /**
@@ -53,6 +58,7 @@ public class AccueilUserActivity extends AppCompatActivity {
     public NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private MenuItem oldMenuItem;
+    private AlertDialog.Builder buildAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,21 @@ public class AccueilUserActivity extends AppCompatActivity {
 
         this.oldMenuItem = null;
 
+        this.buildAlert = new AlertDialog.Builder(this);
+        this.buildAlert.setTitle(getResources().getString(R.string.action_toolbar_deconnnexion));
+        this.buildAlert.setIcon(R.drawable.ic_action_warning);
+        this.buildAlert.setMessage(getResources().getString(R.string.message_alert_dialog_deconnexion));
+        this.buildAlert.setPositiveButton(getResources().getString(R.string.btn_valider), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                AccueilUserActivity.this.deconnection();
+            }
+        });
+        this.buildAlert.setNegativeButton(getResources().getString(R.string.btn_Annuler), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
         //MenuItem mi = nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
         //this.selectDrawerItem(mi);
         this.InitilisationDesDonnees();
@@ -101,7 +122,8 @@ public class AccueilUserActivity extends AppCompatActivity {
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_settings:
-                this.deconnection();
+                AlertDialog alertDeconnection = this.buildAlert.create();
+                alertDeconnection.show();
                 return true;
         }
 
@@ -206,7 +228,8 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        this.deconnection();
+        AlertDialog alertDeconnection = this.buildAlert.create();
+        alertDeconnection.show();
     }
 
     @Override
@@ -291,47 +314,21 @@ public class AccueilUserActivity extends AppCompatActivity {
         }
     }
 
-    class RequestPostTask extends AsyncTask<Void,Void,Void> {
-
-        private PostRequest postRequest;
-        private ProgressDialog progressDialog;
-        private Activity activity;
-
-        public RequestPostTask(String action, List pairs, Activity activity){
-            this.postRequest = new PostRequest(action,pairs);
-            this.activity = activity;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            this.postRequest.sendRequest();
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            this.progressDialog = ProgressDialog.show(activity, activity.getResources().getString(R.string.progress_dialog_titre), activity.getResources().getString(R.string.progress_dialog_message_deconnection));
-
-            this.progressDialog.setCanceledOnTouchOutside(false);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            this.progressDialog.dismiss();
-            this.activity.finish();
-        }
-    }
-
     private void deconnection()
     {
         SessionManager sessionManager = new SessionManager(this);
         List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
         pairsPost.add(new BasicNameValuePair("pseudo",sessionManager.getUserPseudo()));
-        pairsPost.add(new BasicNameValuePair("id", sessionManager.getUserId()+""));
+        pairsPost.add(new BasicNameValuePair("id", sessionManager.getUserId() + ""));
 
-        RequestPostTask requestPostTask = new RequestPostTask("deconnection",pairsPost,this);
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                AccueilUserActivity.this.finish();
+            }
+        };
+
+        RequestPostTask requestPostTask = new RequestPostTask("deconnection",pairsPost,mHandler,this,this.getResources().getString(R.string.progress_dialog_message_deconnection));
         requestPostTask.execute();
     }
 }

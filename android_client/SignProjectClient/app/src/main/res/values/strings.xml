@@ -31,6 +31,7 @@
     <string name="message_alert_dialog_erreur_pseudo_mdp">Pseudo ou mot de passe incorrect</string>
     <string name="message_alert_dialog_inscription_error">Erreur lors de l\'inscription, veuillez réessayer plus tard</string>
     <string name="message_alert_dialog_inscription_denied">Pseudo déjà utilisé</string>
+    <string name="message_alert_dialog_deconnexion">Êtes-vous sûr de vouloir vous déconnecter</string>
     <string name="message_alert_dialog_erreur_chargement">Les données n\'ont pas pu être chargées. Veuillez réessayer ultérieurement</string>
     <string name="message_alert_dialog_erreur_horaire_signalement">Aucun horaire ajouté</string>
     <string name="message_alert_dialog_erreur_groupe_signalement">Aucun groupe selectionné</string>
