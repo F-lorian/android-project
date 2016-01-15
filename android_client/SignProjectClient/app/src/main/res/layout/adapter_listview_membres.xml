@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_membre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/fond1"
+        android:layout_margin="5sp"
+        android:layout_marginBottom="0sp">
+
+        <LinearLayout
+            android:id="@+id/layout_type"
+            style="@style/DataIndicator"
+            android:background="@color/base_color">
+
+            <ImageView
+                android:id="@+id/image_membre"
+                style="@style/DataIndicatorImage"
+                android:src="@drawable/ic_user"/>
+
+            <TextView
+                android:id="@+id/pseudo_adapter_membre"
+                style="@style/DataIndicatorText"
+                android:text="@string/type_public"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_actions"
+            style="@style/DataIndicator"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:background="@color/base_color">
+
+            <ImageView
+                android:id="@+id/image_accept"
+                style="@style/DataIndicatorImage"
+                android:src="@drawable/ic_check"/>
+
+            <ImageView
+                android:id="@+id/image_refuse"
+                style="@style/DataIndicatorImage"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_remove"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

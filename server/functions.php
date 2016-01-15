@@ -623,6 +623,28 @@ function getGroups($user_id){
     }
 }
 
+function getMembersByGroupId($group_id){
+    
+     try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT u.id, u.pseudo FROM user u, user_in_group ug WHERE ug.group = '$group_id' AND ug.user = u.id");
+        $stmt->execute();
+        $dbh = null;
+
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+         
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
 
 function addToGroup($user_id, $group_id, $state){ 
     

@@ -28,9 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import adapters.AdapterListViewGroupe;
 import adapters.AdapterSpinnerTypeGroupe;
 import modeles.modele.Groupe;
@@ -93,7 +90,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             Handler mHandler = getGroupeHandler();
             Map<String, String> params = new HashMap<>();
             params.put("group_id", Integer.toString(id_groupe));
-            sendRequest("getGroup", params, mHandler);
+            RequestPostTask.sendRequest("getGroup", params, mHandler, this);
 
 
         }else{
@@ -244,7 +241,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                         System.out.println("description : "+description);
              */
                 Handler mHandler = getUpdateHandler();
-                sendRequest("editGroup", params, mHandler);
+                RequestPostTask.sendRequest("editGroup", params, mHandler, this);
 
             } else {
                 this.buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
@@ -253,27 +250,6 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             }
 
         }
-    }
-
-    public void sendRequest(String command,Map<String, String> params, Handler handler){
-
-        List<NameValuePair> pairsPost = getPairsPost(params);
-        RequestPostTask requestPostTask = new RequestPostTask(command, pairsPost, handler, this);
-        requestPostTask.execute();
-    }
-
-    public List<NameValuePair> getPairsPost(Map<String, String> params){
-
-        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            String key = entry.getKey();
-            String val = entry.getValue();
-            if(val != null){
-                pairsPost.add(new BasicNameValuePair(key, val));
-            }
-        }
-
-        return pairsPost;
     }
 
     public int getIndiceByType(String typeCons) {

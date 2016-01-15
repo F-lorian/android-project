@@ -10,12 +10,17 @@ import android.os.Message;
 
 import com.example.florian.signprojectclient.R;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import activites.AccueilUserActivity;
 import utilitaires.Config;
@@ -81,6 +86,27 @@ public class RequestPostTask extends AsyncTask<Void,Void,Void> {
             e.printStackTrace();
         }*/
 
+    }
+
+    public static void sendRequest(String command,Map<String, String> params, Handler handler, Activity activity){
+
+        List<NameValuePair> pairsPost = getPairsPost(params);
+        RequestPostTask requestPostTask = new RequestPostTask(command, pairsPost, handler, activity);
+        requestPostTask.execute();
+    }
+
+    public static List<NameValuePair> getPairsPost(Map<String, String> params){
+
+        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            String key = entry.getKey();
+            String val = entry.getValue();
+            if(val != null){
+                pairsPost.add(new BasicNameValuePair(key, val));
+            }
+        }
+
+        return pairsPost;
     }
 
 }

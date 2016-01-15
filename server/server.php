@@ -44,6 +44,9 @@ if(isset($dbh)){
             case "getGroup":
                 getGroupRequest();
                 break;
+            case "getMembers":
+                getMembersRequest();
+                break;
             case "editGroup":
                 editGroupRequest();
                 break;

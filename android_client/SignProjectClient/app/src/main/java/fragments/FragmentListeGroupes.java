@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONTokener;
 
 import activites.AjoutGroupeActivity;
@@ -52,7 +50,6 @@ public class FragmentListeGroupes extends Fragment {
     FloatingActionButton FabAjoutGroupe;
     ArrayList<Groupe> groupes;
     AdapterListViewGroupe adapterListViewGroupe;
-
 
     private AlertDialog.Builder alert;
 
@@ -81,53 +78,21 @@ public class FragmentListeGroupes extends Fragment {
                     if (Config.isNetworkAvailable(getActivity())) {
                         Intent intent = new Intent(getActivity(), AjoutGroupeActivity.class);
                         startActivity(intent);
-                    }
-                    else
+                    } else
 
                     {
                         alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
                         AlertDialog alertInscriptionInvalide = alert.create();
                         alertInscriptionInvalide.show();
                     }
-            }
-        });
-
-            List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-            pairsPost.add(new BasicNameValuePair("user_id",id_user));
-
-            Handler mHandler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-
-                    try {
-
-                        Object json = new JSONTokener((String) msg.obj).nextValue();
-                        if (json instanceof JSONObject) {
-                            JSONObject jsonObject = new JSONObject((String) msg.obj);
-                            if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
-                            {
-                                alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
-                                AlertDialog alertInscriptionInvalide = alert.create();
-                                alertInscriptionInvalide.show();
-                            }
-                        }
-                        else if (json instanceof JSONArray){
-                            JSONArray jsonArray = new JSONArray((String) msg.obj);
-
-                            groupes = jsonToListGroup(jsonArray);
-                            adapterListViewGroupe = new AdapterListViewGroupe(getActivity(), groupes);
-                            listeGroupes.setAdapter(adapterListViewGroupe);
-
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
                 }
-            };
-            RequestPostTask requestPostTask = new RequestPostTask("getGroups",pairsPost, mHandler, getActivity());
-            requestPostTask.execute();
+            });
+
+            Map<String, String> params = new HashMap<>();
+            params.put("user_id", id_user);
+
+            Handler mHandler = getGroupesHandler();
+            RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity());
         }
         else
         {
@@ -189,6 +154,43 @@ public class FragmentListeGroupes extends Fragment {
 
         return groupes;
 
-}
+    }
+
+    public Handler getGroupesHandler() {
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+
+                    Object json = new JSONTokener((String) msg.obj).nextValue();
+                    if (json instanceof JSONObject) {
+                        JSONObject jsonObject = new JSONObject((String) msg.obj);
+                        if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                        {
+                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
+                            AlertDialog alertInscriptionInvalide = alert.create();
+                            alertInscriptionInvalide.show();
+                        }
+                    }
+                    else if (json instanceof JSONArray){
+                        JSONArray jsonArray = new JSONArray((String) msg.obj);
+
+                        groupes = jsonToListGroup(jsonArray);
+                        adapterListViewGroupe = new AdapterListViewGroupe(getActivity(), groupes);
+                        listeGroupes.setAdapter(adapterListViewGroupe);
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        return mHandler;
+    }
+
 
 }

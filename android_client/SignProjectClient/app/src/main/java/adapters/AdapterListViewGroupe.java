@@ -94,7 +94,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
         String nomGroupe = this.groupes.get(position).getNom();
         //nom.setText(nomGroupe.toUpperCase());
         nom.setText(nomGroupe);
-        nom.setTextColor(Color.BLACK);
+        //nom.setTextColor(Color.BLACK);
 
         String descriptionGroupe = this.groupes.get(position).getDescription();
         description.setText(descriptionGroupe);

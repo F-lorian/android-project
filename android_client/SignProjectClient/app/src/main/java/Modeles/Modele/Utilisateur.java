@@ -14,6 +14,10 @@ public class Utilisateur {
     protected ArrayList<Groupe> groupesAppartient;
     protected ArrayList<Groupe> groupesAdmin;
 
+    public Utilisateur(){
+
+    }
+
     public Utilisateur(int id, String pseudo, String mdp, ArrayList<SignalementPublic> signalements, ArrayList<Groupe> groupesAppartient, ArrayList<Groupe> groupesAdmin) {
         this.id = id;
         this.pseudo = pseudo;

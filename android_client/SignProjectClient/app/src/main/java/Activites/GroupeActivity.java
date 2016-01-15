@@ -1,22 +1,19 @@
 package activites;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,18 +21,15 @@ import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import adapters.AdapterListViewGroupe;
+import fragments.FragmentListeMembres;
 import modeles.modele.Groupe;
 import modeles.modele.RequestPostTask;
 import modeles.modele.Utilisateur;
@@ -138,66 +132,12 @@ public class GroupeActivity extends AppCompatActivity {
 
             if (Config.isNetworkAvailable(GroupeActivity.this))
             {
-                List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-                pairsPost.add(new BasicNameValuePair("group_id",Integer.toString(id_groupe)));
-                pairsPost.add(new BasicNameValuePair("user_id",Integer.toString(id_user)));
+                Map<String, String> params = new HashMap<>();
+                params.put("group_id", Integer.toString(id_groupe));
+                params.put("user_id", Integer.toString(id_user));
 
-                Handler mHandler = new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-
-                        try {
-
-                            String rp = (String) msg.obj;
-                            //System.out.println(" MSG : "+rp);
-                            JSONObject jsonObject = new JSONObject(rp);
-
-                            if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
-                            {
-                                alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
-                                AlertDialog alertInscriptionInvalide = alert.create();
-                                alertInscriptionInvalide.show();
-                            }
-                            else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
-                            {
-                                alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
-                                AlertDialog alertInscriptionInvalide = alert.create();
-                                alertInscriptionInvalide.show();
-                            }
-                            else {
-                                SessionManager sessionManager = new SessionManager(GroupeActivity.this);
-                                int id_user = sessionManager.getUserId();
-
-                                String nom = jsonObject.getString("name");
-                                String type = jsonObject.getString("type");
-                                String description = jsonObject.getString("description");
-                                String state = jsonObject.getString("state");
-                                int id =  jsonObject.getInt("id");
-                                int id_admin = jsonObject.getInt("creator");
-                                int nb_demandes = jsonObject.getInt("member_request");
-                                int nb_membres = jsonObject.getInt("nb_member");
-                                Utilisateur admin = new Utilisateur(id_admin, "", "", null, null, null);
-                                groupe = new Groupe();
-                                groupe.setId(id);
-                                groupe.setNom(nom);
-                                groupe.setType(type);
-                                groupe.setDescription(description);
-                                groupe.setAdmin(admin);
-                                groupe.setNbDemandes(nb_demandes);
-                                groupe.setNbMembres(nb_membres);
-
-                                displayGroupe(id_user, groupe, state);
-
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                };
-                RequestPostTask requestPostTask = new RequestPostTask("getGroupWithRestrict",pairsPost, mHandler, GroupeActivity.this);
-                requestPostTask.execute();
+                Handler mHandler = getGroupeHandler();
+                RequestPostTask.sendRequest("getGroupWithRestrict", params, mHandler, this);
             }
             else
             {
@@ -271,11 +211,13 @@ public class GroupeActivity extends AppCompatActivity {
             this.layout_demandes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    layout_demandes.setBackground(getDrawable(R.drawable.drop_shadow_selected));
-                    alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                    AlertDialog alertInscriptionInvalide = alert.create();
-                    alertInscriptionInvalide.show();
-
+                    if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                        showMembersDialog();
+                    } else {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+                    }
                 }
             });
 
@@ -349,6 +291,94 @@ public class GroupeActivity extends AppCompatActivity {
 
         this.contenu_groupe.setVisibility(View.VISIBLE);
         //this.image_type.setColorFilter(0x0106000b, PorterDuff.Mode.MULTIPLY);
+    }
+
+    public Handler getGroupeHandler() {
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+
+                    String rp = (String) msg.obj;
+                    //System.out.println(" MSG : "+rp);
+                    JSONObject jsonObject = new JSONObject(rp);
+
+                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
+                    {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                GroupeActivity.this.finish();
+                            }
+                        });
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+
+                    }
+                    else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                    {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
+                        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                GroupeActivity.this.finish();
+                            }
+                        });
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+                    }
+                    else {
+                        SessionManager sessionManager = new SessionManager(GroupeActivity.this);
+                        int id_user = sessionManager.getUserId();
+
+                        String nom = jsonObject.getString("name");
+                        String type = jsonObject.getString("type");
+                        String description = jsonObject.getString("description");
+                        String state = jsonObject.getString("state");
+                        int id =  jsonObject.getInt("id");
+                        int id_admin = jsonObject.getInt("creator");
+                        int nb_demandes = jsonObject.getInt("member_request");
+                        int nb_membres = jsonObject.getInt("nb_member");
+                        Utilisateur admin = new Utilisateur(id_admin, "", "", null, null, null);
+                        groupe = new Groupe();
+                        groupe.setId(id);
+                        groupe.setNom(nom);
+                        groupe.setType(type);
+                        groupe.setDescription(description);
+                        groupe.setAdmin(admin);
+                        groupe.setNbDemandes(nb_demandes);
+                        groupe.setNbMembres(nb_membres);
+
+                        displayGroupe(id_user, groupe, state);
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        return mHandler;
+    }
+
+    void showMembersDialog() {
+        DialogFragment newFragment = FragmentListeMembres.newInstance(
+                R.string.membres);
+        newFragment.show(getFragmentManager(), "dialog");
+    }
+
+    public void doPositiveClick() {
+        // Do stuff here.
+        Log.i("FragmentAlertDialog", "Positive click!");
+    }
+
+    public void doNegativeClick() {
+        // Do stuff here.
+        Log.i("FragmentAlertDialog", "Negative click!");
     }
 
     public void edit() {
