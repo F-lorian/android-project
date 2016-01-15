@@ -3,7 +3,9 @@ package activites;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -28,9 +30,18 @@ import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import adapters.AdapterListViewHoraireSignalement;
 import adapters.AdapterSpinnerTypeDestination;
@@ -48,6 +59,7 @@ import modeles.modeleBD.SignalementBD;
 import modeles.modeleBD.TypeSignalementBD;
 import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
+import utilitaires.RequestPostTask;
 import utilitaires.SessionManager;
 import utilitaires.UtilisateursDestinationSignalementCompletionView;
 
@@ -162,17 +174,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
             }
         });
-
-        GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
-        groupeUtilisateurBD.open();
-        SessionManager sessionManager = new SessionManager(this);
-        this.groupesDestination = groupeUtilisateurBD.getGroupe(sessionManager.getUserId(), GroupeUtilisateurBD.ETAT_APPARTIENT);
-        groupeUtilisateurBD.close();
-
-        UtilisateurBD utilisateurBD = new UtilisateurBD(this);
-        utilisateurBD.open();
-        this.utilisateursDestination = utilisateurBD.getUtilisateurs();
-        utilisateurBD.close();
 
         this.spinnerTypeDestinataire.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -613,5 +614,67 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         }
 
         return ind;
+    }
+
+    public void initDataForm() {
+        SessionManager sessionManager = new SessionManager(this);
+        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+        pairsPost.add(new BasicNameValuePair("user_id", sessionManager.getUserId() + ""));
+
+        android.os.Handler mHandler = new android.os.Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject((String) msg.obj);
+
+                    AjoutSignalementActivity ajoutSignalementActivity = AjoutSignalementActivity.this;
+                    
+                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
+                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_chargement));
+                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                        alertInscriptionInvalide.show();
+                    } else {
+                        ajoutSignalementActivity.getGroupsFromJson(jsonObject);
+                        ajoutSignalementActivity.getUtilisateursFromJson(jsonObject);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        RequestPostTask requestPostTask = new RequestPostTask("getDataFormAddSignalement", pairsPost, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
+        requestPostTask.execute();
+    }
+
+    private void getGroupsFromJson(JSONObject jsonObject) throws JSONException {
+        this.groupesDestination = new ArrayList<>();
+
+        JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("groupes");
+        for (int i=0; i<jsonArray.length(); i++)
+        {
+            Groupe g = new Groupe();
+            g.setId(jsonArray.getJSONArray(i).getInt(0));
+            g.setNom(jsonArray.getJSONArray(i).getString(1));
+            this.groupesDestination.add(g);
+        }
+
+    }
+
+    private void getUtilisateursFromJson(JSONObject jsonObject) throws JSONException {
+        this.utilisateursDestination = new ArrayList<>();
+
+        JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("users");
+        for (int i=0; i<jsonArray.length(); i++)
+        {
+            Utilisateur u = new Utilisateur();
+            u.setId(jsonArray.getJSONArray(i).getInt(0));
+            u.setPseudo(jsonArray.getJSONArray(i).getString(1));
+            this.utilisateursDestination.add(u);
+        }
+
     }
 }

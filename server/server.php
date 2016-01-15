@@ -71,6 +71,10 @@ if(isset($dbh)){
             case "groupExist":
                 groupExistRequest();
                 break;
+			case "getDataFormAddSignalement":
+                getDataFormAddSignalementRequest();
+                break;
+				
             
             
         }

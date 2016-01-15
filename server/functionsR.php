@@ -348,4 +348,15 @@ function getGroupsRequest(){
     }
 }
 
+function getDataFormAddSignalementRequest(){
+	if (isset($_POST["user_id"])) {
+        $resGroup = getGroups($_POST["user_id"]);
+		$resAllUsers = getAllUsers($_POST["page"]);
+		echo getReplyMessage(SUCCESS, GROUP_FOUND, array('groupes' => $resGroup, 'users' => $resAllUsers));
+
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
 ?>

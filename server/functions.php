@@ -231,7 +231,7 @@ function getAllUsers($page) {
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT pseudo, gcm_regid FROM user");
+        $stmt = $dbh->prepare("SELECT id, pseudo, gcm_regid FROM user");
         $stmt->execute();
         $dbh = null;
         while ($row = $stmt->fetch()) {
