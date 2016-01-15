@@ -17,21 +17,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import fragments.FragmentListeMembres;
 import modeles.modele.Groupe;
-import modeles.modele.RequestPostTask;
+import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.GroupeBD;
 import modeles.modeleBD.GroupeUtilisateurBD;
@@ -137,7 +134,7 @@ public class GroupeActivity extends AppCompatActivity {
                 params.put("user_id", Integer.toString(id_user));
 
                 Handler mHandler = getGroupeHandler();
-                RequestPostTask.sendRequest("getGroupWithRestrict", params, mHandler, this);
+                RequestPostTask.sendRequest("getGroupWithRestrict", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
             }
             else
             {

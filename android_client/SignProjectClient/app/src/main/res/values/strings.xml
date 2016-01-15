@@ -41,6 +41,8 @@
 
     <string name="progress_dialog_titre">Chargement...</string>
     <string name="progress_dialog_message">Initialisation en cours</string>
+    <string name="progress_dialog_message_modif">Modification en cours</string>
+    <string name="progress_dialog_message_ajout">Ajout en cours</string>
     <string name="progress_dialog_message_connection">Connexion en cours</string>
     <string name="progress_dialog_message_inscription">Inscription en cours</string>
     <string name="progress_dialog_message_deconnection">Deconnexion en cours</string>

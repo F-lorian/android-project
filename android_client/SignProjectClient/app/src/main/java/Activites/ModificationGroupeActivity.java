@@ -24,14 +24,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import adapters.AdapterListViewGroupe;
 import adapters.AdapterSpinnerTypeGroupe;
 import modeles.modele.Groupe;
-import modeles.modele.RequestPostTask;
+import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.GroupeBD;
 import utilitaires.Config;
@@ -90,7 +87,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             Handler mHandler = getGroupeHandler();
             Map<String, String> params = new HashMap<>();
             params.put("group_id", Integer.toString(id_groupe));
-            RequestPostTask.sendRequest("getGroup", params, mHandler, this);
+            RequestPostTask.sendRequest("getGroup", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
 
 
         }else{
@@ -241,7 +238,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                         System.out.println("description : "+description);
              */
                 Handler mHandler = getUpdateHandler();
-                RequestPostTask.sendRequest("editGroup", params, mHandler, this);
+                RequestPostTask.sendRequest("editGroup", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message_modif));
 
             } else {
                 this.buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));

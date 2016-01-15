@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.florian.signprojectclient.R;
@@ -27,12 +26,9 @@ import java.util.Map;
 
 import activites.AjoutGroupeActivity;
 import activites.GroupeActivity;
-import adapters.AdapterListViewGroupe;
 import adapters.AdapterListViewMembre;
-import modeles.modele.Groupe;
-import modeles.modele.RequestPostTask;
+import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
-import modeles.modeleBD.GroupeBD;
 import utilitaires.Config;
 
 /**

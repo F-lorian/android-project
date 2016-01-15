@@ -2,10 +2,8 @@ package activites;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,11 +23,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import modeles.modele.RequestPostTask;
+import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
-import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
-import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
 /**
@@ -210,7 +206,7 @@ public class InscriptionActivity extends Activity {
 
                             }
                         };
-                        RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost, mHandler, InscriptionActivity.this);
+                        RequestPostTask requestPostTask = new RequestPostTask("register",pairsPost, mHandler, InscriptionActivity.this, InscriptionActivity.this.getResources().getString(R.string.progress_dialog_message_inscription));
                         requestPostTask.execute();
                     }
                     else

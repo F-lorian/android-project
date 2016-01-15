@@ -1,8 +1,6 @@
 package fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
@@ -23,22 +20,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONTokener;
 
 import activites.AjoutGroupeActivity;
-import activites.GroupeActivity;
 import adapters.AdapterListViewGroupe;
 import modeles.modele.Groupe;
-import modeles.modele.RequestPostTask;
+import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
 import modeles.modeleBD.GroupeBD;
-import modeles.modeleBD.MySQLite;
-import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
-import utilitaires.JsonParser;
 import utilitaires.SessionManager;
 
 /**

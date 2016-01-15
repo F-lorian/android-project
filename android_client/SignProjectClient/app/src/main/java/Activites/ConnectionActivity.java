@@ -2,10 +2,8 @@ package activites;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,11 +23,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import modeles.modele.RequestPostTask;
+import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
-import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
-import utilitaires.PostRequest;
 import utilitaires.SessionManager;
 
 /**
@@ -167,7 +163,7 @@ public class ConnectionActivity extends Activity {
 
                         }
                     };
-                    RequestPostTask requestPostTask = new RequestPostTask("connection", pairsPost, mHandler, ConnectionActivity.this);
+                    RequestPostTask requestPostTask = new RequestPostTask("connection", pairsPost, mHandler, ConnectionActivity.this, ConnectionActivity.this.getResources().getString(R.string.progress_dialog_message_connection));
                     requestPostTask.execute();
                 } else {
                     buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
