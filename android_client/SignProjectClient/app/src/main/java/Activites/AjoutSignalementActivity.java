@@ -91,6 +91,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
     private AlertDialog.Builder buildAlertInscriptionInvalide;
 
     private int idLigneArretCourant;
+    private SessionManager sessionManager = new SessionManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +196,8 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+
+        this.initDataForm();
     }
 
     @Override
@@ -308,8 +311,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
                     signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
                     signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
-
-                    SessionManager sessionManager = new SessionManager(this);
                     signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
 
                     System.out.println(signalement);
@@ -400,38 +401,38 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
 
-                                ListView listViewHoraire = (ListView) AjoutSignalementActivity.this.findViewById(R.id.listHoraireAjoutSignalement);
-                                AjoutSignalementActivity.this.horaires.add(spinnerLigne.getSelectedItem() + " - " + numberPicker.getValue());
-                                AjoutSignalementActivity.this.adapterListViewHoraireSignalement.notifyDataSetChanged();
-                                listViewHoraire.setAdapter(AjoutSignalementActivity.this.adapterListViewHoraireSignalement);
-                                listViewHoraire.setOnTouchListener(new ListView.OnTouchListener() {
-                                    @Override
-                                    public boolean onTouch(View v, MotionEvent event) {
-                                        int action = event.getAction();
-                                        switch (action) {
-                                            case MotionEvent.ACTION_DOWN:
-                                                // Disallow ScrollView to intercept touch events.
-                                                v.getParent().requestDisallowInterceptTouchEvent(true);
-                                                break;
+                                    ListView listViewHoraire = (ListView) AjoutSignalementActivity.this.findViewById(R.id.listHoraireAjoutSignalement);
+                                    AjoutSignalementActivity.this.horaires.add(spinnerLigne.getSelectedItem() + " - " + numberPicker.getValue());
+                                    AjoutSignalementActivity.this.adapterListViewHoraireSignalement.notifyDataSetChanged();
+                                    listViewHoraire.setAdapter(AjoutSignalementActivity.this.adapterListViewHoraireSignalement);
+                                    listViewHoraire.setOnTouchListener(new ListView.OnTouchListener() {
+                                        @Override
+                                        public boolean onTouch(View v, MotionEvent event) {
+                                            int action = event.getAction();
+                                            switch (action) {
+                                                case MotionEvent.ACTION_DOWN:
+                                                    // Disallow ScrollView to intercept touch events.
+                                                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                                                    break;
 
-                                            case MotionEvent.ACTION_UP:
-                                                // Allow ScrollView to intercept touch events.
-                                                v.getParent().requestDisallowInterceptTouchEvent(false);
-                                                break;
+                                                case MotionEvent.ACTION_UP:
+                                                    // Allow ScrollView to intercept touch events.
+                                                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                                                    break;
+                                            }
+
+                                            // Handle ListView touch events.
+                                            v.onTouchEvent(event);
+                                            return true;
                                         }
+                                    });
 
-                                        // Handle ListView touch events.
-                                        v.onTouchEvent(event);
-                                        return true;
+                                    if (AjoutSignalementActivity.this.horaires.size() >= AjoutSignalementActivity.MAX_CAPACITY_LIST_HORAIRES) {
+                                        buttonAddHoraire.setEnabled(false);
+                                        buttonAddHoraire.setAlpha(OPACITY_BTN_ADD_HORAIRE);
                                     }
-                                });
 
-                                if (AjoutSignalementActivity.this.horaires.size() >= AjoutSignalementActivity.MAX_CAPACITY_LIST_HORAIRES) {
-                                    buttonAddHoraire.setEnabled(false);
-                                    buttonAddHoraire.setAlpha(OPACITY_BTN_ADD_HORAIRE);
-                                }
-
-                                dialogAjoutHoraire.dismiss();
+                                    dialogAjoutHoraire.dismiss();
                                 }
                             });
 
@@ -619,7 +620,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
     }
 
     private void initDataForm() {
-        SessionManager sessionManager = new SessionManager(this);
+
         List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
         pairsPost.add(new BasicNameValuePair("user_id", sessionManager.getUserId() + ""));
 
@@ -659,8 +660,8 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         for (int i=0; i<jsonArray.length(); i++)
         {
             Groupe g = new Groupe();
-            g.setId(jsonArray.getJSONArray(i).getInt(0));
-            g.setNom(jsonArray.getJSONArray(i).getString(1));
+            g.setId(jsonArray.getJSONObject(i).getInt("id"));
+            g.setNom(jsonArray.getJSONObject(i).getString("name"));
             this.groupesDestination.add(g);
         }
 
@@ -673,18 +674,16 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         for (int i=0; i<jsonArray.length(); i++)
         {
             Utilisateur u = new Utilisateur();
-            u.setId(jsonArray.getJSONArray(i).getInt(0));
-            u.setPseudo(jsonArray.getJSONArray(i).getString(1));
+            u.setId(jsonArray.getJSONObject(i).getInt("id"));
+            u.setPseudo(jsonArray.getJSONObject(i).getString("pseudo"));
             this.utilisateursDestination.add(u);
         }
     }
 
     private List<NameValuePair> convertSignalementToSend(Signalement signalement) {
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-        pairsPost.add(new BasicNameValuePair("id", signalement.getId() + ""));
         pairsPost.add(new BasicNameValuePair("contenu", signalement.getContenu()));
         pairsPost.add(new BasicNameValuePair("remarque", signalement.getRemarques()));
         pairsPost.add(new BasicNameValuePair("date", dateFormat.format(signalement.getDate())));
@@ -695,14 +694,23 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         if (signalement instanceof SignalementPublic)
         {
             pairsPost.add(new BasicNameValuePair("diffusion", SignalementPublic.TYPE_DESTINATAIRE));
-
             if (((SignalementPublic)signalement).getUtilisateursDestinateurs() != null)
             {
                 JSONArray jsonArray = new JSONArray();
 
+                boolean auteurPresent = false;
                 for (int i=0; i<((SignalementPublic)signalement).getUtilisateursDestinateurs().size(); i++)
                 {
+                    if (((SignalementPublic)signalement).getUtilisateursDestinateurs().get(i).getId() == sessionManager.getUserId())
+                    {
+                        auteurPresent = true;
+                    }
                     jsonArray.put(((SignalementPublic)signalement).getUtilisateursDestinateurs().get(i).getId());
+                }
+
+                if (!auteurPresent)
+                {
+                    jsonArray.put(sessionManager.getUserId());
                 }
 
                 pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
@@ -721,7 +729,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
             pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
         }
-
         return pairsPost;
     }
 

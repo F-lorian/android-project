@@ -736,25 +736,53 @@ function removeFromGroup(){
 
 
 function addSignalement(){
-    $content  = $_POST["content"];
-    $note = $_POST["note"];
-    $date = date('Y-m-d h:m:s');
-    $diffusion = $_POST["diffusion"];
-    $type = $_POST["type"];
+    $contenu  = $_POST["contenu"];
+	$remarque  = $_POST["remarque"];
+	$date  = $_POST["date"];
+	$diffusion  = $_POST["diffusion"];
+	$arret  = $_POST["arret"];
+	$type  = $_POST["type"];
+	$emetteur  = $_POST["emetteur"];
+	
+	
+	$destinataires = null;
+	if (isset($_POST['destinataires']))
+	{
+		$destinataires = json_decode($_POST['destinataires']);
+	}
     
-     try {
+    try {
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("INSERT INTO signalement (content, note, date, diffusion, type) VALUES ('$content', '$note', '$date', '$diffusion', '$type')");
+        $stmt = $dbh->prepare("INSERT INTO signalement (contenu, remarque, date, diffusion, arret, type, emetteur) VALUES ('$contenu', '$remarque', '$date', '$diffusion', '$arret', '$type', '$emetteur')");
         $stmt->execute();
-        $dbh = null;
-
-        /*if (!isInGroup($user_id, $group_id)) { 
-            return SUCCESS;
-        } else {
-            return ERROR;
-        }*/
+		$idSignalement = $dbh->lastInsertId();
+		
+		if ($diffusion == "utilisateur")
+		{
+			if ($destinataires == null)
+			{
+				$destinataires = array_column(getAllUsers(null),"0");
+			}
+			
+			foreach($destinataires as $idUser)
+			{
+				$stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user) VALUES ('$idSignalement', '$idUser')");
+				$stmt->execute();
+			}
+		}
+		else
+		{
+			foreach($destinataires as $idGroup)
+			{
+				$stmt = $dbh->prepare("INSERT INTO signalement_for_group (signalement, group) VALUES ('$idSignalement', '$idGroup')");
+				$stmt->execute();
+			}
+		}
+		
+        
+		$dbh = null;
          
         echo SUCCESS;
         

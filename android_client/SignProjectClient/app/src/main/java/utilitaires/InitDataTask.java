@@ -12,6 +12,8 @@ import com.example.florian.signprojectclient.R;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -49,10 +51,9 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
 
             JeuDeDonnees j = new JeuDeDonnees(this.activity);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            this.reussi = false;
         } finally {
             if (is != null)
             {
@@ -60,6 +61,7 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
                     is.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    this.reussi = false;
                 }
             }
         }
@@ -101,6 +103,8 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
                             InitDataTask.this.activity.finish();
                         }
                     });
+
+            //alertDialog.show();
         }
 
     }

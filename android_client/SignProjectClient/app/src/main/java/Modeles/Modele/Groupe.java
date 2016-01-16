@@ -111,7 +111,7 @@ public class Groupe {
 
     @Override
     public String toString() {
-        return nom+" "+type+" "+description;
+        return nom;
     }
 
     public static boolean nomValide(String nom)

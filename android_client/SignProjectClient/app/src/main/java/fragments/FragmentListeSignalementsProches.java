@@ -153,11 +153,11 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
     }
 
     public void abonnementNetwork() {
-       //this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK, this);
+       this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_SIGNALEMENTS_PROCHES_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_SIGNALEMENTS_PROCHES_NETWORK, this);
     }
 
     public void desabonnementNetwork() {
-       //this.locationManager.removeUpdates(this);
+       this.locationManager.removeUpdates(this);
     }
 
 }
