@@ -3,7 +3,6 @@ package activites;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -36,12 +35,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import adapters.AdapterListViewHoraireSignalement;
 import adapters.AdapterSpinnerTypeDestination;
@@ -53,11 +52,9 @@ import modeles.modele.SignalementGroupe;
 import modeles.modele.SignalementPublic;
 import modeles.modele.TypeSignalement;
 import modeles.modele.Utilisateur;
-import modeles.modeleBD.GroupeUtilisateurBD;
 import modeles.modeleBD.LigneArretBD;
 import modeles.modeleBD.SignalementBD;
 import modeles.modeleBD.TypeSignalementBD;
-import modeles.modeleBD.UtilisateurBD;
 import utilitaires.Config;
 import utilitaires.RequestPostTask;
 import utilitaires.SessionManager;
@@ -313,28 +310,34 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
 
                     SessionManager sessionManager = new SessionManager(this);
-                    signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(),"","",null,null,null));
+                    signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
 
                     System.out.println(signalement);
 
-                    SignalementBD signalementBD = new SignalementBD(this);
-                    signalementBD.open();
-
-                    //****** A REMPLACER PAR TABLE_NAME_SIGNALEMENT_A_ENVOYER *******
-                    int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
-                    signalementBD.close();
-
-                    if (id > 0)
+                    if (Config.isNetworkAvailable(this))
                     {
-                        Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
-                        this.finish();
+                        this.envoyerSignalement(signalement);
+                        //return true;
                     }
                     else
                     {
-                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
-                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                        alertInscriptionInvalide.show();
-                        return true;
+                        SignalementBD signalementBD = new SignalementBD(this);
+                        signalementBD.open();
+                        int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
+                        signalementBD.close();
+
+                        if (id > 0)
+                        {
+                            Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
+                            this.finish();
+                        }
+                        else
+                        {
+                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
+                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                            alertInscriptionInvalide.show();
+                            return true;
+                        }
                     }
                 }
                 else
@@ -342,7 +345,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_arret_signalement));
                     AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                     alertInscriptionInvalide.show();
-
                     return true;
                 }
 
@@ -616,7 +618,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         return ind;
     }
 
-    public void initDataForm() {
+    private void initDataForm() {
         SessionManager sessionManager = new SessionManager(this);
         List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
         pairsPost.add(new BasicNameValuePair("user_id", sessionManager.getUserId() + ""));
@@ -629,7 +631,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject((String) msg.obj);
 
                     AjoutSignalementActivity ajoutSignalementActivity = AjoutSignalementActivity.this;
-                    
+
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
                         buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_chargement));
                         AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
@@ -675,6 +677,87 @@ public class AjoutSignalementActivity extends AppCompatActivity {
             u.setPseudo(jsonArray.getJSONArray(i).getString(1));
             this.utilisateursDestination.add(u);
         }
+    }
 
+    private List<NameValuePair> convertSignalementToSend(Signalement signalement) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
+        pairsPost.add(new BasicNameValuePair("id", signalement.getId() + ""));
+        pairsPost.add(new BasicNameValuePair("contenu", signalement.getContenu()));
+        pairsPost.add(new BasicNameValuePair("remarque", signalement.getRemarques()));
+        pairsPost.add(new BasicNameValuePair("date", dateFormat.format(signalement.getDate())));
+        pairsPost.add(new BasicNameValuePair("arret", signalement.getArret().getId() + ""));
+        pairsPost.add(new BasicNameValuePair("type", signalement.getType().getId() + ""));
+        pairsPost.add(new BasicNameValuePair("emetteur", signalement.getEmetteur().getId() + ""));
+
+        if (signalement instanceof SignalementPublic)
+        {
+            pairsPost.add(new BasicNameValuePair("diffusion", SignalementPublic.TYPE_DESTINATAIRE));
+
+            if (((SignalementPublic)signalement).getUtilisateursDestinateurs() != null)
+            {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i=0; i<((SignalementPublic)signalement).getUtilisateursDestinateurs().size(); i++)
+                {
+                    jsonArray.put(((SignalementPublic)signalement).getUtilisateursDestinateurs().get(i).getId());
+                }
+
+                pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
+            }
+        }
+        else
+        {
+            pairsPost.add(new BasicNameValuePair("diffusion", SignalementGroupe.TYPE_DESTINATAIRE));
+
+            JSONArray jsonArray = new JSONArray();
+
+            for (int i=0; i<((SignalementGroupe)signalement).getGroupesDestinateurs().size(); i++)
+            {
+                jsonArray.put(((SignalementGroupe)signalement).getGroupesDestinateurs().get(i).getId());
+            }
+
+            pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
+        }
+
+        return pairsPost;
+    }
+
+    private void envoyerSignalement(Signalement signalement)
+    {
+        List<NameValuePair> pairsPost = this.convertSignalementToSend(signalement);
+
+        android.os.Handler mHandler = new android.os.Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject((String) msg.obj);
+
+                    AjoutSignalementActivity ajoutSignalementActivity = AjoutSignalementActivity.this;
+
+                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED) || jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                    {
+                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
+                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                        alertInscriptionInvalide.show();
+                    }
+                    else
+                    {
+                        Toast.makeText(ajoutSignalementActivity, ajoutSignalementActivity.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
+                        ajoutSignalementActivity.finish();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        RequestPostTask requestPostTask = new RequestPostTask("addSignalement", pairsPost, mHandler, this, this.getResources().getString(R.string.progress_dialog_message_envoi_signalement));
+        requestPostTask.execute();
     }
 }

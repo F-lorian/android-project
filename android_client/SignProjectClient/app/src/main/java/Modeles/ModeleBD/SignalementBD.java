@@ -30,7 +30,7 @@ public class SignalementBD {
     public static final String ID_SIGNALEMENT="id_signalement";
     public static final String CONTENU_SIGNALEMENT="nom_signalement";
     public static final String REMARQUE_SIGNALEMENT="coordonnees_signalement";
-    public static final String DATE_SIGNALEMENT="description_signalement"; //String au format : YYYY-MM-DD HH:MM:SS.SSS
+    public static final String DATE_SIGNALEMENT="date_signalement"; //String au format : YYYY-MM-DD HH:MM:SS.SSS
     public static final String VU_SIGNALEMENT="vu_signalement";
     public static final String TYPE_DIFFUSION_SIGNALEMENT="type_diffusion_signalement";
     public static final String ARRET_SIGNALEMENT="arret_signalement";

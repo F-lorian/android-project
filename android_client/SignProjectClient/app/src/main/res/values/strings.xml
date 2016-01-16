@@ -47,6 +47,7 @@
     <string name="progress_dialog_message_connection">Connexion en cours</string>
     <string name="progress_dialog_message_inscription">Inscription en cours</string>
     <string name="progress_dialog_message_deconnection">Deconnexion en cours</string>
+    <string name="progress_dialog_message_envoi_signalement">Envoi du signalement en cours</string>
     <string name="popup_progress_dialog_termine">Chargement terminé</string>
 
     <string name="texte_header_nav">Bienvenue</string>
