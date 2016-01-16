@@ -744,7 +744,6 @@ function addSignalement(){
 	$type  = $_POST["type"];
 	$emetteur  = $_POST["emetteur"];
 	
-	
 	$destinataires = null;
 	if (isset($_POST['destinataires']))
 	{
@@ -752,12 +751,12 @@ function addSignalement(){
 	}
     
     try {
-         
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("INSERT INTO signalement (contenu, remarque, date, diffusion, arret, type, emetteur) VALUES ('$contenu', '$remarque', '$date', '$diffusion', '$arret', '$type', '$emetteur')");
         $stmt->execute();
 		$idSignalement = $dbh->lastInsertId();
+		
 		
 		if ($diffusion == "utilisateur")
 		{
@@ -781,14 +780,13 @@ function addSignalement(){
 			}
 		}
 		
-        
 		$dbh = null;
          
-        echo SUCCESS;
+        return SUCCESS;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
-        die();
+        return ERROR;
     }
 }
 

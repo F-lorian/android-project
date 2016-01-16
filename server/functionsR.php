@@ -359,4 +359,18 @@ function getDataFormAddSignalementRequest(){
     }
 }
 
+function addSignalementRequest(){
+	$res = addSignalement();
+        
+	if($res == SUCCESS){
+		echo getReplyMessage(SUCCESS, SIGN_ADDED, array());
+	}
+	else if($res == DENIED){
+		echo getReplyMessage(DENIED, SIGN_ADD_FAIL, array());
+	}
+	else if($res == ERROR){
+		echo getReplyMessage(ERROR, SIGN_ADD_FAIL, array());
+	}
+}
+
 ?>

@@ -53,9 +53,6 @@ if(isset($dbh)){
             case "getGroupWithRestrict":
                 getGroupWithRestrictRequest();
                 break;
-            case "addSignalement":
-                addSignalement();
-                break;
             case "sendNotification":
                 sendNotificationRequest();
                 break;
@@ -74,9 +71,9 @@ if(isset($dbh)){
 			case "getDataFormAddSignalement":
                 getDataFormAddSignalementRequest();
                 break;
-				
-            
-            
+			case "addSignalement":
+                addSignalementRequest();
+                break;
         }
     }
 

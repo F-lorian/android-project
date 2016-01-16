@@ -91,7 +91,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
     private AlertDialog.Builder buildAlertInscriptionInvalide;
 
     private int idLigneArretCourant;
-    private SessionManager sessionManager = new SessionManager(this);
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +196,8 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+
+        sessionManager = new SessionManager(this);
 
         this.initDataForm();
     }
