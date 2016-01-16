@@ -623,13 +623,15 @@ function getGroups($user_id){
     }
 }
 
-function getMembersByGroupId($group_id){
+function getMembersByGroupId($group_id, $state){
     
      try {
          
+        //$group_idint = (int) $group_id;
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT u.id, u.pseudo FROM user u, user_in_group ug WHERE ug.group = '$group_id' AND ug.user = u.id");
+        //$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $dbh->prepare("SELECT u.id, u.pseudo FROM user u, user_in_group ug WHERE ug.`group` = '$group_id' AND ug.user = u.id AND ug.state = '$state'");
         $stmt->execute();
         $dbh = null;
 

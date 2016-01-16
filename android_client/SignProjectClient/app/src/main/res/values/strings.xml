@@ -27,6 +27,7 @@
     <string name="titre_alert_dialog_erreur">Erreur</string>
     <string name="btn_alert_dialog_erreur">Fermer</string>
     <string name="message_alert_dialog_erreur_pas_internet">Pas de connexion à internet</string>
+    <string name="erreur_serveur">erreur</string>
     <string name="message_alert_dialog_erreur_egaux_mdp">Les mots de passes doivent être égaux</string>
     <string name="message_alert_dialog_erreur_pseudo_mdp">Pseudo ou mot de passe incorrect</string>
     <string name="message_alert_dialog_inscription_error">Erreur lors de l\'inscription, veuillez réessayer plus tard</string>

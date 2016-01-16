@@ -84,7 +84,7 @@ public class FragmentListeGroupes extends Fragment {
             params.put("user_id", id_user);
 
             Handler mHandler = getGroupesHandler();
-            RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity());
+            RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
         }
         else
         {
@@ -160,7 +160,7 @@ public class FragmentListeGroupes extends Fragment {
                         JSONObject jsonObject = new JSONObject((String) msg.obj);
                         if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                         {
-                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
+                            alert.setMessage(getResources().getString(R.string.erreur_serveur));
                             AlertDialog alertInscriptionInvalide = alert.create();
                             alertInscriptionInvalide.show();
                         }

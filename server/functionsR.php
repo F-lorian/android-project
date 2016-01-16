@@ -329,8 +329,8 @@ function getGroupWithRestrictRequest(){
 
 function getMembersRequest(){
     
-    if (isset($_POST["group_id"])) {
-        $res = getMembersByGroupId($_POST["group_id"]); 
+    if (isset($_POST["group_id"]) && isset($_POST["state"])) {
+        $res = getMembersByGroupId($_POST["group_id"], $_POST["state"]); 
         echo json_encode($res);
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());

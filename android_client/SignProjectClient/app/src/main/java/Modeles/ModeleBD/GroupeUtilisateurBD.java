@@ -36,7 +36,7 @@ public class GroupeUtilisateurBD {
     private MySQLite maBaseSQLite; // notre gestionnaire du fichier SQLite
     private SQLiteDatabase db;
 
-    public static final String ETAT_ATTENTE = "en attente";
+    public static final String ETAT_ATTENTE = "attente";
     public static final String ETAT_APPARTIENT = "appartient";
 
     // Constructeur

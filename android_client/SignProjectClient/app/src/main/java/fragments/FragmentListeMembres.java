@@ -39,14 +39,19 @@ public class FragmentListeMembres extends DialogFragment {
     ListView listeMembres;
     FloatingActionButton FabAjoutMembre;
     ArrayList<Utilisateur> membres;
+    int id_groupe ;
+    String state ;
+    boolean admin ;
     AdapterListViewMembre adapterListViewMembre;
 
     private AlertDialog.Builder alert;
 
-    public static FragmentListeMembres newInstance(int id_groupe) {
+    public static FragmentListeMembres newInstance(int id_groupe, String state, boolean admin) {
         FragmentListeMembres frag = new FragmentListeMembres();
         Bundle args = new Bundle();
         args.putInt("id_groupe", id_groupe);
+        args.putString("state", state);
+        args.putBoolean("admin", admin);
         frag.setArguments(args);
         return frag;
     }
@@ -61,7 +66,9 @@ public class FragmentListeMembres extends DialogFragment {
 
         this.listeMembres = (ListView) view.findViewById(R.id.liste_membres);
         this.FabAjoutMembre = (FloatingActionButton) view.findViewById(R.id.FabAjoutMembre);
-        int id_groupe = getArguments().getInt("id_groupe");
+        this.id_groupe = getArguments().getInt("id_groupe");
+        this.state = getArguments().getString("state");
+        this.admin = getArguments().getBoolean("admin");
 
         if (Config.isNetworkAvailable(getActivity()))
         {
@@ -84,9 +91,12 @@ public class FragmentListeMembres extends DialogFragment {
 
             Map<String, String> params = new HashMap<>();
             params.put("group_id", Integer.toString(id_groupe));
-
+            params.put("state", state);
+            System.out.println("id_groupe : "+id_groupe);
             Handler mHandler = getMembresHandler();
-            RequestPostTask.sendRequest("getMembers", params, mHandler, getActivity());
+
+            RequestPostTask.sendRequest("getMembers", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
+
         }
         else
         {
@@ -168,7 +178,7 @@ public class FragmentListeMembres extends DialogFragment {
                         JSONObject jsonObject = new JSONObject((String) msg.obj);
                         if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                         {
-                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_error));
+                            alert.setMessage(getResources().getString(R.string.erreur_serveur));
                             AlertDialog alertInscriptionInvalide = alert.create();
                             alertInscriptionInvalide.show();
                         }
@@ -177,7 +187,7 @@ public class FragmentListeMembres extends DialogFragment {
                         JSONArray jsonArray = new JSONArray((String) msg.obj);
 
                         membres = jsonToListMembres(jsonArray);
-                        adapterListViewMembre = new AdapterListViewMembre(getActivity(), membres);
+                        adapterListViewMembre = new AdapterListViewMembre(getActivity(), membres, state, admin);
                         listeMembres.setAdapter(adapterListViewMembre);
 
                     }

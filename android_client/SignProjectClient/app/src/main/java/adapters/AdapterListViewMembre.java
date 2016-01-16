@@ -14,6 +14,7 @@ import com.example.florian.signprojectclient.R;
 import java.util.List;
 
 import modeles.modele.Utilisateur;
+import modeles.modeleBD.GroupeUtilisateurBD;
 
 /**
  * Created by Florian on 15/01/2016.
@@ -21,14 +22,16 @@ import modeles.modele.Utilisateur;
 public class AdapterListViewMembre extends BaseAdapter {
 
     private List<Utilisateur> membres;
-
+    private boolean admin;
+    private String state;
     private Context mContext;
-
     private LayoutInflater mInflater;
 
-    public AdapterListViewMembre(Context mContext, List<Utilisateur> membres) {
+    public AdapterListViewMembre(Context mContext, List<Utilisateur> membres, String state, boolean admin) {
         this.mContext = mContext;
         this.membres = membres;
+        this.admin = admin;
+        this.state = state;
         this.mInflater = LayoutInflater.from(mContext);
     }
 
@@ -68,31 +71,49 @@ public class AdapterListViewMembre extends BaseAdapter {
         String pseudoText = this.membres.get(position).getPseudo();
         pseudo.setText(pseudoText);
 
-        accept.setTag(position);
-        accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context c = AdapterListViewMembre.this.mContext;
+        if(this.admin) {
+            if(this.state.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
+                accept.setTag(position);
+                accept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Context c = AdapterListViewMembre.this.mContext;
 
-                int indice = ((Integer) v.getTag()).intValue();
-                int id = membres.get(indice).getId();
+                        int indice = ((Integer) v.getTag()).intValue();
+                        int id = membres.get(indice).getId();
 
-                System.out.println("ACCEPTE TAG : " + indice);
+                        System.out.println("ACCEPTE TAG : " + indice);
+                    }
+                });
+
+                refuse.setTag(position);
+                refuse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Context c = AdapterListViewMembre.this.mContext;
+
+                        int indice = ((Integer) v.getTag()).intValue();
+                        int id = membres.get(indice).getId();
+
+                        System.out.println("REFUSE TAG : " + indice);
+                    }
+                });
+            } else if (this.state.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)){
+                accept.setVisibility(View.GONE);
+                refuse.setTag(position);
+                refuse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Context c = AdapterListViewMembre.this.mContext;
+
+                        int indice = ((Integer) v.getTag()).intValue();
+                        int id = membres.get(indice).getId();
+
+                        System.out.println("REFUSE TAG : " + indice);
+                    }
+                });
             }
-        });
-
-        refuse.setTag(position);
-        refuse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context c = AdapterListViewMembre.this.mContext;
-
-                int indice = ((Integer)v.getTag()).intValue();
-                int id = membres.get(indice).getId();
-
-                System.out.println("REFUSE TAG : " + indice);
-            }
-        });
+        }
 
         return layoutItem;
 

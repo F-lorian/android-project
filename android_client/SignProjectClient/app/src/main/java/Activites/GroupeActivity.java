@@ -57,12 +57,16 @@ public class GroupeActivity extends AppCompatActivity {
     private LinearLayout layout_admin;
     private LinearLayout layout_membre;
     private LinearLayout layout_en_attente;
+    private LinearLayout layout_nb_membres;
     private LinearLayout layout_demandes;
     private LinearLayout contenu_groupe;
 
     private ImageView image_type ;
 
     private Groupe groupe;
+
+    private boolean admin;
+    private String user_state;
 
     private AlertDialog.Builder alert;
 
@@ -113,6 +117,7 @@ public class GroupeActivity extends AppCompatActivity {
             this.layout_demandes = (LinearLayout) findViewById(R.id.layout_demandes);
             this.nb_demandes = (TextView) findViewById(R.id.nb_demandes);
 
+            this.layout_nb_membres = (LinearLayout) findViewById(R.id.layout_nb_membres);
             this.nb_membres = (TextView) findViewById(R.id.nb_membres);
 
             this.contenu_groupe = (LinearLayout) findViewById(R.id.contenu_groupe);
@@ -144,12 +149,14 @@ public class GroupeActivity extends AppCompatActivity {
                 this.groupe = groupeBD.getGroupe(id_groupe);
                 groupeBD.close();
 
+                this.admin = this.groupe.getAdmin().getId() == id_user;
+
                 GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
                 groupeUtilisateurBD.open();
-                String s = groupeUtilisateurBD.isInGroup(id_user, id_groupe);
+                this.user_state = groupeUtilisateurBD.isInGroup(id_user, id_groupe);
                 groupeUtilisateurBD.close();
 
-                displayGroupe(id_user, groupe, s);
+                displayGroupe(id_user);
             }
 
         }
@@ -168,13 +175,13 @@ public class GroupeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayGroupe(int id_user, Groupe groupe, String state){
+    public void displayGroupe(int id_user){
 
-        if (groupe.getAdmin().getId() == id_user) {
+        if (this.admin) {
             //onclick
             this.layout_admin.setVisibility(View.VISIBLE);
 
-            if(groupe.getNbDemandes() > 0){
+            if(this.groupe.getNbDemandes() > 0){
                 this.nb_demandes.setText(groupe.getNbDemandes()+" "+getResources().getString(R.string.demandes));
                 this.layout_demandes.setVisibility(View.VISIBLE);
             }
@@ -209,7 +216,20 @@ public class GroupeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
-                        showMembersDialog();
+                        showMembersDialog(GroupeUtilisateurBD.ETAT_ATTENTE, admin);
+                    } else {
+                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+                        AlertDialog alertInscriptionInvalide = alert.create();
+                        alertInscriptionInvalide.show();
+                    }
+                }
+            });
+
+            this.layout_nb_membres.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                        showMembersDialog(GroupeUtilisateurBD.ETAT_APPARTIENT, admin);
                     } else {
                         alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
                         AlertDialog alertInscriptionInvalide = alert.create();
@@ -222,7 +242,7 @@ public class GroupeActivity extends AppCompatActivity {
             //System.out.println("groupe : "+groupe);
             //System.out.println("ETAT : " + state);
 
-            if (state != null && state.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
+            if (this.user_state != null && this.user_state.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                 //onclick
                 this.layout_membre.setVisibility(View.VISIBLE);
 
@@ -239,7 +259,7 @@ public class GroupeActivity extends AppCompatActivity {
                     }
                 });
 
-            } else if (state != null && state.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
+            } else if (this.user_state != null && this.user_state.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                 this.layout_en_attente.setVisibility(View.VISIBLE);
 
                 this.annuler_demande.setOnClickListener(new View.OnClickListener() {
@@ -338,17 +358,18 @@ public class GroupeActivity extends AppCompatActivity {
                         int id_admin = jsonObject.getInt("creator");
                         int nb_demandes = jsonObject.getInt("member_request");
                         int nb_membres = jsonObject.getInt("nb_member");
-                        Utilisateur admin = new Utilisateur(id_admin, "", "", null, null, null);
+                        Utilisateur user_admin = new Utilisateur(id_admin, "", "", null, null, null);
                         groupe = new Groupe();
                         groupe.setId(id);
                         groupe.setNom(nom);
                         groupe.setType(type);
                         groupe.setDescription(description);
-                        groupe.setAdmin(admin);
+                        groupe.setAdmin(user_admin);
                         groupe.setNbDemandes(nb_demandes);
                         groupe.setNbMembres(nb_membres);
-
-                        displayGroupe(id_user, groupe, state);
+                        admin = id_admin == id_user;
+                        user_state = state;
+                        displayGroupe(id_user);
 
                     }
 
@@ -362,9 +383,8 @@ public class GroupeActivity extends AppCompatActivity {
         return mHandler;
     }
 
-    void showMembersDialog() {
-        DialogFragment newFragment = FragmentListeMembres.newInstance(
-                R.string.membres);
+    void showMembersDialog(String state, boolean admin) {
+        DialogFragment newFragment = FragmentListeMembres.newInstance(groupe.getId(), state, admin);
         newFragment.show(getFragmentManager(), "dialog");
     }
 
