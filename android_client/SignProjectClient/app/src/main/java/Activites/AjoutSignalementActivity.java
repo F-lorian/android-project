@@ -254,8 +254,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_horaire_signalement));
                             AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                             alertInscriptionInvalide.show();
-
-                            return true;
                         }
                     }
 
@@ -284,8 +282,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_groupe_signalement));
                             AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                             alertInscriptionInvalide.show();
-
-                            return true;
                         }
                     }
                     else if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.autres_personnes_spinner)))
@@ -301,8 +297,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_utilisateur_signalement));
                             AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                             alertInscriptionInvalide.show();
-
-                            return true;
                         }
                     }
                     else
@@ -320,7 +314,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     if (Config.isNetworkAvailable(this))
                     {
                         this.envoyerSignalement(signalement);
-                        //return true;
                     }
                     else
                     {
@@ -339,7 +332,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
                             AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                             alertInscriptionInvalide.show();
-                            return true;
                         }
                     }
                 }
@@ -348,11 +340,11 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_arret_signalement));
                     AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
                     alertInscriptionInvalide.show();
-                    return true;
                 }
-
+                break;
             case android.R.id.home:
                 this.finish();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
