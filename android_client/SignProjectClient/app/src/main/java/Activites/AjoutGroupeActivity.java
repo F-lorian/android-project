@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.example.florian.signprojectclient.R;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -191,7 +189,8 @@ public class AjoutGroupeActivity extends AppCompatActivity {
                 params.put("user_id", id_admin);
                 params.put("description", description);
 
-                sendRequest("addGroup", params);
+                Handler mhandler = getHandler();
+                RequestPostTask.sendRequest("addGroup", params, mhandler, this, this.getResources().getString(R.string.progress_dialog_message_ajout));
             }
             else
             {
@@ -205,27 +204,6 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         }
     }
 
-    public void sendRequest(String command,Map<String, String> params){
-
-        List<NameValuePair> pairsPost = getPairsPost(params);
-        Handler mHandler = getHandler();
-        RequestPostTask requestPostTask = new RequestPostTask(command, pairsPost, mHandler, this, this.getResources().getString(R.string.progress_dialog_message_ajout));
-        requestPostTask.execute();
-    }
-
-    public List<NameValuePair> getPairsPost(Map<String, String> params){
-
-        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            String key = entry.getKey();
-            String val = entry.getValue();
-            if(val != null){
-                pairsPost.add(new BasicNameValuePair(key, val));
-            }
-        }
-
-        return pairsPost;
-    }
 
     public Handler getHandler() {
         Handler mHandler = new Handler() {
@@ -234,7 +212,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
                 try {
 
-                    System.out.println(" MSG : "+(String) msg.obj);
+                    //System.out.println(" MSG : "+(String) msg.obj);
                     String rp = (String) msg.obj;
                     JSONObject jsonObject = new JSONObject(rp);
 

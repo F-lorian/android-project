@@ -36,13 +36,13 @@ import utilitaires.Config;
  */
 public class FragmentListeMembres extends DialogFragment {
 
-    ListView listeMembres;
-    FloatingActionButton FabAjoutMembre;
-    ArrayList<Utilisateur> membres;
-    int id_groupe ;
-    String state ;
-    boolean admin ;
-    AdapterListViewMembre adapterListViewMembre;
+    private ListView listeMembres;
+    private FloatingActionButton FabAjoutMembre;
+    private ArrayList<Utilisateur> membres;
+    private int id_groupe ;
+    private String state ;
+    private boolean admin ;
+    private AdapterListViewMembre adapterListViewMembre;
 
     private AlertDialog.Builder alert;
 
@@ -187,7 +187,7 @@ public class FragmentListeMembres extends DialogFragment {
                         JSONArray jsonArray = new JSONArray((String) msg.obj);
 
                         membres = jsonToListMembres(jsonArray);
-                        adapterListViewMembre = new AdapterListViewMembre(getActivity(), membres, state, admin);
+                        adapterListViewMembre = new AdapterListViewMembre(getActivity(), id_groupe, membres, state, admin);
                         listeMembres.setAdapter(adapterListViewMembre);
 
                     }

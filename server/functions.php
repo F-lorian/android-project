@@ -707,26 +707,49 @@ function isInGroup($user_id, $group_id){
     }
 }
 
-function removeFromGroup(){
-    $user_id  = $_POST["user_id"];
-    $group_id = $_POST["group_id"];
+function acceptMember($group_id, $user_id){
     
      try {
          
-        if(isInGroup($user_id, $group_id)){
+        if(isInGroup($user_id, $group_id) == SUCCESS){
+            $result = array();
+            $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+            $stmt = $dbh->prepare("UPDATE user_in_group SET state = 'appartient' WHERE user = '$user_id' AND `group` = '$group_id'");
+            $stmt->execute();
+            $dbh = null;
+            
+            if (isInGroup($user_id, $group_id) == SUCCESS) { 
+                return SUCCESS;
+            } else {
+                return ERROR;
+            }
+        }
+        return DENIED;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function removeMember($group_id, $user_id){
+    
+     try {
+         
+        if(isInGroup($user_id, $group_id) == SUCCESS){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("DELETE FROM user_in_group WHERE user = '$user_id' AND `group` = '$group_id'");
             $stmt->execute();
             $dbh = null;
             
-            if (!isInGroup($user_id, $group_id)) { 
+            if (isInGroup($user_id, $group_id) == DENIED) { 
                 return SUCCESS;
             } else {
                 return ERROR;
             }
         }
-        echo DENIED;
+        return DENIED;
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";

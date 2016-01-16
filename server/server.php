@@ -47,6 +47,15 @@ if(isset($dbh)){
             case "getMembers":
                 getMembersRequest();
                 break;
+            case "acceptMember":
+                acceptMemberRequest();
+                break;
+            case "refuseMember":
+                refuseMemberRequest();
+                break;
+            case "removeMember":
+                removeMemberRequest();
+                break;
             case "editGroup":
                 editGroupRequest();
                 break;

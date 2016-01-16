@@ -15,6 +15,7 @@ define("USER_IS_IN_GROUP", "l'utilisateur est dans ce groupe");
 define("USER_IS_NOT_IN_GROUP", "l'utilisateur n'est pas dans ce groupe");
 
 define("ADDED_TO_GROUP", "utilisateur ajouté au groupe");
+define("REFUSED", "utilisateur refusé");
 define("REMOVED_FROM_GROUP", "utilisateur retiré du groupe");
 define("ADD_TO_GROUP_FAIL", "erreur lors de l'ajout au groupe");
 define("REMOVE_FROM_GROUP_FAIL", "erreur lors du retrait du groupe");
@@ -336,6 +337,62 @@ function getMembersRequest(){
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
+
+function acceptMemberRequest(){
+    
+    if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
+        $res = acceptMember($_POST["group_id"], $_POST["user_id"]);
+        
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, ADDED_TO_GROUP, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, ADD_TO_GROUP_FAIL, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function refuseMemberRequest(){
+    
+    if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
+        $res = removeMember($_POST["group_id"], $_POST["user_id"]); 
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, REFUSED, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, ADD_TO_GROUP_FAIL, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function removeMemberRequest(){
+    
+    if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
+        $res = removeMember($_POST["group_id"], $_POST["user_id"]); 
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, REMOVED_FROM_GROUP, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, REMOVE_FROM_GROUP_FAIL, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, REMOVE_FROM_GROUP_FAIL, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
 
 function getGroupsRequest(){
     
