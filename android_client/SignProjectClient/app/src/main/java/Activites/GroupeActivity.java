@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import fragments.FragmentInvitationMembre;
 import fragments.FragmentListeMembres;
 import modeles.modele.Groupe;
 import utilitaires.RequestPostTask;
@@ -66,6 +67,7 @@ public class GroupeActivity extends AppCompatActivity {
     private LinearLayout layout_demandes;
     private LinearLayout layout_invitations;
     private LinearLayout contenu_groupe;
+    private LinearLayout layout_inviter;
 
     private ImageView image_type ;
 
@@ -134,6 +136,8 @@ public class GroupeActivity extends AppCompatActivity {
 
             this.contenu_groupe = (LinearLayout) findViewById(R.id.contenu_groupe);
 
+            this.layout_inviter = (LinearLayout) findViewById(R.id.layout_inviter);
+
             if (Config.isNetworkAvailable(GroupeActivity.this))
             {
                 refresh();
@@ -148,6 +152,7 @@ public class GroupeActivity extends AppCompatActivity {
                 this.layout_admin.setVisibility(View.GONE);
                 this.layout_demandes.setVisibility(View.GONE);
                 this.contenu_groupe.setVisibility(View.GONE);
+                this.layout_inviter.setVisibility(View.GONE);
 
                 SessionManager sessionManager = new SessionManager(GroupeActivity.this);
                 int id_user = sessionManager.getUserId();
@@ -184,6 +189,7 @@ public class GroupeActivity extends AppCompatActivity {
         this.layout_admin.setVisibility(View.GONE);
         this.layout_demandes.setVisibility(View.GONE);
         this.layout_invitations.setVisibility(View.GONE);
+        this.layout_inviter.setVisibility(View.GONE);
         this.contenu_groupe.setVisibility(View.GONE);
 
         SessionManager sessionManager = new SessionManager(GroupeActivity.this);
@@ -214,6 +220,8 @@ public class GroupeActivity extends AppCompatActivity {
         if (this.admin) {
             //onclick
             this.layout_admin.setVisibility(View.VISIBLE);
+
+            this.layout_inviter.setVisibility(View.VISIBLE);
 
             if(this.groupe.getNbDemandes() > 0){
                 this.nb_demandes.setText(groupe.getNbDemandes()+" "+getResources().getString(R.string.demandes));
@@ -249,7 +257,7 @@ public class GroupeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
-                        showMembersDialog(GroupeUtilisateurBD.ETAT_ATTENTE, admin);
+                        displayMembersDialog(GroupeUtilisateurBD.ETAT_ATTENTE, admin);
                     } else {
                         displayErrorInternet();
                     }
@@ -260,7 +268,18 @@ public class GroupeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
-                        showMembersDialog(GroupeUtilisateurBD.ETAT_INVITE, admin);
+                        displayMembersDialog(GroupeUtilisateurBD.ETAT_INVITE, admin);
+                    } else {
+                        displayErrorInternet();
+                    }
+                }
+            });
+
+            this.layout_inviter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Config.isNetworkAvailable(GroupeActivity.this)) {
+                        displayInviteDialog();
                     } else {
                         displayErrorInternet();
                     }
@@ -271,7 +290,7 @@ public class GroupeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
-                        showMembersDialog(GroupeUtilisateurBD.ETAT_APPARTIENT, admin);
+                        displayMembersDialog(GroupeUtilisateurBD.ETAT_APPARTIENT, admin);
                     } else {
                         displayErrorInternet();
                     }
@@ -301,7 +320,7 @@ public class GroupeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (Config.isNetworkAvailable(GroupeActivity.this)) {
-                            showMembersDialog(GroupeUtilisateurBD.ETAT_APPARTIENT, admin);
+                            displayMembersDialog(GroupeUtilisateurBD.ETAT_APPARTIENT, admin);
                         } else {
                             displayErrorInternet();
                         }
@@ -533,8 +552,13 @@ public class GroupeActivity extends AppCompatActivity {
         alertInternet.show();
     }
 
-    void showMembersDialog(String state, boolean admin) {
+    void displayMembersDialog(String state, boolean admin) {
         DialogFragment newFragment = FragmentListeMembres.newInstance(groupe.getId(), state, admin);
+        newFragment.show(getFragmentManager(), "dialog");
+    }
+
+    void displayInviteDialog() {
+        DialogFragment newFragment = FragmentInvitationMembre.newInstance(groupe.getId());
         newFragment.show(getFragmentManager(), "dialog");
     }
 

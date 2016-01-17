@@ -132,8 +132,10 @@
     <string name="ajout_invite">Vous avez été invité à rejoindre ce groupe</string>
     <string name="hint_recherche_groupe">Taper un nom de groupe</string>
     <string name="hint_recherche_membre">chercher un utilisateur</string>
+    <string name="invitation_membre">inviter un utilisateur</string>
     <string name="ajoute">ajouté</string>
-    <string name="erreur_ajout_membre">l\'utilisateur est déjà membre ou est en attente d\'acceptation</string>
+    <string name="erreur_invitation_membre">l\'utilisateur est déjà membre, est en attente d\'acceptation ou n'existe pas</string>
+    <string name="groupe_invitation_ennvoyee">invitation envoyée</string>
     <string name="action_refusee">action refusée</string>
     <string name="refuse">refusé</string>
     <string name="supprime_du_groupe">supprimé du groupe</string>

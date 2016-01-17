@@ -174,10 +174,27 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:id="@+id/layout_inviter"
+                                    style="@style/DataIndicatorButton"
+                                    android:layout_marginRight="2sp"
+                                    android:background="@drawable/background_button_base">
+                                    <ImageView
+                                        android:id="@+id/image_inviter"
+                                        style="@style/DataIndicatorImage"
+                                        android:src="@drawable/ic_groupe"/>
+                                    <TextView
+                                        android:id="@+id/inviter"
+                                        style="@style/DataIndicatorText"
+                                        android:text="@string/invitation_membre"/>
+                                </LinearLayout>
+
                                 <LinearLayout
                                     android:id="@+id/layout_demandes"
                                     style="@style/DataIndicatorButton"
-                                    android:background="@drawable/background_button_important">
+                                    android:background="@drawable/background_button_important"
+                                    android:layout_marginTop="5sp">
 
                                     <ImageView
                                         android:id="@+id/image_demandes"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:src="@drawable/groupe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:scaleType="center"
+        android:background="@color/fond1"
+        android:contentDescription="@string/app_name" />
+
+    <LinearLayout
+        android:id="@+id/layout_champ_invitation"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp"
+        >
+
+        <EditText
+            android:id="@+id/champ_invitation_membre"
+            android:layout_width="300sp"
+            android:layout_height="@dimen/hauteur_champs_saisie"
+            android:hint="@string/invitation_membre"/>
+
+        <ImageButton
+            android:id="@+id/button_invitation_membre"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_send_now"
+            android:textSize="@dimen/texte_size_bouton" />
+
+    </LinearLayout>
+</LinearLayout>
