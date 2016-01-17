@@ -816,7 +816,8 @@ function addSignalement(){
 	$destinataires = null;
 	if (isset($_POST['destinataires']))
 	{
-		$destinataires = json_decode($_POST['destinataires']);
+		$destinataires = json_decode($_POST['destinataires'],true);
+		var_dump($destinataires);
 	}
     
     try {

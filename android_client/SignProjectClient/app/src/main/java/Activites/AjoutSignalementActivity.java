@@ -674,7 +674,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         }
     }
 
-    private List<NameValuePair> convertSignalementToSend(Signalement signalement) {
+    private List<NameValuePair> convertSignalementToSend(Signalement signalement) throws JSONException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
@@ -699,13 +699,14 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     {
                         auteurPresent = true;
                     }
-                    jsonArray.put(((SignalementPublic)signalement).getUtilisateursDestinateurs().get(i).getId());
+                    jsonArray.put(new JSONObject().put("idUser", ((SignalementPublic) signalement).getUtilisateursDestinateurs().get(i).getId()));
                 }
 
                 if (!auteurPresent)
                 {
-                    jsonArray.put(sessionManager.getUserId());
+                    jsonArray.put(new JSONObject().put("idUser", sessionManager.getUserId()));
                 }
+
 
                 pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
             }
@@ -718,8 +719,10 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
             for (int i=0; i<((SignalementGroupe)signalement).getGroupesDestinateurs().size(); i++)
             {
-                jsonArray.put(((SignalementGroupe)signalement).getGroupesDestinateurs().get(i).getId());
+                jsonArray.put(new JSONObject().put("idGroupe", ((SignalementGroupe)signalement).getGroupesDestinateurs().get(i).getId()));
             }
+
+            System.out.println(jsonArray);
 
             pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
         }
@@ -728,7 +731,12 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
     private void envoyerSignalement(Signalement signalement)
     {
-        List<NameValuePair> pairsPost = this.convertSignalementToSend(signalement);
+        List<NameValuePair> pairsPost = null;
+        try {
+            pairsPost = this.convertSignalementToSend(signalement);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         android.os.Handler mHandler = new android.os.Handler() {
             @Override
