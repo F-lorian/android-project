@@ -832,8 +832,6 @@ function addSignalement(){
 			if ($destinataires == null)
 			{
 				$destinataires = array_column(getAllUsers(null),"id");
-				//var_dump(getAllUsers(null));
-				var_dump($destinataires);
 			}
 			
 			foreach($destinataires as $idUser)
