@@ -15,12 +15,38 @@ android:background="@android:color/white">
     android:background="@color/fond1"
     android:contentDescription="@string/app_name" />
 
+<LinearLayout
+    android:id="@+id/layout_champ_recherche"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:layout_marginLeft="5sp"
+    android:layout_marginRight="5sp"
+    android:layout_marginTop="45dp"
+    >
+
+
+    <EditText
+        android:id="@+id/champ_recherche_membre"
+        android:layout_width="300sp"
+        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:hint="@string/hint_recherche_membre"/>
+
+    <ImageButton
+        android:id="@+id/button_recherche_membre"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_action_name"
+        android:textSize="@dimen/texte_size_bouton" />
+
+</LinearLayout>
+
 <ListView
     android:id="@+id/liste_membres"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:cacheColorHint="#00000000"
-    android:layout_marginTop="@dimen/hauteur_champs_saisie"/>
+    android:layout_marginTop="90dp"/>
 
 <android.support.design.widget.FloatingActionButton
     android:id="@+id/FabAjoutMembre"

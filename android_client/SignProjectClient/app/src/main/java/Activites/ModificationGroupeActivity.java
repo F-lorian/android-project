@@ -50,7 +50,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
 
     private ArrayList<String> typeGroupes;
 
-    private AlertDialog.Builder buildAlertContenuInvalide;
+    private AlertDialog.Builder alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +67,11 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             this.groupe = groupeBD.getGroupe(id_groupe);
             groupeBD.close();
                */
-            this.buildAlertContenuInvalide = new AlertDialog.Builder(this);
-            this.buildAlertContenuInvalide.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
-            this.buildAlertContenuInvalide.setIcon(R.drawable.ic_action_error);
-            this.buildAlertContenuInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
+
+            this.alert = new AlertDialog.Builder(this);
+            this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
+            this.alert.setIcon(R.drawable.ic_action_error);
+
             // Set a Toolbar to replace the ActionBar.
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -91,15 +88,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
 
 
         }else{
-            this.buildAlertContenuInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                    ModificationGroupeActivity.this.finish();
-                }
-            });
-            this.buildAlertContenuInvalide.setMessage("groupe introuvable");
-            AlertDialog alertInternet = buildAlertContenuInvalide.create();
-            alertInternet.show();
+            displayFatalError();
         }
     }
 
@@ -241,12 +230,35 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                 RequestPostTask.sendRequest("editGroup", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message_modif));
 
             } else {
-                this.buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                AlertDialog alertInternet = this.buildAlertContenuInvalide.create();
-                alertInternet.show();
+                displayErrorInternet();
             }
 
         }
+    }
+
+    public void displayErrorInternet(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+    }
+
+    public void displayFatalError(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                ModificationGroupeActivity.this.finish();
+            }
+        });
+        displayAlertError("groupe introuvable");
+    }
+
+    private void displayAlertError(String message){
+        alert.setMessage(message);
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
     }
 
     public int getIndiceByType(String typeCons) {
@@ -279,13 +291,10 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(rp);
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED)) {
-                        buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
-                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                        alertInscriptionInvalide.show();
+                        displayAlertError(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+
                     } else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
-                        buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
-                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                        alertInscriptionInvalide.show();
+                        displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
                     } else {
                         int indiceType = spinnerType.getSelectedItemPosition();
                         String nom = editTextNom.getText().toString();
@@ -330,25 +339,9 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(rp);
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED)) {
-                        buildAlertContenuInvalide.setMessage("groupe introuvable");
-                        buildAlertContenuInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                ModificationGroupeActivity.this.finish();
-                            }
-                        });
-                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                        alertInscriptionInvalide.show();
+                        displayFatalError();
                     }else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
-                        buildAlertContenuInvalide.setMessage("^paramètre manquant");
-                        buildAlertContenuInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                ModificationGroupeActivity.this.finish();
-                            }
-                        });
-                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                        alertInscriptionInvalide.show();
+                        displayFatalError();
                     } else {
 
                         JSONObject data = jsonObject.getJSONObject("data");

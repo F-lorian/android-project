@@ -623,7 +623,7 @@ function getGroups($user_id){
     }
 }
 
-function getMembersByGroupId($group_id, $state){
+function getMembersByGroupId($group_id, $state, $search){
     
      try {
          
@@ -631,7 +631,7 @@ function getMembersByGroupId($group_id, $state){
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         //$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $dbh->prepare("SELECT u.id, u.pseudo FROM user u, user_in_group ug WHERE ug.`group` = '$group_id' AND ug.user = u.id AND ug.state = '$state'");
+        $stmt = $dbh->prepare("SELECT u.id, u.pseudo FROM user u, user_in_group ug WHERE ug.`group` = '$group_id' AND ug.user = u.id AND ug.state = '$state' AND u.pseudo LIKE '%$search%'");
         $stmt->execute();
         $dbh = null;
 

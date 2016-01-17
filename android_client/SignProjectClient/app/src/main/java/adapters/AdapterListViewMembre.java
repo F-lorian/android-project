@@ -86,6 +86,10 @@ public class AdapterListViewMembre extends BaseAdapter {
             layoutItem = (LinearLayout) convertView;
         }
 
+        this.alert = new AlertDialog.Builder(mActivity);
+        this.alert.setTitle(mActivity.getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.alert.setIcon(R.drawable.ic_action_error);
+
         TextView pseudo = (TextView) layoutItem.findViewById(R.id.pseudo_adapter_membre);
         ImageView accept = (ImageView) layoutItem.findViewById(R.id.image_accept);
         ImageView refuse = (ImageView) layoutItem.findViewById(R.id.image_refuse);
@@ -100,14 +104,29 @@ public class AdapterListViewMembre extends BaseAdapter {
                 accept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        acceptMember(membre);
+                        if (Config.isNetworkAvailable(mActivity))
+                        {
+                            acceptMember(membre);
+                        }
+                        else
+                        {
+                            displayErrorInternet();
+                        }
+
                     }
                 });
 
                 refuse.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        refuseMember(membre);
+                        if (Config.isNetworkAvailable(mActivity))
+                        {
+                            refuseMember(membre);
+                        }
+                        else
+                        {
+                            displayErrorInternet();
+                        }
                     }
                 });
             } else if (this.state.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)){
@@ -115,7 +134,15 @@ public class AdapterListViewMembre extends BaseAdapter {
                 refuse.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        removeMember(membre);
+
+                        if (Config.isNetworkAvailable(mActivity))
+                        {
+                            removeMember(membre);
+                        }
+                        else
+                        {
+                            displayErrorInternet();
+                        }
                     }
                 });
             }
@@ -123,6 +150,17 @@ public class AdapterListViewMembre extends BaseAdapter {
 
         return layoutItem;
 
+    }
+
+    public void displayErrorInternet(){
+        alert.setMessage(mActivity.getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+        alert.setNegativeButton(mActivity.getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
     }
 
     public void acceptMember(View v){

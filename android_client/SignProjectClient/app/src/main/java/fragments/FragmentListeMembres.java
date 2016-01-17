@@ -11,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.florian.signprojectclient.R;
@@ -26,10 +28,13 @@ import java.util.Map;
 
 import activites.AjoutGroupeActivity;
 import activites.GroupeActivity;
+import adapters.AdapterListViewGroupe;
 import adapters.AdapterListViewMembre;
+import modeles.modeleBD.GroupeBD;
 import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
 import utilitaires.Config;
+import utilitaires.SessionManager;
 
 /**
  * Created by Florian on 15/01/2016.
@@ -43,6 +48,9 @@ public class FragmentListeMembres extends DialogFragment {
     private String state ;
     private boolean admin ;
     private AdapterListViewMembre adapterListViewMembre;
+
+    EditText recherche;
+    ImageButton valider;
 
     private AlertDialog.Builder alert;
 
@@ -64,14 +72,46 @@ public class FragmentListeMembres extends DialogFragment {
 
         View view = inflater.inflate(R.layout.fragment_liste_membres, null, false);
 
-        this.listeMembres = (ListView) view.findViewById(R.id.liste_membres);
-        this.FabAjoutMembre = (FloatingActionButton) view.findViewById(R.id.FabAjoutMembre);
-        this.id_groupe = getArguments().getInt("id_groupe");
-        this.state = getArguments().getString("state");
-        this.admin = getArguments().getBoolean("admin");
-
         if (Config.isNetworkAvailable(getActivity()))
         {
+
+            this.alert = new AlertDialog.Builder(getActivity());
+            this.alert.setTitle(getActivity().getResources().getString(R.string.titre_alert_dialog_erreur));
+            this.alert.setIcon(R.drawable.ic_action_error);
+
+            this.listeMembres = (ListView) view.findViewById(R.id.liste_membres);
+            this.FabAjoutMembre = (FloatingActionButton) view.findViewById(R.id.FabAjoutMembre);
+            this.id_groupe = getArguments().getInt("id_groupe");
+            this.state = getArguments().getString("state");
+            this.admin = getArguments().getBoolean("admin");
+
+            this.recherche = (EditText) view.findViewById(R.id.champ_recherche_membre);
+            this.valider = (ImageButton) view.findViewById(R.id.button_recherche_membre);
+
+            this.valider.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (Config.isNetworkAvailable(getActivity()))
+                    {
+                        String s = recherche.getText().toString();
+
+                        Map<String, String> params = new HashMap<>();
+                        params.put("group_id", Integer.toString(id_groupe));
+                        params.put("state", state);
+                        params.put("search", s);
+                        System.out.println("id_groupe : "+id_groupe);
+                        Handler mHandler = getMembresHandler();
+
+                        RequestPostTask.sendRequest("getMembers", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
+                    }
+                    else
+                    {
+                        displayErrorInternet();
+                    }
+
+                }
+            });
 
             this.FabAjoutMembre.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,9 +122,7 @@ public class FragmentListeMembres extends DialogFragment {
                     } else
 
                     {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayErrorInternet();
                     }
                 }
             });
@@ -100,15 +138,8 @@ public class FragmentListeMembres extends DialogFragment {
         }
         else
         {
-            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-            alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                    FragmentListeMembres.this.dismiss();
-                }
-            });
-            AlertDialog alertInscriptionInvalide = alert.create();
-            alertInscriptionInvalide.show();
+
+            displayFatalErrorInternet();
         }
     /*
         this.membres = new ArrayList<>();
@@ -127,6 +158,31 @@ public class FragmentListeMembres extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    public void displayErrorInternet(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        displayAlertErrorInternet();
+    }
+
+    public void displayFatalErrorInternet(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                FragmentListeMembres.this.dismiss();
+            }
+        });
+        displayAlertErrorInternet();
+    }
+
+    private void displayAlertErrorInternet(){
+        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
     }
 
     public ArrayList<Utilisateur> jsonToListMembres(JSONArray j){

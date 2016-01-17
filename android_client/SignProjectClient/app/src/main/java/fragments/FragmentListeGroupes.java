@@ -1,6 +1,7 @@
 package fragments;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +59,10 @@ public class FragmentListeGroupes extends Fragment {
         this.listeGroupes = (ListView) view.findViewById(R.id.listeGroupes);
         this.FabAjoutGroupe = (FloatingActionButton) view.findViewById(R.id.FabAjoutGroupe);
 
+        this.alert = new AlertDialog.Builder(getActivity());
+        this.alert.setTitle(getActivity().getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.alert.setIcon(R.drawable.ic_action_error);
+
         SessionManager sessionManager = new SessionManager(this.getActivity());
         String id_user = Integer.toString(sessionManager.getUserId());
 
@@ -73,9 +78,7 @@ public class FragmentListeGroupes extends Fragment {
                     } else
 
                     {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayErrorInternet();
                     }
                 }
             });
@@ -160,9 +163,7 @@ public class FragmentListeGroupes extends Fragment {
                         JSONObject jsonObject = new JSONObject((String) msg.obj);
                         if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                         {
-                            alert.setMessage(getResources().getString(R.string.erreur_serveur));
-                            AlertDialog alertInscriptionInvalide = alert.create();
-                            alertInscriptionInvalide.show();
+                            displayAlertError(getResources().getString(R.string.erreur_serveur));
                         }
                     }
                     else if (json instanceof JSONArray){
@@ -182,6 +183,21 @@ public class FragmentListeGroupes extends Fragment {
         };
 
         return mHandler;
+    }
+
+    public void displayErrorInternet(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+    }
+
+    private void displayAlertError(String message){
+        alert.setMessage(message);
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
     }
 
 

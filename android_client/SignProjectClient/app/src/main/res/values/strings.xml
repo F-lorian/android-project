@@ -122,6 +122,7 @@
     <string name="btn_annuler_demande">annuler</string>
     <string name="ajout_en_attente">Demande d\'ajout en attente</string>
     <string name="hint_recherche_groupe">Taper un nom de groupe</string>
+    <string name="hint_recherche_membre">chercher un utilisateur</string>
     <string name="ajoute">ajouté</string>
     <string name="refuse">refusé</string>
     <string name="supprime_du_groupe">supprimé du groupe</string>

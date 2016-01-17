@@ -1,7 +1,9 @@
 package adapters;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,6 +48,8 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
     private LayoutInflater mInflater;
 
+    private AlertDialog.Builder alert;
+
     public AdapterListViewGroupe(Context mContext, List<Groupe> groupes) {
         this.mContext = mContext;
         this.groupes = groupes;
@@ -79,6 +83,10 @@ public class AdapterListViewGroupe extends BaseAdapter {
         {
             layoutItem = (LinearLayout) convertView;
         }
+
+        this.alert = new AlertDialog.Builder(mContext);
+        this.alert.setTitle(mContext.getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.alert.setIcon(R.drawable.ic_action_error);
 
         TextView nom = (TextView) layoutItem.findViewById(R.id.nom_adapter_groupe);
         ImageView iv = (ImageView) layoutItem.findViewById(R.id.image_type);
@@ -120,14 +128,19 @@ public class AdapterListViewGroupe extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Context c = AdapterListViewGroupe.this.mContext;
+                if (Config.isNetworkAvailable(c)) {
 
-                int indice = ((Integer)v.getTag()).intValue();
-                int id = groupes.get(indice).getId();
 
-                //aller vers l'activité pour voir un groupe
-                Intent intent = new Intent(c, GroupeActivity.class);
-                intent.putExtra(Config.ID_GROUPE, id);
-                c.startActivity(intent);
+                    int indice = ((Integer) v.getTag()).intValue();
+                    int id = groupes.get(indice).getId();
+
+                    //aller vers l'activité pour voir un groupe
+                    Intent intent = new Intent(c, GroupeActivity.class);
+                    intent.putExtra(Config.ID_GROUPE, id);
+                    c.startActivity(intent);
+                } else{
+                    displayErrorInternet();
+                }
 
             }
         });
@@ -166,8 +179,22 @@ public class AdapterListViewGroupe extends BaseAdapter {
             }
         }
 
-
         return layoutItem;
 
+    }
+
+    public void displayErrorInternet(){
+        alert.setNegativeButton(mContext.getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        displayAlertError(mContext.getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+    }
+
+    private void displayAlertError(String message){
+        alert.setMessage(message);
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
     }
 }

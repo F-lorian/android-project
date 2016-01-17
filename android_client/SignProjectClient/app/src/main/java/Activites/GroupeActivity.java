@@ -143,7 +143,7 @@ public class GroupeActivity extends AppCompatActivity {
             }
             else
             {
-
+                //à virer
                 GroupeBD groupeBD = new GroupeBD(this);
                 groupeBD.open();
                 this.groupe = groupeBD.getGroupe(id_groupe);
@@ -159,6 +159,8 @@ public class GroupeActivity extends AppCompatActivity {
                 displayGroupe(id_user);
             }
 
+        } else {
+            displayFatalError();
         }
     }
 
@@ -193,9 +195,7 @@ public class GroupeActivity extends AppCompatActivity {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
                         edit();
                     } else {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayErrorInternet();
                     }
                 }
             });
@@ -205,9 +205,7 @@ public class GroupeActivity extends AppCompatActivity {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
                         delete();
                     } else {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayErrorInternet();
                     }
                 }
             });
@@ -218,9 +216,7 @@ public class GroupeActivity extends AppCompatActivity {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
                         showMembersDialog(GroupeUtilisateurBD.ETAT_ATTENTE, admin);
                     } else {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayErrorInternet();
                     }
                 }
             });
@@ -231,9 +227,7 @@ public class GroupeActivity extends AppCompatActivity {
                     if (Config.isNetworkAvailable(GroupeActivity.this)) {
                         showMembersDialog(GroupeUtilisateurBD.ETAT_APPARTIENT, admin);
                     } else {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayErrorInternet();
                     }
                 }
             });
@@ -252,9 +246,7 @@ public class GroupeActivity extends AppCompatActivity {
                         if (Config.isNetworkAvailable(GroupeActivity.this)) {
                             quit();
                         } else {
-                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                            AlertDialog alertInscriptionInvalide = alert.create();
-                            alertInscriptionInvalide.show();
+                            displayErrorInternet();
                         }
                     }
                 });
@@ -268,9 +260,7 @@ public class GroupeActivity extends AppCompatActivity {
                         if (Config.isNetworkAvailable(GroupeActivity.this)) {
                             cancelDemand();
                         } else {
-                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                            AlertDialog alertInscriptionInvalide = alert.create();
-                            alertInscriptionInvalide.show();
+                            displayErrorInternet();
                         }
                     }
                 });
@@ -283,9 +273,7 @@ public class GroupeActivity extends AppCompatActivity {
                         if (Config.isNetworkAvailable(GroupeActivity.this)) {
                             sendDemand();
                         } else {
-                            alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                            AlertDialog alertInscriptionInvalide = alert.create();
-                            alertInscriptionInvalide.show();
+                            displayErrorInternet();
                         }
                     }
                 });
@@ -323,30 +311,13 @@ public class GroupeActivity extends AppCompatActivity {
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
                     {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
-                        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                GroupeActivity.this.finish();
-                            }
-                        });
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayFatalError();
 
                     }
                     else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                     {
-                        alert.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
-                        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                GroupeActivity.this.finish();
-                            }
-                        });
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
-                    }
-                    else {
+                        displayFatalError();
+                    } else {
                         SessionManager sessionManager = new SessionManager(GroupeActivity.this);
                         int id_user = sessionManager.getUserId();
 
@@ -381,6 +352,31 @@ public class GroupeActivity extends AppCompatActivity {
         };
 
         return mHandler;
+    }
+
+    public void displayErrorInternet(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+    }
+
+    public void displayFatalError(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                GroupeActivity.this.finish();
+            }
+        });
+        displayAlertError("groupe introuvable");
+    }
+
+    private void displayAlertError(String message){
+        alert.setMessage(message);
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
     }
 
     void showMembersDialog(String state, boolean admin) {

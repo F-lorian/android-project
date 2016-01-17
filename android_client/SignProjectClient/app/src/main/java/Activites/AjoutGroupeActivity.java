@@ -47,7 +47,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
     private ArrayList<String> typeGroupes;
 
-    private AlertDialog.Builder buildAlertContenuInvalide;
+    private AlertDialog.Builder alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,10 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         this.spinnerType = (Spinner) findViewById(R.id.spinnerTypeGroupe);
         AdapterSpinnerTypeGroupe adapterSpinnerTypeGroupe = new AdapterSpinnerTypeGroupe(this,this.typeGroupes);
         this.spinnerType.setAdapter(adapterSpinnerTypeGroupe);
+
+        this.alert = new AlertDialog.Builder(this);
+        this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.alert.setIcon(R.drawable.ic_action_error);
 
 
         editTextNom.addTextChangedListener(new TextWatcher() {
@@ -119,16 +123,6 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
             }
         });
-
-        this.buildAlertContenuInvalide = new AlertDialog.Builder(this);
-        this.buildAlertContenuInvalide.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
-        this.buildAlertContenuInvalide.setIcon(R.drawable.ic_action_error);
-        this.buildAlertContenuInvalide.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-
     }
 
     @Override
@@ -194,9 +188,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
             }
             else
             {
-                buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-                AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                alertInscriptionInvalide.show();
+                displayErrorInternet();
             }
 
 
@@ -204,6 +196,30 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         }
     }
 
+    public void displayErrorInternet(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+    }
+
+    public void displayFatalError(){
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                AjoutGroupeActivity.this.finish();
+            }
+        });
+        displayAlertError("groupe introuvable");
+    }
+
+    private void displayAlertError(String message){
+        alert.setMessage(message);
+        AlertDialog alertInternet = alert.create();
+        alertInternet.show();
+    }
 
     public Handler getHandler() {
         Handler mHandler = new Handler() {
@@ -218,15 +234,11 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
                     {
-                        buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_inscription_denied));
-                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                        alertInscriptionInvalide.show();
+                        displayAlertError(getResources().getString(R.string.message_alert_dialog_inscription_denied));
                     }
                     else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                     {
-                        buildAlertContenuInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
-                        AlertDialog alertInscriptionInvalide = buildAlertContenuInvalide.create();
-                        alertInscriptionInvalide.show();
+                        displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));
                     }
                     else
                     {
