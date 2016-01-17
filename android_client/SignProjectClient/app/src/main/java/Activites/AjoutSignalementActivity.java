@@ -699,12 +699,14 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     {
                         auteurPresent = true;
                     }
-                    jsonArray.put(new JSONObject().put("idUser", ((SignalementPublic) signalement).getUtilisateursDestinateurs().get(i).getId()));
+                    jsonArray.put(((SignalementPublic) signalement).getUtilisateursDestinateurs().get(i).getId());
+                    //new JSONObject().put("idUser", ((SignalementPublic) signalement).getUtilisateursDestinateurs().get(i).getId())
                 }
 
                 if (!auteurPresent)
                 {
-                    jsonArray.put(new JSONObject().put("idUser", sessionManager.getUserId()));
+                    jsonArray.put(sessionManager.getUserId());
+                    //new JSONObject().put("idUser", sessionManager.getUserId())
                 }
 
 
@@ -719,7 +721,8 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
             for (int i=0; i<((SignalementGroupe)signalement).getGroupesDestinateurs().size(); i++)
             {
-                jsonArray.put(new JSONObject().put("idGroupe", ((SignalementGroupe)signalement).getGroupesDestinateurs().get(i).getId()));
+                jsonArray.put(((SignalementGroupe) signalement).getGroupesDestinateurs().get(i).getId());
+                //new JSONObject().put("idGroupe", ((SignalementGroupe) signalement).getGroupesDestinateurs().get(i).getId())
             }
 
             System.out.println(jsonArray);

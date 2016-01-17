@@ -481,7 +481,7 @@ function addSignalementRequest(){
 	else if($res == DENIED){
 		echo getReplyMessage(DENIED, SIGN_ADD_FAIL, array());
 	}
-	else if($res == ERROR){
+	else {
 		echo getReplyMessage(ERROR, SIGN_ADD_FAIL, array());
 	}
 }

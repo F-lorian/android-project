@@ -817,7 +817,6 @@ function addSignalement(){
 	if (isset($_POST['destinataires']))
 	{
 		$destinataires = json_decode($_POST['destinataires'],true);
-		var_dump($destinataires);
 	}
     
     try {
@@ -855,7 +854,7 @@ function addSignalement(){
         return SUCCESS;
         
     } catch (PDOException $e) {
-        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        //echo "Erreur !: " . $e->getMessage() . "<br/>";
         return ERROR;
     }
 }
