@@ -15,6 +15,7 @@ define("USER_IS_IN_GROUP", "l'utilisateur est dans ce groupe");
 define("USER_IS_NOT_IN_GROUP", "l'utilisateur n'est pas dans ce groupe");
 
 define("ADDED_TO_GROUP", "utilisateur ajouté au groupe");
+define("USER_INVITED", "utilisateur invité");
 define("REFUSED", "utilisateur refusé");
 define("REMOVED_FROM_GROUP", "utilisateur retiré du groupe");
 define("ADD_TO_GROUP_FAIL", "erreur lors de l'ajout au groupe");
@@ -253,6 +254,25 @@ function addGroupRequest(){
     }
 }
 
+function removeGroupRequest(){
+    
+    if (isset($_POST["group_id"])) {
+        $res = removeGroup($_POST["group_id"]);
+        
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, GROUP_DELETED, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, GROUP_NOT_FOUND, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, GROUP_DELETE_FAIL, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
 function editGroupRequest(){
     
     if (isset($_POST["group_id"]) && isset($_POST["name"]) && isset($_POST["type"])) {
@@ -333,6 +353,42 @@ function getMembersRequest(){
     if (isset($_POST["group_id"]) && isset($_POST["state"])) {
         $res = getMembersByGroupId($_POST["group_id"], $_POST["state"], $_POST["search"]); 
         echo json_encode($res);
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function inviteMemberRequest(){
+    
+    if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
+        $res = addToGroup($_POST["group_id"], $_POST["user_id"], 'invite'); 
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, USER_INVITED, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, ADD_TO_GROUP_FAIL, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
+        }
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function sendRequestMemberRequest(){
+    
+    if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
+        $res = addToGroup($_POST["group_id"], $_POST["user_id"], 'attente'); 
+        if($res == SUCCESS){
+            echo getReplyMessage(SUCCESS, REQUES_SEND, array());
+        }
+        else if($res == DENIED){
+            echo getReplyMessage(DENIED, ADD_TO_GROUP_FAIL, array());
+        }
+        else if($res == ERROR){
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
+        }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }

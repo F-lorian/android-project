@@ -432,6 +432,31 @@ function addGroup($name, $type, $creator, $description){
     }
 }
 
+function removeGroup($group_id){
+    
+     try {
+         
+        if(getGroupById($id) != null){
+            $result = array();
+            $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+            $stmt = $dbh->prepare("DELETE FROM `group` WHERE id = '$group_id'");
+            $stmt->execute();
+            $dbh = null;
+            
+            if (getGroupById($id) == null) { 
+                return SUCCESS;
+            } else {
+                return ERROR;
+            }
+        }
+        return DENIED;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
 function editGroup($id_group, $name, $type, $description){
     
     try {
@@ -544,9 +569,11 @@ function getGroupForUser($group_id, $user_id){
          
         if(count($result) > 0){
             $nb_member_request = getNbMemberRequest($group_id);
+            $nb_member_invite = getNbMemberInvite($group_id);
             $nb_member = getNbMember($group_id);
             $result[0]["member_request"] = $nb_member_request;
             $result[0]["nb_member"] = $nb_member;
+            $result[0]["member_invite"] = $nb_member_invite;
             return $result[0];
         } else {
             return null;
@@ -565,6 +592,25 @@ function getNbMemberRequest($group_id){
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT count(*) FROM user_in_group ug WHERE ug.`group` = '$group_id' AND ug.state = 'attente'");
+        $stmt->execute();
+        $dbh = null;
+        
+        $number_of_rows = $stmt->fetchColumn(); 
+         
+        return $number_of_rows;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getNbMemberInvite($group_id){
+    try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT count(*) FROM user_in_group ug WHERE ug.`group` = '$group_id' AND ug.state = 'invite'");
         $stmt->execute();
         $dbh = null;
         

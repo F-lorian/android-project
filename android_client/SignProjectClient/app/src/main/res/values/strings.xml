@@ -105,12 +105,19 @@
     <string name="visibilite">Visibilité</string>
     <string name="description">Description</string>
     <string name="demandes">demandes</string>
+    <string name="invitations">invitations</string>
     <string name="type_public">Public</string>
     <string name="type_prive">Privé</string>
     <string name="erreur_nom_groupe">Doit être supérieur à 6 lettres, ne peut contenir que des lettres, des chiffres et les caractères _ et -</string>
     <string name="erreur_description_groupe">Doit être inférieur à 500 caractères</string>
     <string name="message_alert_dialog_erreur_ajout_groupe_bd">Erreur lors de l\'enregistrement du groupe</string>
     <string name="groupe_ajoute">Groupe créé</string>
+    <string name="groupe_supprime">Groupe supprimé</string>
+    <string name="groupe_quitte">Groupe quitté</string>
+    <string name="demande_envoyee">Demande envoyée</string>
+    <string name="demande_annulee">Demande annulée</string>
+    <string name="groupe_rejoint">Groupe rejoint</string>
+    <string name="groupe_invitation_refusee">invitation refusée</string>
     <string name="membres">Membres</string>
     <string name="membre">Membre</string>
     <string name="admin">Admin</string>
@@ -118,12 +125,16 @@
     <string name="btn_quitter_groupe">quitter</string>
     <string name="btn_modifier_groupe">modifier</string>
     <string name="btn_supprimer_groupe">supprimer</string>
+    <string name="btn_refuser_groupe">refuser</string>
     <string name="btn_rejoindre_groupe">rejoindre le groupe</string>
     <string name="btn_annuler_demande">annuler</string>
     <string name="ajout_en_attente">Demande d\'ajout en attente</string>
+    <string name="ajout_invite">Vous avez été invité à rejoindre ce groupe</string>
     <string name="hint_recherche_groupe">Taper un nom de groupe</string>
     <string name="hint_recherche_membre">chercher un utilisateur</string>
     <string name="ajoute">ajouté</string>
+    <string name="erreur_ajout_membre">l\'utilisateur est déjà membre ou est en attente d\'acceptation</string>
+    <string name="action_refusee">action refusée</string>
     <string name="refuse">refusé</string>
     <string name="supprime_du_groupe">supprimé du groupe</string>
 

@@ -32,8 +32,8 @@ if(isset($dbh)){
             case "addGroup":
                 addGroupRequest();
                 break;
-            case "addToGroup":
-                addToGroup();
+            case "removeGroup":
+                removeGroupRequest();
                 break;
             case "removeFromGroup":
                 removeFromGroup();
@@ -52,6 +52,12 @@ if(isset($dbh)){
                 break;
             case "refuseMember":
                 refuseMemberRequest();
+                break;
+            case "inviteMember":
+                inviteMemberRequest();
+                break;
+            case "requestMember":
+                sendRequestMemberRequest();
                 break;
             case "removeMember":
                 removeMemberRequest();

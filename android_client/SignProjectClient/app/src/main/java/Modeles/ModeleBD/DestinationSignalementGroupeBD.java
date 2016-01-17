@@ -155,7 +155,7 @@ public class DestinationSignalementGroupeBD {
         if (c.moveToFirst()) {
             while (c.isAfterLast() == false) {
 
-                Groupe g = new Groupe(0,"","",null,null,null,0,0);
+                Groupe g = new Groupe(0,"","",null,null,null,0,0,0);
 
                 g.setId(c.getInt(c.getColumnIndex(GroupeBD.ID_GROUPE)));
                 g.setNom(c.getString(c.getColumnIndex(GroupeBD.NOM_GROUPE)));
