@@ -844,7 +844,7 @@ function addSignalement(){
 		{
 			foreach($destinataires as $idGroup)
 			{
-				$stmt = $dbh->prepare("INSERT INTO signalement_for_group (signalement, group) VALUES ('$idSignalement', '$idGroup')");
+				$stmt = $dbh->prepare("INSERT INTO signalement_for_group (signalement, `group`) VALUES ('$idSignalement', '$idGroup')");
 				$stmt->execute();
 			}
 		}
