@@ -831,13 +831,14 @@ function addSignalement(){
 		{
 			if ($destinataires == null)
 			{
-				$destinataires = array_column(getAllUsers(null),"0");
-				var_dump(getAllUsers(null));
+				$destinataires = array_column(getAllUsers(null),"id");
+				//var_dump(getAllUsers(null));
 				var_dump($destinataires);
 			}
 			
 			foreach($destinataires as $idUser)
 			{
+				$idUser = intval($idUser);
 				$stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user) VALUES ('$idSignalement', '$idUser')");
 				$stmt->execute();
 			}
