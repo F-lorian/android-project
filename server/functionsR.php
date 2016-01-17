@@ -240,14 +240,14 @@ function addGroupRequest(){
     if (isset($_POST["name"]) && isset($_POST["type"]) && isset($_POST["user_id"])) {
         $res = addGroup($_POST["name"], $_POST["type"], $_POST["user_id"], $_POST["description"]);
         
-        if($res == SUCCESS){
-            echo getReplyMessage(SUCCESS, GROUP_ADDED, array());
-        }
-        else if($res == DENIED){
+        if($res == DENIED){
             echo getReplyMessage(DENIED, GROUP_EXIST, array());
         }
         else if($res == ERROR){
             echo getReplyMessage(ERROR, GROUP_ADD_FAIL, array($_POST["name"],$_POST["type"],$_POST["user_id"],$_POST["description"]));
+        } 
+        else {
+            echo getReplyMessage(SUCCESS, GROUP_ADDED, array('id'=>$res));
         }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
@@ -360,8 +360,8 @@ function getMembersRequest(){
 
 function inviteMemberRequest(){
     
-    if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
-        $res = addToGroup($_POST["group_id"], $_POST["user_id"], 'invite'); 
+    if (isset($_POST["group_id"]) && isset($_POST["pseudo"])) {
+        $res = inviteMember($_POST["group_id"], $_POST["pseudo"]); 
         if($res == SUCCESS){
             echo getReplyMessage(SUCCESS, USER_INVITED, array());
         }
@@ -369,7 +369,7 @@ function inviteMemberRequest(){
             echo getReplyMessage(DENIED, ADD_TO_GROUP_FAIL, array());
         }
         else if($res == ERROR){
-            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array($_POST["group_id"], $_POST["pseudo"]));
         }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
@@ -453,7 +453,7 @@ function removeMemberRequest(){
 function getGroupsRequest(){
     
     if (isset($_POST["user_id"])) {
-        $res = getGroups($_POST["user_id"]);
+        $res = getGroups($_POST["user_id"], $_POST["search"]);
         echo json_encode($res);
 
     } else {

@@ -89,6 +89,11 @@ public class AdapterListViewMembre extends BaseAdapter {
         this.alert = new AlertDialog.Builder(mActivity);
         this.alert.setTitle(mActivity.getResources().getString(R.string.titre_alert_dialog_erreur));
         this.alert.setIcon(R.drawable.ic_action_error);
+        this.alert.setNegativeButton(mActivity.getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
         TextView pseudo = (TextView) layoutItem.findViewById(R.id.pseudo_adapter_membre);
         ImageView accept = (ImageView) layoutItem.findViewById(R.id.image_accept);
@@ -145,6 +150,22 @@ public class AdapterListViewMembre extends BaseAdapter {
                         }
                     }
                 });
+            } else if (this.state.equals(GroupeUtilisateurBD.ETAT_INVITE)){
+                accept.setVisibility(View.GONE);
+                refuse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (Config.isNetworkAvailable(mActivity))
+                        {
+                            cancelInviation(membre);
+                        }
+                        else
+                        {
+                            displayErrorInternet();
+                        }
+                    }
+                });
             }
         }
 
@@ -153,12 +174,11 @@ public class AdapterListViewMembre extends BaseAdapter {
     }
 
     public void displayErrorInternet(){
-        alert.setMessage(mActivity.getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-        alert.setNegativeButton(mActivity.getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+        displayAlertError(mActivity.getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+    }
+
+    private void displayAlertError(String message){
+        alert.setMessage(message);
         AlertDialog alertInternet = alert.create();
         alertInternet.show();
     }
@@ -173,6 +193,19 @@ public class AdapterListViewMembre extends BaseAdapter {
         params.put("user_id", Integer.toString(id));
 
         Handler mHandler = getHandler(v, mActivity.getResources().getString(R.string.ajoute));
+        RequestPostTask.sendRequest("acceptMember", params, mHandler, mActivity, mActivity.getResources().getString(R.string.progress_dialog_titre));
+    }
+
+    public void cancelInviation(View v){
+
+        int indice = ((Integer) v.getTag()).intValue();
+        int id = this.membres.get(indice).getId();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("group_id", Integer.toString(this.id_groupe));
+        params.put("user_id", Integer.toString(id));
+
+        Handler mHandler = getHandler(v, mActivity.getResources().getString(R.string.invitation_annulee));
         RequestPostTask.sendRequest("acceptMember", params, mHandler, mActivity, mActivity.getResources().getString(R.string.progress_dialog_titre));
     }
 
@@ -193,7 +226,6 @@ public class AdapterListViewMembre extends BaseAdapter {
 
         int indice = ((Integer) v.getTag()).intValue();
         int id = this.membres.get(indice).getId();
-        String pseudo = this.membres.get(indice).getPseudo();
 
         Map<String, String> params = new HashMap<>();
         params.put("group_id", Integer.toString(this.id_groupe));
@@ -215,21 +247,21 @@ public class AdapterListViewMembre extends BaseAdapter {
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                     {
-                        alert.setMessage(mActivity.getResources().getString(R.string.erreur_serveur));
-                        AlertDialog alertInscriptionInvalide = alert.create();
-                        alertInscriptionInvalide.show();
+                        displayAlertError(mActivity.getResources().getString(R.string.erreur_serveur));
                     }
                     else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
                     {
 
                     } else {
+
+                        ((GroupeActivity) mActivity).setModification(true);
+
                         int indice = ((Integer) v.getTag()).intValue();
                         String pseudo = membres.get(indice).getPseudo();
                         //membres.remove(indice);
 
 
                         v.setVisibility(View.GONE);
-
                         Toast.makeText(mActivity, pseudo + " " + action, Toast.LENGTH_LONG).show();
                     }
 

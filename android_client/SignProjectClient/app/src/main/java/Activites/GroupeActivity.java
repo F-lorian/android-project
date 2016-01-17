@@ -77,6 +77,8 @@ public class GroupeActivity extends AppCompatActivity {
 
     private AlertDialog.Builder alert;
 
+    private boolean modification;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +87,8 @@ public class GroupeActivity extends AppCompatActivity {
 
         if (id_groupe != -1) {
             setContentView(R.layout.activity_groupe);
+
+            this.modification = false;
 
             this.alert = new AlertDialog.Builder(this);
             this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
@@ -177,6 +181,39 @@ public class GroupeActivity extends AppCompatActivity {
             displayFatalError();
         }
     }
+    /*
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+
+        if(getModification()){
+            System.out.println("refresh");
+            refresh();
+        }
+
+    }*/
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+
+            if(resultCode == RESULT_OK){
+                refresh();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Do nothing
+            }
+        }
+    }
+
+    public void setModification(boolean modification){
+        this.modification = true;
+    }
+
+    public boolean getModification(){
+        return this.modification;
+    }
 
     public void refresh(){
 
@@ -199,7 +236,9 @@ public class GroupeActivity extends AppCompatActivity {
         params.put("user_id", Integer.toString(id_user));
 
         Handler mHandler = getGroupeHandler();
-        RequestPostTask.sendRequest("getGroupWithRestrict", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
+        RequestPostTask.sendRequest("getGroupWithRestrict", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_titre));
+
+        this.modification = false;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -527,12 +566,7 @@ public class GroupeActivity extends AppCompatActivity {
         return mHandler;
     }
 
-    public void displayErrorInternet(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+    public void displayErrorInternet() {
         displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
     }
 
@@ -562,23 +596,13 @@ public class GroupeActivity extends AppCompatActivity {
         newFragment.show(getFragmentManager(), "dialog");
     }
 
-    public void doPositiveClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-
-    public void doNegativeClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "Negative click!");
-    }
-
     public void edit() {
 
         int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
 
         Intent intent = new Intent(this, ModificationGroupeActivity.class);
         intent.putExtra(Config.ID_GROUPE, id_groupe);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
 
     }
     public void delete() {

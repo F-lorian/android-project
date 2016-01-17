@@ -41,8 +41,9 @@ import utilitaires.SessionManager;
  */
 public class FragmentListeMembres extends DialogFragment {
 
+    private boolean modification;
+
     private ListView listeMembres;
-    private FloatingActionButton FabAjoutMembre;
     private ArrayList<Utilisateur> membres;
     private int id_groupe ;
     private String state ;
@@ -74,13 +75,17 @@ public class FragmentListeMembres extends DialogFragment {
 
         if (Config.isNetworkAvailable(getActivity()))
         {
-
+            this.modification = false;
             this.alert = new AlertDialog.Builder(getActivity());
             this.alert.setTitle(getActivity().getResources().getString(R.string.titre_alert_dialog_erreur));
             this.alert.setIcon(R.drawable.ic_action_error);
+            this.alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
 
             this.listeMembres = (ListView) view.findViewById(R.id.liste_membres);
-            this.FabAjoutMembre = (FloatingActionButton) view.findViewById(R.id.FabAjoutMembre);
             this.id_groupe = getArguments().getInt("id_groupe");
             this.state = getArguments().getString("state");
             this.admin = getArguments().getBoolean("admin");
@@ -113,20 +118,6 @@ public class FragmentListeMembres extends DialogFragment {
                 }
             });
 
-            this.FabAjoutMembre.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (Config.isNetworkAvailable(getActivity())) {
-                        Intent intent = new Intent(getActivity(), AjoutGroupeActivity.class);
-                        startActivity(intent);
-                    } else
-
-                    {
-                        displayErrorInternet();
-                    }
-                }
-            });
-
             Map<String, String> params = new HashMap<>();
             params.put("group_id", Integer.toString(id_groupe));
             params.put("state", state);
@@ -153,7 +144,9 @@ public class FragmentListeMembres extends DialogFragment {
                 // Add action buttons
                 .setNegativeButton(R.string.btn_alert_dialog_erreur, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        ((GroupeActivity) getActivity()).doPositiveClick();
+                        if(((GroupeActivity) getActivity()).getModification()){
+                            ((GroupeActivity) getActivity()).refresh();
+                        }
                     }
                 });
 
@@ -161,11 +154,6 @@ public class FragmentListeMembres extends DialogFragment {
     }
 
     public void displayErrorInternet(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
         displayAlertErrorInternet();
     }
 

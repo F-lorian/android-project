@@ -145,7 +145,7 @@ function register($pseudo, $password, $gcm_regid) {
         
         
         $check = getUserByPseudo($pseudo);
-        if (count($check) == 1) { 
+        if ($check != null) { 
             return $check['id'];
         } else {
             return ERROR;
@@ -193,7 +193,11 @@ function getUserByPseudo($pseudo) {
             $result[] = $row;
         }
             
-        return $result[0];
+        if(count($result) > 0){
+          return $result[0];
+        } else {
+          return null;
+        }
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -417,9 +421,9 @@ function addGroup($name, $type, $creator, $description){
             $dbh = null;
             
             $check = getGroupByName($name);
-            if (count($check) > 0) {
+            if ($check != null) {
                 addToGroup($creator, $check['id'], 'appartient');
-                return SUCCESS;
+                return $check['id'];
             } else {
                 return ERROR;
             }
@@ -519,7 +523,11 @@ function getGroupByName($name){
             $result[] = $row;
         }
          
-        return $result[0];
+        if(count($result) > 0){
+          return $result[0];
+        } else {
+          return null;
+        }
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -643,13 +651,13 @@ function getNbMember($group_id){
     }
 }
 
-function getGroups($user_id){
+function getGroups($user_id, $search){
     
      try {
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id");
+        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
         $stmt->execute();
         $dbh = null;
 
@@ -693,6 +701,13 @@ function getMembersByGroupId($group_id, $state, $search){
     }
 }
 
+function inviteMember($group_id, $pseudo){
+    $res = getUserByPseudo($pseudo);
+    if( $res != null){
+        return addToGroup($res['id'], $group_id, 'invite'); 
+    }
+    return DENIED;
+}
 
 function addToGroup($user_id, $group_id, $state){ 
     

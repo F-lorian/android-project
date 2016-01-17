@@ -39,21 +39,15 @@ import utilitaires.RequestPostTask;
  */
 public class FragmentInvitationMembre extends DialogFragment {
 
-    private ListView listeMembres;
-    private FloatingActionButton FabAjoutMembre;
-    private ArrayList<Utilisateur> membres;
     private int id_groupe ;
-    private String state ;
-    private boolean admin ;
-    private AdapterListViewMembre adapterListViewMembre;
 
     EditText champ_invitation_membre;
     ImageButton button_invitation_membre;
 
     private AlertDialog.Builder alert;
 
-    public static FragmentListeMembres newInstance(int id_groupe) {
-        FragmentListeMembres frag = new FragmentListeMembres();
+    public static FragmentInvitationMembre newInstance(int id_groupe) {
+        FragmentInvitationMembre frag = new FragmentInvitationMembre();
         Bundle args = new Bundle();
         args.putInt("id_groupe", id_groupe);
         frag.setArguments(args);
@@ -74,6 +68,11 @@ public class FragmentInvitationMembre extends DialogFragment {
             this.alert = new AlertDialog.Builder(getActivity());
             this.alert.setTitle(getActivity().getResources().getString(R.string.titre_alert_dialog_erreur));
             this.alert.setIcon(R.drawable.ic_action_error);
+            this.alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
 
             this.id_groupe = getArguments().getInt("id_groupe");
 
@@ -107,15 +106,20 @@ public class FragmentInvitationMembre extends DialogFragment {
             displayFatalErrorInternet();
         }
 
+        builder.setView(view)
+        .setNegativeButton(R.string.btn_alert_dialog_erreur, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if(((GroupeActivity) getActivity()).getModification()){
+                    ((GroupeActivity) getActivity()).refresh();
+                }
+            }
+        });
+
+
         return builder.create();
     }
 
     public void displayErrorInternet(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
         displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
     }
 
@@ -130,6 +134,7 @@ public class FragmentInvitationMembre extends DialogFragment {
     }
 
     private void displayAlertError(String message){
+
         alert.setMessage(message);
         AlertDialog alertInternet = alert.create();
         alertInternet.show();
@@ -156,6 +161,7 @@ public class FragmentInvitationMembre extends DialogFragment {
                         displayAlertError(getResources().getString(R.string.erreur_serveur));
 
                     } else {
+                        ((GroupeActivity) getActivity()).setModification(true);
                         Toast.makeText(getActivity(), getResources().getString(R.string.groupe_invitation_ennvoyee), Toast.LENGTH_LONG).show();
                     }
 

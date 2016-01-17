@@ -130,7 +130,6 @@ public class AdapterListViewGroupe extends BaseAdapter {
                 Context c = AdapterListViewGroupe.this.mContext;
                 if (Config.isNetworkAvailable(c)) {
 
-
                     int indice = ((Integer) v.getTag()).intValue();
                     int id = groupes.get(indice).getId();
 

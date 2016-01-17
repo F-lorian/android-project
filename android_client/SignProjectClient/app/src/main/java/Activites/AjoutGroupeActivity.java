@@ -2,6 +2,7 @@ package activites;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -76,7 +77,11 @@ public class AjoutGroupeActivity extends AppCompatActivity {
         this.alert = new AlertDialog.Builder(this);
         this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
         this.alert.setIcon(R.drawable.ic_action_error);
-
+        this.alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
         editTextNom.addTextChangedListener(new TextWatcher() {
             @Override
@@ -140,6 +145,9 @@ public class AjoutGroupeActivity extends AppCompatActivity {
                 valid();
                 break;
             case android.R.id.home:
+
+                Intent returnIntent = new Intent();
+                setResult(RESULT_CANCELED, returnIntent);
                 this.finish();
                 break;
 
@@ -197,22 +205,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
     }
 
     public void displayErrorInternet(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
         displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
-    }
-
-    public void displayFatalError(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-                AjoutGroupeActivity.this.finish();
-            }
-        });
-        displayAlertError("groupe introuvable");
     }
 
     private void displayAlertError(String message){
@@ -242,6 +235,8 @@ public class AjoutGroupeActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        int id = jsonObject.getJSONObject(Config.JSON_DATA).getInt("id");
+
                         int indiceType = spinnerType.getSelectedItemPosition();
                         String nom = editTextNom.getText().toString();
                         String type = typeGroupes.get(indiceType);
@@ -258,8 +253,17 @@ public class AjoutGroupeActivity extends AppCompatActivity {
                         saveLocal(nom, typeConst, description, id_admin);
 
                         Toast.makeText(AjoutGroupeActivity.this, AjoutGroupeActivity.this.getResources().getString(R.string.groupe_ajoute), Toast.LENGTH_LONG).show();
-                        AjoutGroupeActivity.this.finish();
 
+                        //aller vers l'activité pour voir un groupe
+
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
+
+                        Intent intent = new Intent(AjoutGroupeActivity.this, GroupeActivity.class);
+                        intent.putExtra(Config.ID_GROUPE, id);
+                        startActivity(intent);
+
+                        AjoutGroupeActivity.this.finish();
                     }
 
                 } catch (JSONException e) {

@@ -1,5 +1,6 @@
 package fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import java.util.Map;
 import org.json.JSONTokener;
 
 import activites.AjoutGroupeActivity;
+import activites.ModificationGroupeActivity;
 import adapters.AdapterListViewGroupe;
 import modeles.modele.Groupe;
 import utilitaires.RequestPostTask;
@@ -62,9 +64,12 @@ public class FragmentListeGroupes extends Fragment {
         this.alert = new AlertDialog.Builder(getActivity());
         this.alert.setTitle(getActivity().getResources().getString(R.string.titre_alert_dialog_erreur));
         this.alert.setIcon(R.drawable.ic_action_error);
+        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
-        SessionManager sessionManager = new SessionManager(this.getActivity());
-        String id_user = Integer.toString(sessionManager.getUserId());
 
         if (Config.isNetworkAvailable(getActivity()))
         {
@@ -73,8 +78,10 @@ public class FragmentListeGroupes extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (Config.isNetworkAvailable(getActivity())) {
+
                         Intent intent = new Intent(getActivity(), AjoutGroupeActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, 1);
+
                     } else
 
                     {
@@ -83,14 +90,13 @@ public class FragmentListeGroupes extends Fragment {
                 }
             });
 
-            Map<String, String> params = new HashMap<>();
-            params.put("user_id", id_user);
-
-            Handler mHandler = getGroupesHandler();
-            RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
+            refresh();
         }
         else
         {
+            SessionManager sessionManager = new SessionManager(this.getActivity());
+            String id_user = Integer.toString(sessionManager.getUserId());
+
             GroupeBD groupeBD = new GroupeBD(getActivity());
             groupeBD.open();
             this.groupes = groupeBD.getGroupesByIdUser(sessionManager.getUserId());
@@ -102,6 +108,31 @@ public class FragmentListeGroupes extends Fragment {
 
         return view;
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+
+            if(resultCode == Activity.RESULT_OK){
+                refresh();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Do nothing
+            }
+        }
+    }
+
+
+    public void refresh(){
+        SessionManager sessionManager = new SessionManager(this.getActivity());
+        String id_user = Integer.toString(sessionManager.getUserId());
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", id_user);
+
+        Handler mHandler = getGroupesHandler();
+        RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
     }
 
     public ArrayList<Groupe> jsonToListGroup(JSONArray j){
@@ -186,11 +217,6 @@ public class FragmentListeGroupes extends Fragment {
     }
 
     public void displayErrorInternet(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
         displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
     }
 

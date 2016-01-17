@@ -2,6 +2,7 @@ package activites;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -71,6 +72,11 @@ public class ModificationGroupeActivity extends AppCompatActivity {
             this.alert = new AlertDialog.Builder(this);
             this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
             this.alert.setIcon(R.drawable.ic_action_error);
+            this.alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
 
             // Set a Toolbar to replace the ActionBar.
             toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -107,6 +113,9 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                 valid();
                 break;
             case android.R.id.home:
+
+                Intent returnIntent = new Intent();
+                setResult(RESULT_CANCELED, returnIntent);
                 this.finish();
                 break;
 
@@ -237,11 +246,6 @@ public class ModificationGroupeActivity extends AppCompatActivity {
     }
 
     public void displayErrorInternet(){
-        alert.setNegativeButton(getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
         displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
     }
 
@@ -311,7 +315,11 @@ public class ModificationGroupeActivity extends AppCompatActivity {
 
                         saveLocal(nom, typeConst, description, id_admin);
 
-                        Toast.makeText(ModificationGroupeActivity.this, ModificationGroupeActivity.this.getResources().getString(R.string.groupe_ajoute), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ModificationGroupeActivity.this, ModificationGroupeActivity.this.getResources().getString(R.string.groupe_modifie), Toast.LENGTH_LONG).show();
+
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
+
                         ModificationGroupeActivity.this.finish();
 
                     }

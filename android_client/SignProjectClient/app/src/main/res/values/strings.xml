@@ -112,12 +112,14 @@
     <string name="erreur_description_groupe">Doit être inférieur à 500 caractères</string>
     <string name="message_alert_dialog_erreur_ajout_groupe_bd">Erreur lors de l\'enregistrement du groupe</string>
     <string name="groupe_ajoute">Groupe créé</string>
+    <string name="groupe_modifie">Groupe mis à jour</string>
     <string name="groupe_supprime">Groupe supprimé</string>
     <string name="groupe_quitte">Groupe quitté</string>
     <string name="demande_envoyee">Demande envoyée</string>
     <string name="demande_annulee">Demande annulée</string>
     <string name="groupe_rejoint">Groupe rejoint</string>
     <string name="groupe_invitation_refusee">invitation refusée</string>
+    <string name="invitation_annulee">invitation annulée</string>
     <string name="membres">Membres</string>
     <string name="membre">Membre</string>
     <string name="admin">Admin</string>
@@ -132,7 +134,7 @@
     <string name="ajout_invite">Vous avez été invité à rejoindre ce groupe</string>
     <string name="hint_recherche_groupe">Taper un nom de groupe</string>
     <string name="hint_recherche_membre">chercher un utilisateur</string>
-    <string name="invitation_membre">inviter un utilisateur</string>
+    <string name="invitation_membre">inviter</string>
     <string name="ajoute">ajouté</string>
     <string name="erreur_invitation_membre">l\'utilisateur est déjà membre, est en attente d\'acceptation ou n\'existe pas</string>
     <string name="groupe_invitation_ennvoyee">invitation envoyée</string>
