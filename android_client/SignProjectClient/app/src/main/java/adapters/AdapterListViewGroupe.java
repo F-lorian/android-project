@@ -92,8 +92,10 @@ public class AdapterListViewGroupe extends BaseAdapter {
         ImageView iv = (ImageView) layoutItem.findViewById(R.id.image_type);
         TextView type = (TextView) layoutItem.findViewById(R.id.type_adapter_groupe);
         TextView description = (TextView) layoutItem.findViewById(R.id.description_adapter_groupe);
-        TextView etat_utilisateur = (TextView) layoutItem.findViewById(R.id.user_adapter_etat);
+
         LinearLayout groupe = (LinearLayout) layoutItem.findViewById(R.id.layout_groupe);
+        TextView etat_utilisateur = (TextView) layoutItem.findViewById(R.id.user_adapter_etat);
+        LinearLayout layout_etat = (LinearLayout) layoutItem.findViewById(R.id.layout_state);
         TextView nb_membres = (TextView) layoutItem.findViewById(R.id.members_adapter_groupe);
         TextView nb_demandes = (TextView) layoutItem.findViewById(R.id.nb_demandes);
 
@@ -145,10 +147,6 @@ public class AdapterListViewGroupe extends BaseAdapter {
         });
 
         SessionManager sessionManager = new SessionManager(mContext);
-        if(this.groupes.get(position).getAdmin().getId() == sessionManager.getUserId()){
-            etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
-
-        }
 
         int id_groupe = this.groupes.get(position).getId();
         int id_admin = this.groupes.get(position).getAdmin().getId();
@@ -173,8 +171,10 @@ public class AdapterListViewGroupe extends BaseAdapter {
                 etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
             } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                 etat_utilisateur.setText(mContext.getResources().getString(R.string.en_attente));
-            } else {
-                etat_utilisateur.setVisibility(View.GONE);
+            } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_INVITE)) {
+                etat_utilisateur.setText(mContext.getResources().getString(R.string.invite));
+            }else {
+                layout_etat.setVisibility(View.GONE);
             }
         }
 
