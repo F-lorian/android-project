@@ -9,89 +9,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical">
-
         <LinearLayout
             android:id="@+id/layoutFormAjoutSignalement"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:layout_margin="15dp">
 
             <LinearLayout
                 android:id="@+id/layoutNomAjoutGroupe"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
-                android:orientation="horizontal"
+                style="@style/DataIndicatorChampSaisie"
                 android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/nom"
-                    android:textSize="@dimen/texte_size_libelle_formulaire"
-                    android:layout_marginRight="@dimen/margin_between_field"
-                    android:gravity="center" />
-
                 <EditText
                     android:id="@+id/champNomGroupe"
-                    android:hint=""
-                    android:textSize="20sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    style="@style/DataIndicatorTextChampSaisie"
+                    android:hint="@string/nom"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layoutTypeAjoutGroupe"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
-                android:orientation="horizontal"
+                style="@style/DataIndicatorChampSaisie"
                 android:gravity="center">
-
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/DataIndicatorTextChampSaisie"
                     android:text="@string/visibilite"
-                    android:textSize="@dimen/texte_size_libelle_formulaire"
-                    android:layout_marginRight="@dimen/margin_between_field"
-                    android:gravity="center" />
-
+                    android:layout_width="wrap_content"
+                    />
                 <Spinner
                     android:id="@+id/spinnerTypeGroupe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/DataIndicatorTextChampSaisie"
                     android:prompt="@string/titre_spinner"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layoutDescriptionAjoutGroupe"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
-                android:orientation="horizontal"
+                style="@style/DataIndicatorChampSaisie"
+                android:layout_height="wrap_content"
                 android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/description"
-                    android:textSize="@dimen/texte_size_libelle_formulaire"
-                    android:layout_marginRight="@dimen/margin_between_field"
-                    android:gravity="center" />
-
                 <EditText
                     android:id="@+id/champDescriptionGroupe"
-                    android:hint=""
-                    android:inputType="textMultiLine"
-                    android:textSize="20sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    style="@style/DataIndicatorTextChampSaisie"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/description"/>
             </LinearLayout>
 
         </LinearLayout>
-
-    </ScrollView>
 </LinearLayout>

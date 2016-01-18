@@ -3,69 +3,98 @@
     <!-- Base application theme. -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#F44336</item>
-        <item name="colorPrimaryDark">#D32F2F</item>
+        <!--item name="android:textColorPrimary">@android:color/white</item-->
+        <!--item name="colorPrimary">@color/base_color_dark</item>
+        <item name="colorPrimaryDark">@color/base_color_dark_2</item>
         <item name="colorAccent">#536DFE</item>
-    </style>
+        <item name="android:windowBackground">@drawable/image_fond</item-->
 
-    <style name="MinusButton">
-        <item name="android:background">@drawable/btn_circle</item>
-        <item name="android:src">@drawable/ic_btn_round_minus</item>
-        <item name="android:contentDescription">@string/description_minus_button</item>
-    </style>
+        <item name="colorPrimary">@color/dark_base_color_dark</item>
+        <item name="colorPrimaryDark">@color/dark_base_color_dark_2</item>
+        <item name="colorAccent">#536DFE</item>
+        <item name="android:windowBackground">@color/dark_base_color</item>
 
-    <style name="PlusButton">
-        <item name="android:background">@drawable/btn_circle</item>
-        <item name="android:src">@drawable/ic_btn_round_plus</item>
-        <item name="android:contentDescription">@string/description_plus_button</item>
-    </style>
+     </style>
 
-    <style name="Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:textSize">@dimen/text_size</item>
-    </style>
+     <style name="MinusButton">
+         <item name="android:background">@drawable/btn_circle</item>
+         <item name="android:src">@drawable/ic_btn_round_minus</item>
+         <item name="android:contentDescription">@string/description_minus_button</item>
+     </style>
 
-    <style name="Paragraphe">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:textSize">@dimen/text_size</item>
-    </style>
+     <style name="PlusButton">
+         <item name="android:background">@drawable/btn_circle</item>
+         <item name="android:src">@drawable/ic_btn_round_plus</item>
+         <item name="android:contentDescription">@string/description_plus_button</item>
+     </style>
 
-    <style name="Title">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/title_size</item>
-    </style>
+     <style name="Button">
+         <item name="android:layout_width">wrap_content</item>
+         <item name="android:layout_height">40dp</item>
+         <item name="android:textSize">@dimen/text_size</item>
+     </style>
 
-    <style name="DataIndicator">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">24dp</item>
-        <item name="android:padding">2dp</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+     <style name="Paragraphe">
+         <item name="android:layout_width">match_parent</item>
+         <item name="android:layout_height">wrap_content</item>
+         <item name="android:padding">10dp</item>
+         <item name="android:textSize">@dimen/text_size</item>
+     </style>
 
-    <style name="DataIndicatorButton" parent="DataIndicator">
-        <item name="android:layout_height">28dp</item>
-        <item name="android:padding">4dp</item>
-    </style>
+     <style name="Title">
+         <item name="android:layout_width">wrap_content</item>
+         <item name="android:layout_height">wrap_content</item>
+         <item name="android:textSize">@dimen/title_size</item>
+     </style>
 
-    <style name="DataIndicatorText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">15dp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">3dp</item>
-    </style>
+     <style name="DataIndicator">
+         <item name="android:layout_width">wrap_content</item>
+         <item name="android:layout_height">24dp</item>
+         <item name="android:padding">2dp</item>
+         <item name="android:orientation">horizontal</item>
+         <item name="android:textColor">@android:color/white</item>
+         <item name="android:textStyle">bold</item>
+     </style>
 
-    <style name="DataIndicatorImage">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-</resources>
+     <style name="DataIndicatorButton" parent="DataIndicator">
+         <item name="android:layout_height">28dp</item>
+         <item name="android:padding">4dp</item>
+     </style>
+
+     <style name="DataIndicatorText">
+         <item name="android:layout_width">wrap_content</item>
+         <item name="android:layout_height">wrap_content</item>
+         <item name="android:textSize">15dp</item>
+         <item name="android:textColor">@android:color/white</item>
+         <item name="android:textStyle">bold</item>
+         <item name="android:paddingLeft">5dp</item>
+         <item name="android:paddingRight">3dp</item>
+     </style>
+
+     <style name="DataIndicatorImage">
+         <item name="android:background">@android:color/white</item>
+         <item name="android:layout_width">wrap_content</item>
+         <item name="android:layout_height">match_parent</item>
+     </style>
+
+
+     <style name="DataIndicatorChampSaisie" parent="DataIndicator">
+         <item name="android:layout_width">match_parent</item>
+         <item name="android:layout_height">@dimen/hauteur_champs_saisie</item>
+         <item name="android:background">@color/light_base_color</item>
+         <item name="android:layout_marginBottom">5dp</item>
+     </style>
+
+     <style name="DataIndicatorTextChampSaisie" parent="DataIndicatorText">
+         <item name="android:layout_width">match_parent</item>
+         <item name="android:layout_height">@dimen/hauteur_champs_saisie</item>
+         <item name="android:minHeight">@dimen/hauteur_champs_saisie</item>
+         <!--item name="android:background">@android:color/white</item>
+         <item name="android:textColor">@android:color/black</item-->
+         <item name="android:background">#898989</item>
+         <item name="android:textColorHint">#d3d3d3</item>
+         <item name="android:textColor">@android:color/white</item>
+         <item name="android:gravity">center_vertical</item>
+         <item name="android:textStyle">normal</item>
+     </style>
+ </resources>

@@ -9,39 +9,29 @@ android:layout_margin="@dimen/margin_formulaire">
 
 <LinearLayout
     android:id="@+id/layoutPseudoConnection"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/hauteur_champs_saisie"
-    android:orientation="horizontal"
-    android:gravity="center">
+    style="@style/DataIndicatorChampSaisie">
     <ImageView
         android:id="@+id/imgPseudoConnection"
-        android:layout_width="@dimen/largeur_image_formulaire"
-        android:layout_height="@dimen/hauteur_image_formulaire"
-        android:src="@drawable/ic_action_person"/>
+        style="@style/DataIndicatorImage"
+        android:src="@drawable/ic_user"/>
     <EditText
         android:id="@+id/editTextPseudoConnection"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/hauteur_champs_saisie"
-        android:hint="@string/champ_pseudo"/>
+        style="@style/DataIndicatorTextChampSaisie"
+        android:hint="@string/champ_pseudo" />
 </LinearLayout>
 
 <LinearLayout
     android:id="@+id/layoutMdpConnection"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/hauteur_champs_saisie"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/margin_between_field"
-    android:gravity="center">
+    style="@style/DataIndicatorChampSaisie">
     <ImageView
         android:id="@+id/imgMdpConnection"
-        android:layout_width="@dimen/largeur_image_formulaire"
-        android:layout_height="@dimen/hauteur_image_formulaire"
-        android:src="@drawable/ic_action_accounts"/>
+        style="@style/DataIndicatorImage"
+        android:src="@drawable/ic_key"/>
     <EditText
         android:id="@+id/editTextMdpConnection"
-        android:layout_width="match_parent"
+        style="@style/DataIndicatorTextChampSaisie"
         android:inputType="textPassword"
-        android:layout_height="@dimen/hauteur_champs_saisie"
+        android:fontFamily="sans-serif"
         android:hint="@string/champ_mdp"/>
 </LinearLayout>
 
@@ -50,23 +40,22 @@ android:layout_margin="@dimen/margin_formulaire">
     android:layout_width="match_parent"
     android:layout_height="@dimen/hauteur_boutons_formulaire"
     android:orientation="horizontal"
-    android:gravity="center"
-    android:layout_marginTop="@dimen/margin_formulaire">
+    android:gravity="center">
     <Button
-        android:background="@android:color/holo_green_light"
         android:id="@+id/BtnSeConnecterConnection"
+        style="@style/Button"
+        android:textColorHint="@android:color/white"
+        android:background="@drawable/btn_valider"
         android:layout_width="@dimen/largeur_boutons_formulaire"
-        android:layout_height="match_parent"
-        android:hint="@string/btn_seConnecter"
-        android:textSize="@dimen/texte_size_bouton"/>
+        android:hint="@string/btn_seConnecter"/>
     <Button
-        android:layout_marginLeft="@dimen/margin_between_field"
-        android:background="@android:color/holo_red_light"
         android:id="@+id/BtnAnnulerConnection"
+        android:layout_marginLeft="@dimen/margin_between_field"
+        style="@style/Button"
+        android:textColorHint="@android:color/white"
+        android:background="@drawable/btn_annuler"
         android:layout_width="@dimen/largeur_boutons_formulaire"
-        android:layout_height="match_parent"
-        android:hint="@string/btn_Annuler"
-        android:textSize="@dimen/texte_size_bouton"/>
+        android:hint="@string/btn_Annuler"/>
 </LinearLayout>
 
 

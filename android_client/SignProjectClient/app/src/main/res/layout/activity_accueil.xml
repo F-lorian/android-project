@@ -7,8 +7,18 @@
     android:layout_margin="@dimen/margin_formulaire">
 
 
+    <TextView
+        android:id="@+id/info_invite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="50dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="@dimen/margin_formulaire"/>
+
     <Button
-        android:background="@android:color/holo_blue_dark"
+        android:background="@drawable/btn_normal"
         android:id="@+id/BtnSeConnecterAccueil"
         android:layout_width="match_parent"
         android:layout_height="@dimen/hauteur_boutons_formulaire"
@@ -16,7 +26,7 @@
         android:textSize="@dimen/texte_size_bouton"/>
     <Button
         android:layout_marginTop="@dimen/margin_between_field"
-        android:background="@android:color/holo_blue_dark"
+        android:background="@drawable/btn_normal"
         android:id="@+id/BtnInscriptionAccueil"
         android:layout_width="match_parent"
         android:layout_height="@dimen/hauteur_boutons_formulaire"

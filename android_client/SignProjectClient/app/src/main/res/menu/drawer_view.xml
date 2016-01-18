@@ -4,7 +4,7 @@
         <menu>
             <item
                 android:id="@+id/item_signalementsProches"
-                android:icon="@drawable/ic_action_place"
+                android:icon="@drawable/ic_location"
                 android:title="@string/menu_item_listSignalementsProches" />
             <item
                 android:id="@+id/item_signalementsControleurs"
@@ -12,11 +12,11 @@
                 android:title="@string/menu_item_listSignalementsControleurs" />
             <item
                 android:id="@+id/item_signalementsHoraires"
-                android:icon="@drawable/ic_action_time"
+                android:icon="@drawable/ic_clock"
                 android:title="@string/menu_item_listSignalementsHoraires" />
             <item
                 android:id="@+id/item_signalementsAccidentsAutres"
-                android:icon="@drawable/ic_autre"
+                android:icon="@drawable/ic_autres"
                 android:title="@string/menu_item_listSignalementsAccidentsAutres" />
         </menu>
     </item>
@@ -24,11 +24,11 @@
         <menu>
             <item
                 android:id="@+id/item_mesGroupes"
-                android:icon="@drawable/ic_action_group"
+                android:icon="@drawable/ic_groupe"
                 android:title="@string/menu_item_mesGroupes" />
             <item
                 android:id="@+id/item_rejoindreGroupe"
-                android:icon="@drawable/ic_action_add_group"
+                android:icon="@drawable/ic_add_groupe"
                 android:title="@string/menu_item_rejoindreGroupe" />
         </menu>
     </item>

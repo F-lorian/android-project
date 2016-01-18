@@ -74,7 +74,7 @@ public class AdapterSpinnerTypeSignalement extends BaseAdapter {
         else if (this.mListTypeSignalement.get(position).getType().equals(Config.HORAIRES))
         {
             tv.setText(this.mContext.getResources().getString(R.string.horaire_spinner));
-            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_action_time));
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_clock));
         }
         else if (this.mListTypeSignalement.get(position).getType().equals(Config.ACCIDENTS))
         {
@@ -84,7 +84,7 @@ public class AdapterSpinnerTypeSignalement extends BaseAdapter {
         else
         {
             tv.setText(this.mContext.getResources().getString(R.string.autres_spinner));
-            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_autre));
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext,R.drawable.ic_autres));
         }
 
         return layoutItem;

@@ -28,11 +28,10 @@ import android.widget.TextView;
 
 import com.example.florian.signprojectclient.R;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fragments.FragmentListeGroupes;
 import fragments.FragmentListeGroupesRecherche;
@@ -317,9 +316,10 @@ public class AccueilUserActivity extends AppCompatActivity {
     private void deconnection()
     {
         SessionManager sessionManager = new SessionManager(this);
-        List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
-        pairsPost.add(new BasicNameValuePair("pseudo",sessionManager.getUserPseudo()));
-        pairsPost.add(new BasicNameValuePair("id", sessionManager.getUserId() + ""));
+
+        Map<String, String> params = new HashMap<>();
+        params.put("pseudo", sessionManager.getUserPseudo());
+        params.put("id", Integer.toString(sessionManager.getUserId()));
 
         Handler mHandler = new Handler() {
             @Override
@@ -327,8 +327,7 @@ public class AccueilUserActivity extends AppCompatActivity {
                 AccueilUserActivity.this.finish();
             }
         };
+        RequestPostTask.sendRequest("deconnection", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message_deconnection));
 
-        RequestPostTask requestPostTask = new RequestPostTask("deconnection",pairsPost,mHandler,this,this.getResources().getString(R.string.progress_dialog_message_deconnection));
-        requestPostTask.execute();
     }
 }

@@ -206,7 +206,7 @@ public class AdapterListViewMembre extends BaseAdapter {
         params.put("user_id", Integer.toString(id));
 
         Handler mHandler = getHandler(v, mActivity.getResources().getString(R.string.invitation_annulee));
-        RequestPostTask.sendRequest("acceptMember", params, mHandler, mActivity, mActivity.getResources().getString(R.string.progress_dialog_titre));
+        RequestPostTask.sendRequest("removeMember", params, mHandler, mActivity, mActivity.getResources().getString(R.string.progress_dialog_titre));
     }
 
     public void refuseMember(View v){

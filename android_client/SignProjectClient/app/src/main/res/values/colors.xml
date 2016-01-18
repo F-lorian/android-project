@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="base_color">@android:color/holo_blue_dark</color>
+    <color name="base_color_dark">#00648c</color>
+    <color name="base_color_dark_2">#004763</color>
     <color name="color_important">@android:color/holo_red_dark</color>
     <color name="color_info">@android:color/holo_orange_dark</color>
     <color name="fond1">#dbdbdb</color>
     <color name="fond2">#efefef</color>
+
+    <color name="dark_base_color">#4f5050</color>
+    <color name="light_base_color">#939393</color>
+    <color name="dark_base_color_dark">#00648c</color>
+    <color name="dark_base_color_dark_2">#004763</color>
+
 </resources>

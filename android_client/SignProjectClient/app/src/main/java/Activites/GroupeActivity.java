@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -241,10 +242,19 @@ public class GroupeActivity extends AppCompatActivity {
         this.modification = false;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_toolbar_groupe, menu);
+        return true;
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
         switch (item.getItemId()) {
-
+            case R.id.toolbar_refresh:
+                this.refresh();
+                break;
             case android.R.id.home:
                 this.finish();
                 break;

@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
+
         <LinearLayout
             android:id="@+id/layoutFormAjoutSignalement"
             android:orientation="vertical"
@@ -24,63 +25,41 @@
 
             <LinearLayout
                 android:id="@+id/layoutTypeAjoutSignalement"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
-                android:orientation="horizontal"
+                style="@style/DataIndicatorChampSaisie"
                 android:gravity="center">
-
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/DataIndicatorTextChampSaisie"
                     android:text="@string/type_ajout_signalement"
-                    android:textSize="@dimen/texte_size_libelle_formulaire"
-                    android:layout_marginRight="@dimen/margin_between_field"
-                    android:gravity="center" />
-
+                    android:layout_width="wrap_content"
+                    />
                 <Spinner
                     android:id="@+id/spinnerAjoutSignalement"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/DataIndicatorTextChampSaisie"
                     android:prompt="@string/titre_spinner"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layoutArretAjoutSignalement"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_formulaire">
-
+                style="@style/DataIndicatorChampSaisie"
+                android:gravity="center">
                 <AutoCompleteTextView
                     android:id="@+id/champArretSignalement"
-                    android:hint="Arret"
-                    android:textSize="20sp"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:prompt="@string/titre_spinner"/>
+                    style="@style/DataIndicatorTextChampSaisie"
+                    android:hint="@string/arret_ajout_signalement"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layoutDestinationAjoutSignalement"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hauteur_champs_saisie"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_formulaire">
-
+                style="@style/DataIndicatorChampSaisie"
+                android:gravity="center">
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/DataIndicatorTextChampSaisie"
                     android:text="@string/destination_ajout_signalement"
-                    android:textSize="@dimen/texte_size_libelle_formulaire"
-                    android:layout_marginRight="@dimen/margin_between_field"
-                    android:gravity="center" />
-
+                    android:layout_width="wrap_content"
+                    />
                 <Spinner
                     android:id="@+id/spinnerDestinationAjoutSignalement"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/DataIndicatorTextChampSaisie"
                     android:prompt="@string/titre_spinner"/>
             </LinearLayout>
 

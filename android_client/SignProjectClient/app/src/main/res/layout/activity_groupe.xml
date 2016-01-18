@@ -131,11 +131,15 @@
                     <Button
                         android:id="@+id/action_accepter_button_group"
                         style="@style/Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:hint="@string/btn_rejoindre_groupe"/>
 
                     <Button
                         android:id="@+id/action_refuser_button_group"
                         style="@style/Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:hint="@string/btn_refuser_groupe"/>
                 </LinearLayout>
 
