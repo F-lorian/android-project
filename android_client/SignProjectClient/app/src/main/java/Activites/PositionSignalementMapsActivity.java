@@ -1,9 +1,12 @@
 package activites;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -120,7 +123,7 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
 
         this.currentPosition.showInfoWindow();
 
-        this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
     }
 
     public Marker createArret() {
@@ -184,12 +187,10 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
     @Override
     public void onLocationChanged(Location location) {
 
-        if (this.isBetterLocation(location, this.bestCurrentLocation))
-        {
+        if (this.isBetterLocation(location, this.bestCurrentLocation)) {
             this.bestCurrentLocation = location;
 
-            if (this.currentPosition != null)
-            {
+            if (this.currentPosition != null) {
                 this.currentPosition.remove();
             }
 
@@ -198,8 +199,6 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
                     this.arret.getPosition().latitude, this.arret.getPosition().longitude, results);
 
             String distance = getResources().getString(R.string.snippet_position_courante_1) + " " + results[0] + " " + getResources().getString(R.string.snippet_position_courante_2);
-
-
 
             MarkerOptions markerOptionsCurrentPosition = new MarkerOptions();
             markerOptionsCurrentPosition.title(getResources().getString(R.string.titre_position_courante));
@@ -218,25 +217,43 @@ public class PositionSignalementMapsActivity extends AppCompatActivity implement
 
     @Override
     public void onProviderEnabled(String provider) {
-        if (provider.equals(LocationManager.NETWORK_PROVIDER))
-        {
+        if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
             this.abonnementNetwork();
         }
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        if (provider.equals(LocationManager.NETWORK_PROVIDER))
-        {
+        if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
             this.desabonnementNetwork();
         }
     }
 
     public void abonnementNetwork() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
         this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.DISTANCE_MAJ_MIN_TIME_NETWORK, Config.DISTANCE_MAJ_MIN_DISTANCE_NETWORK, this);
     }
 
     public void desabonnementNetwork() {
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
         this.locationManager.removeUpdates(this);
     }
 

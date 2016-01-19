@@ -39,7 +39,7 @@ public class SignalementBD {
 
     public static final String CREATE_TABLE_SIGNALEMENT_RECU = "CREATE TABLE "+TABLE_NAME_SIGNALEMENT_RECU+
             " (" +
-            " "+ID_SIGNALEMENT+" INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " "+ID_SIGNALEMENT+" INTEGER PRIMARY KEY," +
             " "+CONTENU_SIGNALEMENT+" TEXT," +
             " "+REMARQUE_SIGNALEMENT+" TEXT," +
             " "+DATE_SIGNALEMENT+" TEXT," +
@@ -96,6 +96,12 @@ public class SignalementBD {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         ContentValues values = new ContentValues();
+
+        if (table.equals(TABLE_NAME_SIGNALEMENT_RECU))
+        {
+            values.put(ID_SIGNALEMENT, signalement.getId());
+        }
+
         values.put(CONTENU_SIGNALEMENT, signalement.getContenu());
         values.put(REMARQUE_SIGNALEMENT, signalement.getRemarques());
         values.put(DATE_SIGNALEMENT, dateFormat.format(signalement.getDate()));
@@ -193,7 +199,7 @@ public class SignalementBD {
             s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
             s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)),c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)),"",null,null,null));
 
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             try {
                 s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
             } catch (ParseException e) {
@@ -246,7 +252,7 @@ public class SignalementBD {
                 s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
                 s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 try {
                     s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
                 } catch (ParseException e) {
@@ -303,7 +309,7 @@ public class SignalementBD {
                 s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
                 s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 try {
                     s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
                 } catch (ParseException e) {
@@ -369,7 +375,7 @@ public class SignalementBD {
                     s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
                     s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
 
-                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                     try {
                         s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
                     } catch (ParseException e) {

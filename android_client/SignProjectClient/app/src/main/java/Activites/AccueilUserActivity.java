@@ -321,6 +321,8 @@ public class AccueilUserActivity extends AppCompatActivity {
         params.put("pseudo", sessionManager.getUserPseudo());
         params.put("id", Integer.toString(sessionManager.getUserId()));
 
+        sessionManager.logoutUser();
+
         Handler mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {

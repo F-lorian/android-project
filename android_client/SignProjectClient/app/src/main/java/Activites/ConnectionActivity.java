@@ -20,9 +20,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import utilitaires.GestionRegID;
 import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
 import utilitaires.Config;
@@ -39,6 +41,7 @@ public class ConnectionActivity extends Activity {
     private Button annuler;
     private static float alphaBtnSeConnecter = 64f/255f;
     private AlertDialog.Builder buildAlertInscriptionInvalide;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +134,7 @@ public class ConnectionActivity extends Activity {
                     List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
                     pairsPost.add(new BasicNameValuePair("pseudo", ConnectionActivity.this.pseudo.getText().toString()));
                     pairsPost.add(new BasicNameValuePair("password", ConnectionActivity.this.mdp.getText().toString()));
-                    pairsPost.add(new BasicNameValuePair("regId", ""));
+
 
                     Handler mHandler = new Handler() {
                         @Override
@@ -148,8 +151,8 @@ public class ConnectionActivity extends Activity {
                                     SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
 
                                     /***** REGID GCM A IMPLEMENTER *****/
-                                    String regidGCM = "";
-                                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"), jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"), regidGCM);
+
+                                    sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"), jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"), "");
 
                                     Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -157,7 +160,7 @@ public class ConnectionActivity extends Activity {
                                     ConnectionActivity.this.finish();
                                 }
 
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 

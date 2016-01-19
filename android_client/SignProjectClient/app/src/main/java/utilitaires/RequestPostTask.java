@@ -11,6 +11,7 @@ import com.example.florian.signprojectclient.R;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,16 @@ import java.util.Map;
  */
 public class RequestPostTask extends AsyncTask<Void,Void,Void> {
 
-    private PostRequest postRequest;
-    private ProgressDialog progressDialog;
-    private Activity activity;
-    private String result;
-    Handler mHandler;
-    private final String messageDialog;
+    protected PostRequest postRequest;
+    protected String action;
+    protected ProgressDialog progressDialog;
+    protected Activity activity;
+    protected String result;
+    protected Handler mHandler;
+    protected final String messageDialog;
 
     public RequestPostTask(String action, List pairs,Handler mHandler,  Activity activity, String messageDialog){
+        this.action = action;
         this.postRequest = new PostRequest(action,pairs);
         this.activity = activity;
         this.mHandler = mHandler;
@@ -36,7 +39,32 @@ public class RequestPostTask extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
+
+
+        SessionManager sm = new SessionManager(this.activity);
+        if (this.action.equals("connection") || this.action.equals("register"))
+        {
+            GestionRegID gestionRegID = new GestionRegID(this.activity);
+            try {
+                String regidGCM = gestionRegID.register();
+                System.out.println(regidGCM);
+                this.postRequest.getPairs().add(new BasicNameValuePair("regId", regidGCM));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (this.action.equals("deconnection"))
+        {
+            GestionRegID gestionRegID = new GestionRegID(this.activity);
+            try {
+                gestionRegID.unregister();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         this.postRequest.sendRequest();
+
         return null;
     }
 

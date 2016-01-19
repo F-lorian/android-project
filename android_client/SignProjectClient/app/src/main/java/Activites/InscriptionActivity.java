@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import utilitaires.GestionRegID;
 import utilitaires.RequestPostTask;
 import modeles.modele.Utilisateur;
 import utilitaires.Config;
@@ -191,7 +192,8 @@ public class InscriptionActivity extends Activity {
                                         SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
 
                                         /***** REGID GCM A IMPLEMENTER *****/
-                                        String regidGCM = "";
+                                        GestionRegID gestionRegID = new GestionRegID(InscriptionActivity.this);
+                                        String regidGCM = gestionRegID.register();
                                         sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"),jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"),regidGCM);
 
                                         Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
@@ -200,7 +202,7 @@ public class InscriptionActivity extends Activity {
                                         InscriptionActivity.this.finish();
                                     }
 
-                                } catch (JSONException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 

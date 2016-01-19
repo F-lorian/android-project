@@ -27,7 +27,7 @@ public class SessionManager {
 
     public static final String KEY_PSEUDO_USER = "pseudo";
 
-    public static final String KEY_REGID_GSM = "regid";
+    public static final String KEY_REGID_GCM = "regid";
 
     // Constructor
     public SessionManager(Context context){
@@ -39,7 +39,7 @@ public class SessionManager {
     /**
      * Create login session
      * */
-    public void createLoginSession(int id, String pseudo, String regidGSM){
+    public void createLoginSession(int id, String pseudo, String regidGCM){
 
         editor.putBoolean(IS_LOGIN, true);
 
@@ -47,7 +47,7 @@ public class SessionManager {
 
         editor.putString(KEY_PSEUDO_USER, pseudo);
 
-        editor.putString(KEY_REGID_GSM, regidGSM);
+        editor.putString(KEY_REGID_GCM, regidGCM);
 
         editor.commit();
     }
@@ -92,8 +92,8 @@ public class SessionManager {
         return pref.getString(KEY_PSEUDO_USER,null);
     }
 
-    public String getRegidGsm() {
-        return pref.getString(KEY_REGID_GSM,null);
+    public String getRegidGcm() {
+        return pref.getString(KEY_REGID_GCM,null);
     }
     /**
      * Clear session details
@@ -102,17 +102,6 @@ public class SessionManager {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
-
-        // After logout redirect user to Accueil Activity
-        Intent i = new Intent(context, AccueilActivity.class);
-        // Closing all the Activities
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // Add new Flag to start new Activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // Staring Login Activity
-        context.startActivity(i);
     }
 
     /**
