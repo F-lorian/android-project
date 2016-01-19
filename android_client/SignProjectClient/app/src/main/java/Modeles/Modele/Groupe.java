@@ -19,11 +19,12 @@ public class Groupe {
     protected int nb_membres;
     protected int nb_demandes;
     protected int nb_invitations;
+    protected String user_state;
 
     public static final String TYPE_PUBLIC = "public";
     public static final String TYPE_PRIVE = "private";
 
-    public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin, int nb_membres, int nb_demandes, int nb_invitations) {
+    public Groupe(int id, String nom, String type, ArrayList<SignalementGroupe> signalements, ArrayList<Utilisateur> membres, Utilisateur admin, int nb_membres, int nb_demandes, int nb_invitations, String user_state) {
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -33,6 +34,7 @@ public class Groupe {
         this.nb_membres = nb_membres;
         this.nb_demandes = nb_demandes;
         this.nb_invitations = nb_invitations;
+        this.user_state = user_state;
     }
 
     public Groupe(){
@@ -61,6 +63,14 @@ public class Groupe {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUserState() {
+        return user_state;
+    }
+
+    public void setUserState(String user_state) {
+        this.user_state = user_state;
     }
 
     public String getDescription() {

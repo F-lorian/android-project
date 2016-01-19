@@ -57,10 +57,10 @@ public class JeuDeDonnees {
         GroupeBD var = new GroupeBD(c);
         var.open();
 
-        var.add(new Groupe(0, "groupe1", Groupe.TYPE_PUBLIC, null, null, new Utilisateur(1, "", "", null, null, null),0,0,0));
-        var.add(new Groupe(0,"groupe2",Groupe.TYPE_PUBLIC,null,null,new Utilisateur(2,"","",null,null,null),0,0,0));
-        var.add(new Groupe(0,"groupe3",Groupe.TYPE_PRIVE,null,null,new Utilisateur(3,"","",null,null,null),0,0,0));
-        var.add(new Groupe(0,"groupe4",Groupe.TYPE_PUBLIC,null,null,new Utilisateur(4,"","",null,null,null),0,0,0));
+        var.add(new Groupe(0, "groupe1", Groupe.TYPE_PUBLIC, null, null, new Utilisateur(1, "", "", null, null, null),0,0,0,""));
+        var.add(new Groupe(0,"groupe2",Groupe.TYPE_PUBLIC,null,null,new Utilisateur(2,"","",null,null,null),0,0,0,""));
+        var.add(new Groupe(0,"groupe3",Groupe.TYPE_PRIVE,null,null,new Utilisateur(3,"","",null,null,null),0,0,0,""));
+        var.add(new Groupe(0,"groupe4",Groupe.TYPE_PUBLIC,null,null,new Utilisateur(4,"","",null,null,null),0,0,0,""));
 
         var.close();
     }

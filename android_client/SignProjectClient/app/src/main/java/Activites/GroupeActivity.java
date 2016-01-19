@@ -74,7 +74,6 @@ public class GroupeActivity extends AppCompatActivity {
 
     private Groupe groupe;
     private boolean admin;
-    private String user_state;
 
     private AlertDialog.Builder alert;
 
@@ -170,12 +169,7 @@ public class GroupeActivity extends AppCompatActivity {
 
                 this.admin = this.groupe.getAdmin().getId() == id_user;
 
-                GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(this);
-                groupeUtilisateurBD.open();
-                this.user_state = groupeUtilisateurBD.isInGroup(id_user, id_groupe);
-                groupeUtilisateurBD.close();
-
-                displayGroupe(id_user);
+                displayGroupe();
             }
 
         } else {
@@ -200,6 +194,7 @@ public class GroupeActivity extends AppCompatActivity {
         if (requestCode == 1) {
 
             if(resultCode == RESULT_OK){
+                this.setModification(true);
                 refresh();
             }
             if (resultCode == RESULT_CANCELED) {
@@ -239,7 +234,7 @@ public class GroupeActivity extends AppCompatActivity {
         Handler mHandler = getGroupeHandler();
         RequestPostTask.sendRequest("getGroupWithRestrict", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_titre));
 
-        this.modification = false;
+        setModification(false);
     }
 
     @Override
@@ -256,6 +251,15 @@ public class GroupeActivity extends AppCompatActivity {
                 this.refresh();
                 break;
             case android.R.id.home:
+                System.out.println("getModification() : " + getModification());
+                if(getModification()){
+                    Intent returnIntent = new Intent();
+                    setResult(RESULT_OK, returnIntent);
+                } else {
+                    Intent returnIntent = new Intent();
+                    setResult(RESULT_CANCELED, returnIntent);
+                }
+
                 this.finish();
                 break;
 
@@ -264,7 +268,7 @@ public class GroupeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayGroupe(int id_user){
+    public void displayGroupe(){
 
         if (this.admin) {
             //onclick
@@ -350,7 +354,7 @@ public class GroupeActivity extends AppCompatActivity {
             //System.out.println("groupe : "+groupe);
             //System.out.println("ETAT : " + state);
 
-            if (this.user_state != null && this.user_state.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
+            if (this.groupe.getUserState() != null && this.groupe.getUserState().equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
                 //onclick
                 this.layout_membre.setVisibility(View.VISIBLE);
 
@@ -376,7 +380,7 @@ public class GroupeActivity extends AppCompatActivity {
                     }
                 });
 
-            } else if (this.user_state != null && this.user_state.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
+            } else if (this.groupe.getUserState() != null && this.groupe.getUserState().equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                 this.layout_en_attente.setVisibility(View.VISIBLE);
 
                 this.annuler_demande.setOnClickListener(new View.OnClickListener() {
@@ -390,7 +394,7 @@ public class GroupeActivity extends AppCompatActivity {
                     }
                 });
 
-            } else if (this.user_state != null && this.user_state.equals(GroupeUtilisateurBD.ETAT_INVITE)) {
+            } else if (this.groupe.getUserState() != null && this.groupe.getUserState().equals(GroupeUtilisateurBD.ETAT_INVITE)) {
                 this.layout_invite.setVisibility(View.VISIBLE);
 
                 this.accepter.setOnClickListener(new View.OnClickListener() {
@@ -491,8 +495,8 @@ public class GroupeActivity extends AppCompatActivity {
                         groupe.setNbMembres(nb_membres);
                         groupe.setNbInvitations(nb_invitations);
                         admin = id_admin == id_user;
-                        user_state = state;
-                        displayGroupe(id_user);
+                        groupe.setUserState(state);
+                        displayGroupe();
 
                     }
 
@@ -529,6 +533,7 @@ public class GroupeActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(GroupeActivity.this, message, Toast.LENGTH_LONG).show();
                         refresh();
+                        setModification(true);
                     }
 
                 } catch (JSONException e) {
@@ -563,6 +568,8 @@ public class GroupeActivity extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(GroupeActivity.this, getResources().getString(R.string.groupe_supprime), Toast.LENGTH_LONG).show();
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
                         GroupeActivity.this.finish();
                     }
 

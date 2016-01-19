@@ -148,6 +148,7 @@ public class FragmentListeGroupes extends Fragment {
                 String nom = jsonobj.getString("name");
                 String type = jsonobj.getString("type");
                 String description = jsonobj.getString("description");
+                String state = jsonobj.getString("state");
                 int id =   jsonobj.getInt("id");
                 int id_admin = jsonobj.getInt("creator");
                 int nb_demandes = jsonobj.getInt("member_request");
@@ -160,15 +161,8 @@ public class FragmentListeGroupes extends Fragment {
                 g.setAdmin(admin);
                 g.setNbDemandes(nb_demandes);
                 g.setNbMembres(nb_membres);
+                g.setUserState(state);
 
-                    /*
-                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        g.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    */
                 groupes.add(g);
             }
 

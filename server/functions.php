@@ -657,7 +657,7 @@ function getGroups($user_id, $search){
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
+        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
         $stmt->execute();
         $dbh = null;
 

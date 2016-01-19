@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -59,6 +60,8 @@ public class AccueilUserActivity extends AppCompatActivity {
     private MenuItem oldMenuItem;
     private AlertDialog.Builder buildAlert;
 
+    private Fragment currentFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +114,21 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("requestCode : " + requestCode);
+        if (requestCode == 1) {
+            System.out.println("resultCode : " + resultCode);
+            if(resultCode == Activity.RESULT_OK){
+
+                System.out.println("RESULT OK");
+                this.currentFragment.onActivityResult(requestCode,resultCode,data);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Do nothing
+            }
+        }
     }
 
     @Override
@@ -181,25 +199,25 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     private void changeViewOnSelectMenuItem(MenuItem menuItem)
     {
-        Fragment fragment = null;
+        this.currentFragment = null;
         Bundle args = new Bundle();
 
         switch(menuItem.getItemId()) {
             case R.id.item_signalementsProches:
-                fragment = new FragmentListeSignalementsProches();
+                this.currentFragment = new FragmentListeSignalementsProches();
                 break;
             case R.id.item_signalementsControleurs:
                 args.putString(Config.TYPE_SIGNALEMENT, Config.CONTROLEUR);
-                fragment = new FragmentListeSignalementsSimples();
+                this.currentFragment = new FragmentListeSignalementsSimples();
                 break;
             case R.id.item_signalementsHoraires:
-                fragment = new FragmentListeSignalementsHoraires();
+                this.currentFragment = new FragmentListeSignalementsHoraires();
                 break;
             case R.id.item_mesGroupes:
-                fragment = new FragmentListeGroupes();
+                this.currentFragment = new FragmentListeGroupes();
                 break;
             case R.id.item_rejoindreGroupe:
-                fragment = new FragmentListeGroupesRecherche();
+                this.currentFragment = new FragmentListeGroupesRecherche();
                 break;
             default:
                 break;
@@ -218,10 +236,10 @@ public class AccueilUserActivity extends AppCompatActivity {
         else
         {
             this.updateViewToolbar(this.getResources().getString(R.string.menu_item_listSignalementsControleurs));
-            fragment.setArguments(args);
+            this.currentFragment.setArguments(args);
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.flContent, this.currentFragment).commit();
         }
     }
 

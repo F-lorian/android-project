@@ -1,5 +1,6 @@
 package adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -44,16 +45,16 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
     private List<Groupe> groupes;
 
-    private Context mContext;
+    private Activity mActivity;
 
     private LayoutInflater mInflater;
 
     private AlertDialog.Builder alert;
 
-    public AdapterListViewGroupe(Context mContext, List<Groupe> groupes) {
-        this.mContext = mContext;
+    public AdapterListViewGroupe(Activity mActivity, List<Groupe> groupes) {
+        this.mActivity = mActivity;
         this.groupes = groupes;
-        this.mInflater = LayoutInflater.from(mContext);
+        this.mInflater = LayoutInflater.from(mActivity);
     }
 
     @Override
@@ -84,8 +85,8 @@ public class AdapterListViewGroupe extends BaseAdapter {
             layoutItem = (LinearLayout) convertView;
         }
 
-        this.alert = new AlertDialog.Builder(mContext);
-        this.alert.setTitle(mContext.getResources().getString(R.string.titre_alert_dialog_erreur));
+        this.alert = new AlertDialog.Builder(mActivity);
+        this.alert.setTitle(mActivity.getResources().getString(R.string.titre_alert_dialog_erreur));
         this.alert.setIcon(R.drawable.ic_action_error);
 
         TextView nom = (TextView) layoutItem.findViewById(R.id.nom_adapter_groupe);
@@ -113,12 +114,12 @@ public class AdapterListViewGroupe extends BaseAdapter {
         String typeString = "";
 
         if(typeGroupe.equals(Groupe.TYPE_PUBLIC)){
-            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_eye));
-            typeString = mContext.getResources().getString(R.string.type_public);
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mActivity, R.drawable.ic_eye));
+            typeString = mActivity.getResources().getString(R.string.type_public);
         }
         else if(typeGroupe.equals(Groupe.TYPE_PRIVE)){
-            iv.setImageDrawable(ContextCompat.getDrawable(this.mContext, R.drawable.ic_closed_eye));
-            typeString = mContext.getResources().getString(R.string.type_prive);
+            iv.setImageDrawable(ContextCompat.getDrawable(this.mActivity, R.drawable.ic_closed_eye));
+            typeString = mActivity.getResources().getString(R.string.type_prive);
         }
 
         type.setText(typeString);
@@ -129,16 +130,16 @@ public class AdapterListViewGroupe extends BaseAdapter {
         groupe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context c = AdapterListViewGroupe.this.mContext;
-                if (Config.isNetworkAvailable(c)) {
+
+                if (Config.isNetworkAvailable(mActivity)) {
 
                     int indice = ((Integer) v.getTag()).intValue();
                     int id = groupes.get(indice).getId();
 
                     //aller vers l'activité pour voir un groupe
-                    Intent intent = new Intent(c, GroupeActivity.class);
+                    Intent intent = new Intent(mActivity, GroupeActivity.class);
                     intent.putExtra(Config.ID_GROUPE, id);
-                    c.startActivity(intent);
+                    mActivity.startActivityForResult(intent, 1);
                 } else{
                     displayErrorInternet();
                 }
@@ -146,7 +147,7 @@ public class AdapterListViewGroupe extends BaseAdapter {
             }
         });
 
-        SessionManager sessionManager = new SessionManager(mContext);
+        SessionManager sessionManager = new SessionManager(mActivity);
 
         int id_groupe = this.groupes.get(position).getId();
         int id_admin = this.groupes.get(position).getAdmin().getId();
@@ -154,25 +155,22 @@ public class AdapterListViewGroupe extends BaseAdapter {
 
 
         if (id_admin == idUser) {
-            etat_utilisateur.setText(mContext.getResources().getString(R.string.admin));
-            int nb =this.groupes.get(position).getNbDemandes();
+            etat_utilisateur.setText(mActivity.getResources().getString(R.string.admin));
+            int nb = this.groupes.get(position).getNbDemandes();
             if(nb > 0){
                 nb_demandes.setText("+"+nb);
                 nb_demandes.setVisibility(View.VISIBLE);
             }
         } else {
 
-            GroupeUtilisateurBD groupeUtilisateurBD = new GroupeUtilisateurBD(mContext);
-            groupeUtilisateurBD.open();
-            String s = groupeUtilisateurBD.isInGroup(idUser, id_groupe);
-            groupeUtilisateurBD.close();
+            String s = this.groupes.get(position).getUserState();
 
             if (s != null && s.equals(GroupeUtilisateurBD.ETAT_APPARTIENT)) {
-                etat_utilisateur.setText(mContext.getResources().getString(R.string.membre));
+                etat_utilisateur.setText(mActivity.getResources().getString(R.string.membre));
             } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
-                etat_utilisateur.setText(mContext.getResources().getString(R.string.en_attente));
+                etat_utilisateur.setText(mActivity.getResources().getString(R.string.en_attente));
             } else if (s != null && s.equals(GroupeUtilisateurBD.ETAT_INVITE)) {
-                etat_utilisateur.setText(mContext.getResources().getString(R.string.invite));
+                etat_utilisateur.setText(mActivity.getResources().getString(R.string.invite));
             }else {
                 layout_etat.setVisibility(View.GONE);
             }
@@ -183,12 +181,12 @@ public class AdapterListViewGroupe extends BaseAdapter {
     }
 
     public void displayErrorInternet(){
-        alert.setNegativeButton(mContext.getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(mActivity.getResources().getString(R.string.btn_alert_dialog_erreur), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         });
-        displayAlertError(mContext.getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
+        displayAlertError(mActivity.getResources().getString(R.string.message_alert_dialog_erreur_pas_internet));
     }
 
     private void displayAlertError(String message){

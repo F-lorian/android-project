@@ -1,5 +1,6 @@
 package fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -82,17 +83,8 @@ public class FragmentListeGroupesRecherche extends Fragment {
                 {
 
                     //recherche.clearFocus();
+                    refresh();
 
-                    SessionManager sessionManager = new SessionManager(getActivity());
-                    String id_user = Integer.toString(sessionManager.getUserId());
-                    String s = FragmentListeGroupesRecherche.this.recherche.getText().toString();
-
-                    Map<String, String> params = new HashMap<>();
-                    params.put("user_id", id_user);
-                    params.put("search", s);
-
-                    Handler mHandler = getGroupesHandler();
-                    RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
                 }
                 else
                 {
@@ -104,6 +96,32 @@ public class FragmentListeGroupesRecherche extends Fragment {
 
         return view;
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+
+            if(resultCode == Activity.RESULT_OK){
+                refresh();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Do nothing
+            }
+        }
+    }
+
+    public void refresh(){
+        SessionManager sessionManager = new SessionManager(getActivity());
+        String id_user = Integer.toString(sessionManager.getUserId());
+        String s = FragmentListeGroupesRecherche.this.recherche.getText().toString();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", id_user);
+        params.put("search", s);
+
+        Handler mHandler = getGroupesHandler();
+        RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
     }
 
     public void displayErrorInternet(){
@@ -129,6 +147,7 @@ public class FragmentListeGroupesRecherche extends Fragment {
                 String nom = jsonobj.getString("name");
                 String type = jsonobj.getString("type");
                 String description = jsonobj.getString("description");
+                String state = jsonobj.getString("state");
                 int id =   jsonobj.getInt("id");
                 int id_admin = jsonobj.getInt("creator");
                 int nb_demandes = jsonobj.getInt("member_request");
@@ -141,6 +160,7 @@ public class FragmentListeGroupesRecherche extends Fragment {
                 g.setAdmin(admin);
                 g.setNbDemandes(nb_demandes);
                 g.setNbMembres(nb_membres);
+                g.setUserState(state);
 
                 groupes.add(g);
             }

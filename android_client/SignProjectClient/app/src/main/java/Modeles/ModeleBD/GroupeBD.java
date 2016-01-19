@@ -120,7 +120,7 @@ public class GroupeBD {
     public Groupe getGroupeAdmin(int id) {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
-        Groupe g = new Groupe(0,"","",null,null,null,0,0,0);
+        Groupe g = new Groupe(0,"","",null,null,null,0,0,0,"");
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
         if (c.moveToFirst()) {
@@ -142,7 +142,7 @@ public class GroupeBD {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 
         System.out.println("ID : "+id);
-        Groupe g = new Groupe(0,"","",null,null,null,0,0,0);
+        Groupe g = new Groupe(0,"","",null,null,null,0,0,0,"");
 
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+" WHERE "+ID_GROUPE+"="+id+" AND "+ADMIN_GROUPE+"="+UtilisateurBD.ID_UTILISATEUR, null);
         if (c.moveToFirst()) {
@@ -169,7 +169,7 @@ public class GroupeBD {
         if (c.moveToFirst()) {
             while (c.isAfterLast() == false) {
 
-                Groupe g = new Groupe(0,"","",null,null,null,0,0,0);
+                Groupe g = new Groupe(0,"","",null,null,null,0,0,0,"");
                 g.setId(c.getInt(c.getColumnIndex(ID_GROUPE)));
                 g.setNom(c.getString(c.getColumnIndex(NOM_GROUPE)));
                 g.setType(c.getString(c.getColumnIndex(TYPE_GROUPE)));
@@ -189,12 +189,9 @@ public class GroupeBD {
 
     public ArrayList<Groupe> getGroupesByIdUser(int idUser) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+GroupeUtilisateurBD.TABLE_NAME
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+GroupeUtilisateurBD.TABLE_NAME
                 + " WHERE "+ID_GROUPE+"="+GroupeUtilisateurBD.ID_GROUPE
-                + " AND "+UtilisateurBD.ID_UTILISATEUR+"="+GroupeUtilisateurBD.ID_UTILISATEUR
                 + " AND "+GroupeUtilisateurBD.ID_UTILISATEUR+"="+idUser
-                //+ " AND "+GroupeUtilisateurBD.ETAT_GROUPE+"="+GroupeUtilisateurBD.ETAT_APPARTIENT
-                //+ "' ORDER BY datetime("+DATE_SIGNALEMENT+") DESC"  ajouter la date d'ajout de l'utilisateur au groupe
                 , null);
 
         ArrayList<Groupe> groupes = new ArrayList<Groupe>();
@@ -208,13 +205,15 @@ public class GroupeBD {
                 String nom = c.getString(c.getColumnIndex(NOM_GROUPE));
                 String type = c.getString(c.getColumnIndex(TYPE_GROUPE));
                 String Description = c.getString(c.getColumnIndex(DESCRIPTION_GROUPE));
-                Utilisateur admin = new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null);
+                Utilisateur admin = new Utilisateur(c.getInt(c.getColumnIndex(ADMIN_GROUPE)), "", "", null, null, null);
+                String user_state = c.getString(c.getColumnIndex(GroupeUtilisateurBD.ETAT_GROUPE));
 
                 g.setId(id);
                 g.setNom(nom);
                 g.setType(type);
                 g.setDescription(Description);
                 g.setAdmin(admin);
+                g.setUserState(user_state);
 
                 /*
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -235,6 +234,8 @@ public class GroupeBD {
         return groupes;
     }
 
+
+    //A MODIFIER
     public ArrayList<Groupe> searchGroupes(String search){
         // sélection de tous les enregistrements de la table
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+", "+UtilisateurBD.TABLE_NAME
