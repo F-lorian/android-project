@@ -82,14 +82,23 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
         ImageButton detailBtn = (ImageButton) layoutItem.findViewById(R.id.Btn_adapter_DetailSignalement);
 
         String typeSignalement = this.signalements.get(position).getType().getType();
-        titre.setText(typeSignalement.toUpperCase());
+
 
         if (typeSignalement.equals(Config.CONTROLEUR))
         {
+            titre.setText(this.mContext.getResources().getString(R.string.controleur_spinner).toUpperCase());
             titre.setTextColor(Color.RED);
         }
         else if (typeSignalement.equals(Config.AUTRES) || typeSignalement.equals(Config.ACCIDENTS))
         {
+            if (typeSignalement.equals(Config.AUTRES))
+            {
+                titre.setText(this.mContext.getResources().getString(R.string.autres_spinner).toUpperCase());
+            }
+            else
+            {
+                titre.setText(this.mContext.getResources().getString(R.string.accident_spinner).toUpperCase());
+            }
             titre.setTextColor(Color.BLUE);
         }
 

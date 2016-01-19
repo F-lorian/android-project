@@ -59,6 +59,7 @@
 
     <string name="type_ajout_signalement">Type</string>
     <string name="titre_spinner">Choisir</string>
+
     <string name="controleur_spinner">Controleur</string>
     <string name="horaire_spinner">Horaires</string>
     <string name="accident_spinner">Accidents</string>
@@ -96,6 +97,8 @@
     <string name="titre_position_courante">Vous êtes ici</string>
     <string name="snippet_position_courante_1">Vous êtes à</string>
     <string name="snippet_position_courante_2">mètre(s) du signalement</string>
+
+    <string name="titre_notification_signalement">Signalement proche !</string>
 
     <string name="titre_toolbar_ajout_groupe">Nouveau groupe</string>
     <string name="titre_toolbar_modifier_groupe">Modifier groupe</string>

@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import activites.AjoutSignalementActivity;
 import adapters.AdapterExpandableListViewHoraire;
@@ -37,6 +39,8 @@ public class FragmentListeSignalementsHoraires extends Fragment{
     HashMap<Signalement,List<String>> horairesSignalements;
     AdapterExpandableListViewHoraire adapterExpandableListViewHoraire;
     Thread mTimeUpdateThread;
+    Thread mSignalementUpdateThread;
+    Lock verrouUpdateSignalement = new ReentrantLock();
 
     public FragmentListeSignalementsHoraires()
     {
@@ -52,13 +56,11 @@ public class FragmentListeSignalementsHoraires extends Fragment{
 
         SignalementBD signalementBD = new SignalementBD(getActivity());
         signalementBD.open();
-        this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,getActivity().getResources().getString(R.string.horaire_spinner));
+        this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,Config.HORAIRES);
         signalementBD.close();
 
         this.initData();
         this.updateSignalements();
-
-        System.out.println("***** BEGIN **** " + this.signalements);
 
         this.adapterExpandableListViewHoraire = new AdapterExpandableListViewHoraire(getActivity(),this.signalements,this.horairesSignalements);
 
@@ -68,13 +70,14 @@ public class FragmentListeSignalementsHoraires extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AjoutSignalementActivity.class);
-                intent.putExtra(Config.TYPE_SIGNALEMENT,Config.HORAIRES);
+                intent.putExtra(Config.TYPE_SIGNALEMENT, Config.HORAIRES);
                 startActivity(intent);
             }
         });
 
         this.expandAll();
         this.updateHoraireThread();
+        this.removeObsoleteHorairesThread();
 
         return view;
     }
@@ -83,6 +86,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
     public void onDetach() {
         super.onDetach();
         mTimeUpdateThread.interrupt();
+        mSignalementUpdateThread.interrupt();
     }
 
     protected void initData()
@@ -104,7 +108,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         }
     }
 
-    private void updateHoraireThread(){
+    private void removeObsoleteHorairesThread(){
         final int exampleIntervall = 1000;
         mTimeUpdateThread = new Thread() {
 
@@ -133,6 +137,41 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         mTimeUpdateThread.start();
     }
 
+    private void updateHoraireThread(){
+        final int exampleIntervall = 5000;
+        mSignalementUpdateThread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!mSignalementUpdateThread.isInterrupted()) {
+                        Thread.sleep(exampleIntervall);
+
+                        verrouUpdateSignalement.lock();
+
+                        SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsHoraires.this.getActivity());
+                        signalementBD.open();
+                        FragmentListeSignalementsHoraires.this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU, Config.HORAIRES);
+                        signalementBD.close();
+
+                        FragmentListeSignalementsHoraires.this.initData();
+
+                        FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.setSignalementsHoraires(FragmentListeSignalementsHoraires.this.signalements);
+                        FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.setListOfChilds(FragmentListeSignalementsHoraires.this.horairesSignalements);
+
+                        FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.notifyDataSetChanged();
+
+                        verrouUpdateSignalement.unlock();
+                    }
+                }
+                catch (InterruptedException e) {
+                }
+            }
+        };
+
+        mTimeUpdateThread.start();
+    }
+
     protected void expandAll()
     {
         for (int i=0; i<this.adapterExpandableListViewHoraire.getGroupCount(); i++)
@@ -147,7 +186,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
     protected void updateSignalements()
     {
         this.updateTempsAttentes();
-        this.updateSignalementsHoraires();
+        this.removeObsoleteSignalementsHoraires();
     }
 
     protected void updateTempsAttentes()
@@ -200,7 +239,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         signalementBD.close();
     }
 
-    protected void updateSignalementsHoraires()
+    protected void removeObsoleteSignalementsHoraires()
     {
         Date dt2 = new Date();
 

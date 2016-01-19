@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import activites.AccueilUserActivity;
 import modeles.modele.Arret;
@@ -42,33 +43,29 @@ import utilitaires.Config;
 public class GcmListenerSignalementService extends GcmListenerService implements LocationListener{
 
     private float distanceDuSignalement;
-    private LatLng positionArret;
+    private Arret arret;
+    private Signalement signalement;
     private LocationManager locationManager;
 
     public GcmListenerSignalementService()
     {
         super();
         this.distanceDuSignalement = 1f;
-        this.positionArret = null;
+        this.arret = null;
+        this.signalement = null;
         this.locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         this.abonnementNetwork();
     }
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-        Signalement signalement = addSignalement(message);
-        Arret arret = getArret(signalement.getId());
-        this.positionArret = this.getCoordinate(arret.getCoordonnees());
 
-        while (this.distanceDuSignalement == -1f)
+        if (data.getString("type").equals("signalement"))
         {
-
-        }
-
-        if (this.distanceDuSignalement <= Config.DISTANCE_MAX_SIGNALEMENTS_PROCHES)
-        {
-            //notification
+            String message = data.getString("message");
+            System.out.println("$$$$ signalement gcm serveur $$$"+ message);
+            this.signalement = addSignalement(message);
+            this.arret = getArret(signalement.getId());
         }
     }
 
@@ -137,14 +134,29 @@ public class GcmListenerSignalementService extends GcmListenerService implements
     @Override
     public void onLocationChanged(Location location) {
 
-        if (this.positionArret != null)
+        SignalementBD signalementBD = new SignalementBD(this);
+        signalementBD.open();
+        ArrayList<Signalement> signalementsProchesNonVu = signalementBD.getSignalementsProchesNonVu(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,location,Config.DISTANCE_MAX_SIGNALEMENTS_PROCHES);
+
+
+        if (signalementsProchesNonVu.size()>0) //TODO : Si plus de 5 signalements, prends les 5 plus proches
         {
-            float[] results = new float[1];
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                    this.positionArret.latitude, this.positionArret.longitude, results);
-            this.distanceDuSignalement = results[0];
+            for (int i=0; i<signalementsProchesNonVu.size(); i++)
+            {
+                Signalement signalement = signalementsProchesNonVu.get(i);
+
+                String messageNotification = this.createMessageNotification(signalement);
+
+                signalement.setVu(true);
+
+                signalementBD.updateSignalement(signalement, SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
+
+                this.sendNotification(messageNotification,signalement.getId());
+            }
         }
 
+        signalementBD.close();
+        LatLng positionArret = this.getCoordinate(arret.getCoordonnees());
 
     }
 
@@ -195,26 +207,51 @@ public class GcmListenerSignalementService extends GcmListenerService implements
         this.locationManager.removeUpdates(this);
     }
 
-    private void sendNotification(String message) {
+    private void sendNotification(String message, int idSignalement) {
         Intent intent = new Intent(this, AccueilUserActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         /***** A ADAPTER *****/
-
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_notification_signalement)
-                .setContentTitle("GCM Message")
+                .setContentTitle(this.getResources().getString(R.string.titre_notification_signalement))
                 .setContentText(message)
                 .setAutoCancel(true)
+                .setVibrate(new long[]{1000, 1000})
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(idSignalement, notificationBuilder.build());
+    }
+
+    private String createMessageNotification(Signalement signalement)
+    {
+        String type = "";
+
+        String typeSignalement = signalement.getType().getType();
+
+        if (typeSignalement.equals(Config.CONTROLEUR))
+        {
+            type = getResources().getString(R.string.controleur_spinner);
+        }
+        else if (typeSignalement.equals(Config.AUTRES))
+        {
+            type = getResources().getString(R.string.autres_spinner);
+        }
+        else if (typeSignalement.equals(Config.ACCIDENTS))
+        {
+            type = getResources().getString(R.string.accident_spinner);
+        }
+        else
+        {
+            type = getResources().getString(R.string.horaire_spinner);
+        }
+
+        return type + "\n" + signalement.getArret().getNom();
     }
 }

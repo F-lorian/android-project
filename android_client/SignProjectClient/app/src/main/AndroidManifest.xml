@@ -79,6 +79,14 @@
                 <category android:name="com.example.florian.signprojectclient" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name="services.GcmListenerSignalementService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

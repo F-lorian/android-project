@@ -53,10 +53,14 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
 
         this.locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
 
+        /**
         SignalementBD signalementBD = new SignalementBD(getActivity());
         signalementBD.open();
         this.signalements = signalementBD.getSignalements(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
         signalementBD.close();
+         **/
+
+        this.signalements = new ArrayList<>();
 
         this.initData();
         this.updateSignalements();
@@ -123,8 +127,6 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
         signalementBD.open();
         this.signalements = signalementBD.getSignalementsProches(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU,location,Config.DISTANCE_MAX_SIGNALEMENTS_PROCHES);
         signalementBD.close();
-
-        System.out.println(this.signalements + " on location changed ");
 
         this.initData();
 

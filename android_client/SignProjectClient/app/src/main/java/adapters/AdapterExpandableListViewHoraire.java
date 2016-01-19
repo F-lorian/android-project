@@ -102,19 +102,28 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
         ImageButton detailBtn = (ImageButton) convertView.findViewById(R.id.Btn_adapter_DetailSignalement);
 
         String typeSignalement = signalement.getType().getType();
-        titre.setText(typeSignalement.toUpperCase());
 
 
         if (typeSignalement.equals(Config.CONTROLEUR))
         {
+            titre.setText(this.context.getResources().getString(R.string.controleur_spinner).toUpperCase());
             titre.setTextColor(Color.RED);
         }
         else if (typeSignalement.equals(Config.AUTRES) || typeSignalement.equals(Config.ACCIDENTS))
         {
+            if (typeSignalement.equals(Config.AUTRES))
+            {
+                titre.setText(this.context.getResources().getString(R.string.autres_spinner).toUpperCase());
+            }
+            else
+            {
+                titre.setText(this.context.getResources().getString(R.string.accident_spinner).toUpperCase());
+            }
             titre.setTextColor(Color.BLUE);
         }
         else
         {
+            titre.setText(this.context.getResources().getString(R.string.horaire_spinner).toUpperCase());
             titre.setTextColor(Color.GREEN);
         }
 

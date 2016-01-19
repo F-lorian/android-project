@@ -402,5 +402,69 @@ public class SignalementBD {
         return signalements;
     }
 
+    public ArrayList<Signalement> getSignalementsProchesNonVu(String table, Location location, float distanceMax) {
+        // sélection de tous les enregistrements de la table
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" AND "+VU_SIGNALEMENT+"=0 ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
+
+        ArrayList<Signalement> signalements = new ArrayList<Signalement>();
+
+        double[] coordinates = new double[2];
+        float[] results = new float[1];
+
+        if (c.moveToFirst()) {
+            while (c.isAfterLast() == false) {
+
+                Signalement s = null;
+
+                String[] coordinatesString = c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)).split(",");
+
+                coordinates[0] = Double.valueOf(coordinatesString[1]);
+                coordinates[1] = Double.valueOf(coordinatesString[0]);
+
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(), coordinates[0], coordinates[1], results);
+
+                if (results[0] <= distanceMax) {
+
+                    String type = c.getString(c.getColumnIndex(TYPE_DIFFUSION_SIGNALEMENT));
+
+                    if (type.equals(SignalementGroupe.TYPE_DESTINATAIRE)) {
+                        s = new SignalementGroupe(0, "", "", null, false, null, null, null, null);
+                    } else {
+                        s = new SignalementPublic(0, "", "", null, false, null, null, null, null);
+                    }
+
+                    s.setId(c.getInt(c.getColumnIndex(ID_SIGNALEMENT)));
+                    s.setContenu(c.getString(c.getColumnIndex(CONTENU_SIGNALEMENT)));
+                    s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
+                    s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
+                    s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
+                    s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                    try {
+                        s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    int vu = c.getInt(c.getColumnIndex(VU_SIGNALEMENT));
+                    if (vu == 0) {
+                        s.setVu(false);
+                    } else {
+                        s.setVu(true);
+                    }
+
+                    signalements.add(s);
+                }
+
+                c.moveToNext();
+            }
+        }
+
+        c.close();
+
+        return signalements;
+    }
+
 
 }

@@ -13,6 +13,8 @@ import com.example.florian.signprojectclient.R;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import activites.AjoutSignalementActivity;
 import adapters.AdapterListViewSimpleSignalement;
@@ -33,6 +35,8 @@ public class FragmentListeSignalementsSimples extends Fragment {
     ArrayList<Signalement> signalements;
     AdapterListViewSimpleSignalement adapterListViewSimpleSignalement;
     Thread mTimeUpdateThread;
+    Thread mSignalementUpdateThread;
+    Lock verrouUpdateSignalement = new ReentrantLock();
 
     public FragmentListeSignalementsSimples()
     {
@@ -68,15 +72,16 @@ public class FragmentListeSignalementsSimples extends Fragment {
         });
 
         this.updateTimeThread();
+        this.updateSignalements();
 
         return view;
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mTimeUpdateThread.interrupt();
+        mSignalementUpdateThread.interrupt();
     }
 
     private void updateTimeThread(){
@@ -95,6 +100,36 @@ public class FragmentListeSignalementsSimples extends Fragment {
                                 FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.notifyDataSetChanged();
                             }
                         });
+                    }
+                }
+                catch (InterruptedException e) {
+                }
+            }
+        };
+
+        mTimeUpdateThread.start();
+    }
+
+    private void updateSignalementThread(){
+        final int exampleIntervall = 5000;
+        mSignalementUpdateThread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!mSignalementUpdateThread.isInterrupted()) {
+                        Thread.sleep(exampleIntervall);
+
+                        verrouUpdateSignalement.lock();
+
+                        SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsSimples.this.getActivity());
+                        signalementBD.open();
+                        FragmentListeSignalementsSimples.this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU, getArguments().getString(Config.TYPE_SIGNALEMENT));
+                        signalementBD.close();
+
+                        FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.notifyDataSetChanged();
+
+                        verrouUpdateSignalement.unlock();
                     }
                 }
                 catch (InterruptedException e) {
