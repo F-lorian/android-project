@@ -80,6 +80,9 @@ public class FragmentListeGroupesRecherche extends Fragment {
 
                 if (Config.isNetworkAvailable(getActivity()))
                 {
+
+                    //recherche.clearFocus();
+
                     SessionManager sessionManager = new SessionManager(getActivity());
                     String id_user = Integer.toString(sessionManager.getUserId());
                     String s = FragmentListeGroupesRecherche.this.recherche.getText().toString();

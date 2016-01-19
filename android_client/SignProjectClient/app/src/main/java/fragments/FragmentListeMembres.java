@@ -99,6 +99,7 @@ public class FragmentListeMembres extends DialogFragment {
 
                     if (Config.isNetworkAvailable(getActivity()))
                     {
+                        //recherche.clearFocus();
                         String s = recherche.getText().toString();
 
                         Map<String, String> params = new HashMap<>();
