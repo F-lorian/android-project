@@ -164,9 +164,8 @@ public class InscriptionActivity extends Activity {
                     {
                         List<NameValuePair> pairsPost = new ArrayList<NameValuePair>();
                         pairsPost.add(new BasicNameValuePair("pseudo",InscriptionActivity.this.pseudo.getText().toString()));
-                        pairsPost.add(new BasicNameValuePair("email",""));
                         pairsPost.add(new BasicNameValuePair("password",InscriptionActivity.this.mdp.getText().toString()));
-                        pairsPost.add(new BasicNameValuePair("regId",""));
+
 
                         Handler mHandler = new Handler() {
                             @Override
@@ -191,10 +190,7 @@ public class InscriptionActivity extends Activity {
                                     {
                                         SessionManager sessionManager = new SessionManager(InscriptionActivity.this);
 
-                                        /***** REGID GCM A IMPLEMENTER *****/
-                                        GestionRegID gestionRegID = new GestionRegID(InscriptionActivity.this);
-                                        String regidGCM = gestionRegID.register();
-                                        sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"),jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"),regidGCM);
+                                        sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"),jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"),"");
 
                                         Intent intent = new Intent(InscriptionActivity.this, AccueilUserActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

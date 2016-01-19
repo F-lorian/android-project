@@ -150,8 +150,6 @@ public class ConnectionActivity extends Activity {
                                 } else {
                                     SessionManager sessionManager = new SessionManager(ConnectionActivity.this);
 
-                                    /***** REGID GCM A IMPLEMENTER *****/
-
                                     sessionManager.createLoginSession(jsonObject.getJSONObject(Config.JSON_DATA).getInt("id"), jsonObject.getJSONObject(Config.JSON_DATA).getString("pseudo"), "");
 
                                     Intent intent = new Intent(ConnectionActivity.this, AccueilUserActivity.class);
