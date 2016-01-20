@@ -485,14 +485,18 @@ public class GroupeActivity extends AppCompatActivity {
                     //System.out.println(" MSG : "+rp);
                     JSONObject jsonObject = new JSONObject(rp);
 
-                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
-                    {
+                    String state = "";
+                    if (jsonObject.has("state")) {
+                        state = jsonObject.getString("state");
+                    }
+
+
+                    if (state.equals(Config.JSON_DENIED)) {
                         displayFatalError();
 
-                    }
-                    else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
-                    {
+                    } else if (state.equals(Config.JSON_ERROR)) {
                         displayFatalError();
+
                     } else {
                         SessionManager sessionManager = new SessionManager(GroupeActivity.this);
                         int id_user = sessionManager.getUserId();
@@ -500,8 +504,7 @@ public class GroupeActivity extends AppCompatActivity {
                         String nom = jsonObject.getString("name");
                         String type = jsonObject.getString("type");
                         String description = jsonObject.getString("description");
-                        String state = jsonObject.getString("state");
-                        int id =  jsonObject.getInt("id");
+                        int id = jsonObject.getInt("id");
                         int id_admin = jsonObject.getInt("creator");
                         int nb_demandes = jsonObject.getInt("member_request");
                         int nb_membres = jsonObject.getInt("nb_member");
@@ -519,7 +522,6 @@ public class GroupeActivity extends AppCompatActivity {
                         admin = id_admin == id_user;
                         groupe.setUserState(state);
                         displayGroupe();
-
                     }
 
                 } catch (JSONException e) {
@@ -540,7 +542,7 @@ public class GroupeActivity extends AppCompatActivity {
                 try {
 
                     String rp = (String) msg.obj;
-                    //System.out.println(" MSG : "+rp);
+                    System.out.println(" MSG : "+rp);
                     JSONObject jsonObject = new JSONObject(rp);
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
@@ -773,6 +775,9 @@ public class GroupeActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
         int id_groupe = this.groupe.getId();
+
+        System.out.println("id_user"+id_user);
+        System.out.println("id_groupe"+id_groupe);
 
         /*
         if(id != -1){

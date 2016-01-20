@@ -41,6 +41,10 @@ if(isset($isLogged) && $isLogged){
             </form>
             <?php
                // echo testNotification();
+                echo addToGroup(74, 15, 'attente');
+                echo isInGroup(15, 74);
+    echo isInGroup(8, 82);
+               // print_r(getGroups(0, ''));
             ?>
         </div>
     </div>

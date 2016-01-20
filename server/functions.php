@@ -618,7 +618,14 @@ function getGroupForUser($group_id, $user_id){
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user u, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = '$group_id' AND ug.`group` = g.id AND ug.user = u.id LIMIT 1");
+         
+         $check = isInGroup($user_id, $group_id);
+         if($check == SUCCESS){
+             $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user u, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = '$group_id' AND ug.`group` = g.id AND ug.user = u.id LIMIT 1");
+         } else {
+             $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g WHERE g.id = '$group_id'");
+         }
+        
         $stmt->execute();
         $dbh = null;
         while ($row = $stmt->fetch()) {
@@ -632,6 +639,7 @@ function getGroupForUser($group_id, $user_id){
             $result[0]["member_request"] = $nb_member_request;
             $result[0]["nb_member"] = $nb_member;
             $result[0]["member_invite"] = $nb_member_invite;
+            
             return $result[0];
         } else {
             return null;
@@ -719,11 +727,38 @@ function getGroups($user_id, $search){
             $result[] = $row;
         }
          
-        //$stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g WHERE g.name LIKE '%$search%' AND g.type = 'public");
-        //$stmt->execute();
-        $dbh = null;
+       /* $stmt2 = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g WHERE g.name LIKE '%$search%' AND g.type = 'public'");
+        $stmt2->execute();
+        
          
-       /*  while ($row = $stmt->fetch()) {
+         while ($row = $stmt2->fetch()) {
+            $nb_member_request = getNbMemberRequest($row['id']);
+            $nb_member = getNbMember($row['id']);
+            $row["member_request"] = $nb_member_request;
+            $row["nb_member"] = $nb_member;
+            $result[] = $row;
+        }*/
+        
+         $dbh = null;
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getGroups2($user_id, $search){
+    
+     try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+/*        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%' AND g.type = 'private'");
+        $stmt->execute();
+        
+
+        while ($row = $stmt->fetch()) {
             $nb_member_request = getNbMemberRequest($row['id']);
             $nb_member = getNbMember($row['id']);
             $row["member_request"] = $nb_member_request;
@@ -731,6 +766,20 @@ function getGroups($user_id, $search){
             $result[] = $row;
         }*/
          
+        $stmt2 = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g WHERE g.name LIKE '%$search%' AND g.type = 'public'");
+        $stmt2->execute();
+        
+         
+         while ($row = $stmt2->fetch()) {
+            $nb_member_request = getNbMemberRequest($row['id']);
+            $nb_member = getNbMember($row['id']);
+            $row['state'] = getState($user_id, $row['id']);
+            $row["member_request"] = $nb_member_request;
+            $row["nb_member"] = $nb_member;
+            $result[] = $row;
+        }
+        
+         $dbh = null;
         return $result;
         
     } catch (PDOException $e) {
@@ -769,7 +818,7 @@ function getMembersByGroupId($group_id, $state, $search){
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         //$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $dbh->prepare("SELECT u.id, u.pseudo FROM user u, user_in_group ug WHERE ug.`group` = '$group_id' AND ug.user = u.id AND ug.state = '$state' AND u.pseudo LIKE '%$search%'");
+        $stmt = $dbh->prepare("SELECT u.id, u.pseudo, u.gcm_regid FROM user u, user_in_group ug WHERE ug.`group` = '$group_id' AND ug.user = u.id AND ug.state = '$state' AND u.pseudo LIKE '%$search%'");
         $stmt->execute();
         $dbh = null;
 
@@ -789,15 +838,18 @@ function inviteMember($group_id, $pseudo){
     $res = getUserByPseudo($pseudo);
     if( $res != null){
         
-        $content = array('id' => $group_id);
+        $res = addToGroup($res['id'], $group_id, 'invite'); 
         
-        $message = new Message();
-        $message->setContent($content);
-        $message->setType("groupeInvite");
-        $result = sendNotification(array($res['gcm_regid']), $message);
+        if($res == SUCCESS){
+            $content = array('id' => $group_id);
+            $message = new Message();
+            $message->setContent($content);
+            $message->setType("groupeInvite");
+            $result = sendNotification(array($res['gcm_regid']), $message);
+        }
         
+        return $res;
         
-        return addToGroup($res['id'], $group_id, 'invite'); 
     }
     return DENIED;
 }
@@ -813,19 +865,37 @@ function addToGroup($user_id, $group_id, $state){
             
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-            
-            $stmt = $dbh->prepare("INSERT INTO user_in_group (user, `group`, state) VALUES ('$user_idint', '$group_idint', '$state')");
+             $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $dbh->prepare("INSERT INTO user_in_group (`user`, `group`, state) VALUES ('$user_idint', '$group_idint', '$state')");
             $stmt->execute();
             
             $dbh = null;
             
             if (isInGroup($user_id, $group_id) == SUCCESS) { 
+              /*  
+                if($state == 'attente'){
+                    
+                    $user = getUserById($id);
+                    
+                    $message->setType("groupeRequest");
+                    $content = array('id' => $group_id);
+        
+                    $message = new Message();
+                    $message->setContent($content);
+                
+                    $result = sendNotification(array($user['gcm_regid']), $message);
+                }
+                */
+                
+                
                 return SUCCESS;
             } else {
                 return ERROR;
             }
         }
-        return DENIED;
+         
+         return DENIED;
+     
         
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
@@ -834,6 +904,33 @@ function addToGroup($user_id, $group_id, $state){
 }
 
 
+function getState($user_id, $group_id){
+     try {
+         
+        $user_idint = (int) $user_id;
+        $group_idint = (int) $group_id;
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT state FROM user_in_group WHERE `user` = $user_idint AND `group` = $group_idint LIMIT 1");
+        
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+        $dbh = null;
+         
+        if (count($result) > 0) { 
+            return $result[0]['state'];
+        } else {
+            return null;
+        }
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+    
 function isInGroup($user_id, $group_id){
      try {
          
@@ -841,8 +938,8 @@ function isInGroup($user_id, $group_id){
         $group_idint = (int) $group_id;
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM user_in_group WHERE user = $user_idint AND `group` = $group_idint LIMIT 1");
-        
+        $stmt = $dbh->prepare("SELECT * FROM user_in_group WHERE `user` = $user_idint AND `group` = $group_idint LIMIT 1");
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $result[] = $row;
@@ -868,11 +965,26 @@ function acceptMember($group_id, $user_id){
         if(isInGroup($user_id, $group_id) == SUCCESS){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-            $stmt = $dbh->prepare("UPDATE user_in_group SET state = 'appartient' WHERE user = '$user_id' AND `group` = '$group_id'");
+            $stmt = $dbh->prepare("UPDATE user_in_group SET state = 'appartient' WHERE `user` = '$user_id' AND `group` = '$group_id'");
             $stmt->execute();
             $dbh = null;
             
-            if (isInGroup($user_id, $group_id) == SUCCESS) { 
+            $check = getState($user_id, $group_id);
+            if ($check != null) { 
+                
+                if($check == 'attente'){
+                    $message->setType("groupeAccept");
+                }
+                if($check == 'attente'){
+                    $message->setType("inviteAccept");
+                }
+                
+                $user = getUserById($user_id);
+                $content = array('id' => $group_id);
+                $message = new Message();
+                $message->setContent($content);
+                $result = sendNotification(array($user['gcm_regid']), $message);
+                
                 return SUCCESS;
             } else {
                 return ERROR;
@@ -893,7 +1005,7 @@ function removeMember($group_id, $user_id){
         if(isInGroup($user_id, $group_id) == SUCCESS){
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-            $stmt = $dbh->prepare("DELETE FROM user_in_group WHERE user = '$user_id' AND `group` = '$group_id'");
+            $stmt = $dbh->prepare("DELETE FROM user_in_group WHERE `user` = '$user_id' AND `group` = '$group_id'");
             $stmt->execute();
             $dbh = null;
             
@@ -951,7 +1063,7 @@ function addSignalement(){
                 $user = getUserById($idUser);
                 $registration_ids[] = $user['gcm_regid'];
                 
-				$stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user) VALUES ('$idSignalement', '$idUser')");
+				$stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user, checked) VALUES ('$idSignalement', '$idUser', 0)");
 				$stmt->execute();
 			}
 		}
@@ -959,8 +1071,19 @@ function addSignalement(){
 		{
 			foreach($destinataires as $idGroup)
 			{
-				$stmt = $dbh->prepare("INSERT INTO signalement_for_group (signalement, `group`) VALUES ('$idSignalement', '$idGroup')");
+                $stmt = $dbh->prepare("INSERT INTO signalement_for_group (signalement, `group`) VALUES ('$idSignalement', '$idGroup')");
 				$stmt->execute();
+                
+                $destinataires = getMembersByGroupId($idGroup, 'appartient', '');
+                foreach($destinataires as $User)
+                {
+                    if($user['gcm_regid'] != null && $user['gcm_regid'] != ''){
+                        $registration_ids[] = $user['gcm_regid'];
+                    }
+
+                    $stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user, checked) VALUES ('$idSignalement', '$idUser', 0)");
+                    $stmt->execute();
+                }
 			}
 		}
         

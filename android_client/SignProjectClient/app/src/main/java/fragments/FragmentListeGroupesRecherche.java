@@ -121,7 +121,7 @@ public class FragmentListeGroupesRecherche extends Fragment {
         params.put("search", s);
 
         Handler mHandler = getGroupesHandler();
-        RequestPostTask.sendRequest("getGroups", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
+        RequestPostTask.sendRequest("getGroupsSearch", params, mHandler, getActivity(), getResources().getString(R.string.progress_dialog_titre));
     }
 
     public void displayErrorInternet(){
@@ -147,7 +147,12 @@ public class FragmentListeGroupesRecherche extends Fragment {
                 String nom = jsonobj.getString("name");
                 String type = jsonobj.getString("type");
                 String description = jsonobj.getString("description");
-                String state = jsonobj.getString("state");
+
+                String state = "";
+                if(jsonobj.has("state")){
+                    state = jsonobj.getString("state");
+                }
+
                 int id =   jsonobj.getInt("id");
                 int id_admin = jsonobj.getInt("creator");
                 int nb_demandes = jsonobj.getInt("member_request");

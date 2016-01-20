@@ -45,6 +45,7 @@ define("ADD_FAIL", "erreur lors de l'ajout");
 define("DELETE_FAIL", "erreur lors de la suppression");
 
 define("PARAMETERS_MISSING", "paramètre(s) manquant(s)");
+define("REQUEST_SEND", "demande envoyée");
 
 function sendNotificationRequest(){
     $registrationIds  = $_POST["regIDs"];
@@ -375,23 +376,16 @@ function inviteMemberRequest(){
 function sendRequestMemberRequest(){
     
     if (isset($_POST["group_id"]) && isset($_POST["user_id"])) {
-        $res = addToGroup($_POST["group_id"], $_POST["user_id"], 'attente'); 
+        $res = addToGroup($_POST["user_id"], $_POST["group_id"] , "attente"); 
         if($res == SUCCESS){
             
-            $content = array('id' => $group_id);
-        
-            $message = new Message();
-            $message->setContent($content);
-            $message->setType("groupeRequest");
-            $result = sendNotification($registration_ids, $message);
-            
-            echo getReplyMessage(SUCCESS, REQUES_SEND, array());
+            echo getReplyMessage(SUCCESS, REQUEST_SEND, array());
         }
         else if($res == DENIED){
             echo getReplyMessage(DENIED, ADD_TO_GROUP_FAIL, array());
         }
         else if($res == ERROR){
-            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array());
+            echo getReplyMessage(ERROR, ADD_TO_GROUP_FAIL, array("groupe" => $_POST["group_id"],"user" =>  $_POST["user_id"]));
         }
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
@@ -404,13 +398,6 @@ function acceptMemberRequest(){
         $res = acceptMember($_POST["group_id"], $_POST["user_id"]);
         
         if($res == SUCCESS){
-            
-            $content = array('id' => $group_id);
-        
-            $message = new Message();
-            $message->setContent($content);
-            $message->setType("groupeAccept");
-            $result = sendNotification($registration_ids, $message);
             
             echo getReplyMessage(SUCCESS, ADDED_TO_GROUP, array());
         }
@@ -431,13 +418,6 @@ function acceptInviteRequest(){
         $res = acceptMember($_POST["group_id"], $_POST["user_id"]);
         
         if($res == SUCCESS){
-            
-            $content = array('id' => $group_id);
-        
-            $message = new Message();
-            $message->setContent($content);
-            $message->setType("inviteAccept");
-            $result = sendNotification($registration_ids, $message);
             
             echo getReplyMessage(SUCCESS, ADDED_TO_GROUP, array());
         }
@@ -492,6 +472,17 @@ function getGroupsRequest(){
     
     if (isset($_POST["user_id"])) {
         $res = getGroups($_POST["user_id"], $_POST["search"]);
+        echo json_encode($res);
+
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
+
+function getGroupsSearchRequest(){
+    
+    if (isset($_POST["user_id"])) {
+        $res = getGroups2($_POST["user_id"], $_POST["search"]);
         echo json_encode($res);
 
     } else {
