@@ -123,6 +123,8 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
             this.listeSignalements.setAdapter(this.adapterExpandableListViewHoraire);
 
             this.expandAll();
+
+            this.adapterExpandableListViewHoraire.notifyDataSetChanged();
         }
         else
         {
