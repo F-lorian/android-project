@@ -7,9 +7,17 @@
     android:layout_marginTop="@dimen/margin_top_dynamic_field"
     android:layout_height="150dp">
 
-    <ListView
-        android:id="@+id/listGroupUserAjoutSignalement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+    <LinearLayout
+        android:id="@+id/layoutTypeAjoutSignalement"
+        style="@style/DataIndicatorChampSaisie"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ListView
+            android:id="@+id/listGroupUserAjoutSignalement"
+            style="@style/DataIndicatorTextChampSaisie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
 
 </LinearLayout>

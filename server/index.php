@@ -39,6 +39,9 @@ if(isset($isLogged) && $isLogged){
                         </span>
                 </div>
             </form>
+            <?php
+               // echo testNotification();
+            ?>
         </div>
     </div>
 

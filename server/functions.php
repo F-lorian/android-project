@@ -6,6 +6,51 @@ define("ERROR", "error");
 define("DENIED", "denied");
 
 
+/*function sendNotification($registrationIds, $message){
+    $regIDs = null;
+    if($registrationIds == null || count($registrationIds) == 0){
+        $regIDs = getAllUsersGCMID();
+        if($regIDs == null){
+            return DENIED;
+        }   
+    }
+    else{
+        $regIDs = $registrationIds;
+    }
+
+    $notification = new Notification();
+    $notification->setMessage($message);
+    
+    
+    $notification->setRegistrationId($regIDs);
+    $notification->send();
+    
+    return SUCCESS;
+}*/
+    
+function sendNotification($registrationIds, $message){
+    $regIDs = null;
+    if($registrationIds == null || count($registrationIds) == 0){
+        $regIDs = getAllUsersGCMID();
+        if($regIDs == null){
+            return DENIED;
+        }   
+    }
+    else{
+        $regIDs = $registrationIds;
+    }
+
+    $notification = new Notification();
+    $notification->setMessage($message);
+    
+    foreach($registrationIds as $regid)
+    {
+        $notification->setRegistrationId(array($regid));
+        echo $notification->send();
+    }
+    
+}
+
 function isLoggedAdmin(){
     
    /* echo $_SESSION['id']; 
@@ -64,28 +109,6 @@ function deconnection($id, $pseudo){
     }
 }
 
-function sendNotification($registrationIds, $message){
-    $regIDs = null;
-    if($registrationIds == null || count($registrationIds) == 0){
-        $regIDs = getAllUsersGCMID();
-        if($regIDs == null){
-            return DENIED;
-        }   
-    }
-    else{
-        $regIDs = $registrationIds;
-    }
-
-   /* $notification = new Notification();
-    $notification->setMessage($message);
-    
-    
-    $notification->setRegistrationId($regIDs);
-    $notification->send();*/
-    
-    return SUCCESS;
-}
-
 function isLogged(){
     return (isset($_SESSION['id']) && isset($_SESSION['pseudo']));
 }
@@ -139,7 +162,7 @@ function register($pseudo, $password, $gcm_regid) {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         //$stmt = $dbh->prepare("INSERT INTO user (name, email, password, gcm_regid, created_at) VALUES ('$pseudo', '$email', '$password', '$gcm_regid', NOW())");
-		$stmt = $dbh->prepare("INSERT INTO user (pseudo, password, gcm_regid) VALUES ('$pseudo', '$password', '$gcm_regid')");
+		$stmt = $dbh->prepare("INSERT INTO user (pseudo, password, gcm_regid, online) VALUES ('$pseudo', '$password', '$gcm_regid', 1)");
 		$stmt->execute();
         $dbh = null;
         
@@ -187,6 +210,33 @@ function getUserByPseudo($pseudo) {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT * FROM user WHERE pseudo = '$pseudo' LIMIT 1");
+        $stmt->execute();
+        $dbh = null;
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+            
+        if(count($result) > 0){
+          return $result[0];
+        } else {
+          return null;
+        }
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    } 
+}
+
+
+/**
+ * Get user by pseudo
+ */
+function getUserById($id) {
+    try {
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM user WHERE id = '$id' LIMIT 1");
         $stmt->execute();
         $dbh = null;
         while ($row = $stmt->fetch()) {
@@ -841,7 +891,8 @@ function addSignalement(){
         $stmt->execute();
 		$idSignalement = $dbh->lastInsertId();
 		
-		
+		$registration_ids = array();
+        
 		if ($diffusion == "utilisateur")
 		{
 			if ($destinataires == null)
@@ -851,7 +902,10 @@ function addSignalement(){
 			
 			foreach($destinataires as $idUser)
 			{
-				$idUser = intval($idUser);
+                $idUser = intval($idUser);
+                $user = getUserById($idUser);
+                $registration_ids[] = $user['gcm_regid'];
+                
 				$stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user) VALUES ('$idSignalement', '$idUser')");
 				$stmt->execute();
 			}
@@ -864,6 +918,22 @@ function addSignalement(){
 				$stmt->execute();
 			}
 		}
+        
+        $content = array('id' => $idSignalement,
+                         'contenu'  => $_POST["contenu"], 
+                         'remarque'  => $_POST["remarque"], 
+                         'date'  => $_POST["date"],
+                         'diffusion'  => $_POST["diffusion"],
+                         'arret'   => $_POST["arret"],
+                         'type'  => $_POST["type"],
+                         'emetteur' => $_POST["emetteur"],
+                        'recepteur' => $registration_ids);
+        
+        $message = new Message();
+        $message->setContent($content);
+        $message->setType("signalement");
+        $result = sendNotification($registration_ids, $message);
+
 		
 		$dbh = null;
          
@@ -873,6 +943,27 @@ function addSignalement(){
         //echo "Erreur !: " . $e->getMessage() . "<br/>";
         return ERROR;
     }
+}
+
+function testNotification(){
+    $content = array(
+                    'id'  => 100, 
+                    'contenu'  => 'test contenu', 
+                    'remarque'  => 'test remarque', 
+                    'date'  => '1992-10-02 12:20:21.152',
+                    'diffusion'  => 'utilisateur',
+                    'arret'  => 1,
+                    'type'  => 1,
+                    'emetteur' => 1);
+    
+    $registration_ids = array("d7XgcapkwTY:APA91bFA9J4aoXtjq6yPH7w9T5sM4FcDXCBhRJfHvAjkO80mIP3QcUwsZbtz1iaJAcqawxpUpGl8hrphxTajBJGYm9AKpVnhRvNAqH0B01cXg_EvK1by626HZBEvISo1YexS9VR9N2PL");
+                            
+    $message = new Message();
+    $message->setContent($content);
+    $message->setType("signalement");
+    $result = sendNotification($registration_ids, $message);
+    
+    echo $result;
 }
 
 function deleteSignalement(){

@@ -106,14 +106,7 @@ function registerRequest(){
         } else {
             echo getReplyMessage(SUCCESS, USER_ADDED, array('pseudo'=>$_POST["pseudo"], 'id'=>$res));
         }
-
-/*       $registration_ids = array($gcm_regid);
-        $message = new Message();
-        $message->setContent("inscription réussie");
-        $message->setTitle("success");
-        $result = sendNotification($registration_ids, $message);
-
-        echo $result;*/
+        
     } else {
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
