@@ -221,142 +221,30 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 AutoCompleteTextView autoCompleteTextViewArret = (AutoCompleteTextView) AjoutSignalementActivity.this.findViewById(R.id.champArretSignalement);
                 this.idLigneArretCourant = AjoutSignalementActivity.this.getIdLigneArret(autoCompleteTextViewArret.getText().toString());
 
-                Signalement signalement = null;
-                if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.groupe_spinner)))
+                Signalement signalement = this.validerSignalements(indiceTypeSignalement,indiceTypeDestination,autoCompleteTextViewArret);
+
+                if (Config.isNetworkAvailable(this))
                 {
-                    signalement = new SignalementGroupe();
+                    this.envoyerSignalement(signalement);
                 }
                 else
                 {
-                    signalement = new SignalementPublic();
-                }
+                    SignalementBD signalementBD = new SignalementBD(this);
+                    signalementBD.open();
+                    int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
+                    signalementBD.close();
 
-                if(!this.arretsArray.contains(autoCompleteTextViewArret.getText().toString())){
-                    autoCompleteTextViewArret.setError(getResources().getString(R.string.erreur_validation_arret));
-                }
-                else if (this.idLigneArretCourant != ListView.INVALID_POSITION)
-                {
-                    LigneArretBD ligneArretBD = new LigneArretBD(this);
-                    ligneArretBD.open();
-                    Arret arret = ligneArretBD.getArret(this.idLigneArretCourant);
-                    ligneArretBD.close();
-
-                    signalement.setArret(arret);
-
-                    ContenuSignalement contenuSignalement = new ContenuSignalement(autoCompleteTextViewArret.getText().toString(),this.idLigneArretCourant,new ArrayList<String>());
-
-                    if (this.typeSignalements.get(indiceTypeSignalement).getType().equals(this.getResources().getString(R.string.horaire_spinner)))
+                    if (id > 0)
                     {
-                        if (this.horaires.size()>0)
-                        {
-                            contenuSignalement.setTempsAttente(this.horaires);
-                        }
-                        else
-                        {
-                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_horaire_signalement));
-                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                            alertInscriptionInvalide.show();
-                        }
-                    }
-
-                    signalement.setContenu(contenuSignalement.getJson().toString());
-
-                    if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.groupe_spinner)))
-                    {
-                        ListView listViewGroupe = (ListView) findViewById(R.id.listGroupUserAjoutSignalement);
-                        SparseBooleanArray indiceGroupeChecked = listViewGroupe.getCheckedItemPositions();
-                        ArrayList<Groupe> groupesSelected = new ArrayList<Groupe>();
-
-                        for (int i=0; i<listViewGroupe.getCount(); i++)
-                        {
-                            if (indiceGroupeChecked.get(i))
-                            {
-                                groupesSelected.add(this.groupesDestination.get(i));
-                            }
-                        }
-
-                        if (groupesSelected.size() > 0)
-                        {
-                            ((SignalementGroupe)signalement).setGroupesDestinateurs(groupesSelected);
-                        }
-                        else
-                        {
-                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_groupe_signalement));
-                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                            alertInscriptionInvalide.show();
-                        }
-                    }
-                    else if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.autres_personnes_spinner)))
-                    {
-                        UtilisateursDestinationSignalementCompletionView utilisateursDestinationSignalementCompletionView = (UtilisateursDestinationSignalementCompletionView) findViewById(R.id.tokenUtilisateur);
-
-                        ArrayList<Utilisateur> destination = new ArrayList<>();
-                        for ( Utilisateur u: utilisateursDestinationSignalementCompletionView.getObjects()) {
-                            if (utilisateursDestination.contains(u)){
-                                destination.add((Utilisateur) u);
-                            }
-                        }
-
-                        if (destination.size() > 0)
-                        {
-
-                            ((SignalementPublic)signalement).setUtilisateursDestinateurs(destination);
-
-                            signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
-                            signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
-                            signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
-
-                            if (Config.isNetworkAvailable(this))
-                            {
-                                this.envoyerSignalement(signalement);
-                            }
-                            else
-                            {
-                                SignalementBD signalementBD = new SignalementBD(this);
-                                signalementBD.open();
-                                int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
-                                signalementBD.close();
-
-                                if (id > 0)
-                                {
-                                    Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
-                                    this.finish();
-                                }
-                                else
-                                {
-
-                                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
-                                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                                    alertInscriptionInvalide.show();
-                                }
-                            }
-
-                        }
-                        else
-                      {
-                            /*
-                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_utilisateur_signalement));
-                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                            alertInscriptionInvalide.w();
-                            */
-
-                            utilisateursDestinationSignalementCompletionView.setError(getResources().getString(R.string.message_alert_dialog_erreur_utilisateur_signalement));
-                        }
+                        Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
+                        this.finish();
                     }
                     else
                     {
-                        //CAS PUBLIC
-                        ((SignalementPublic)signalement).setUtilisateursDestinateurs(null);
+                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
+                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                        alertInscriptionInvalide.show();
                     }
-                }
-                else
-              {
-                    /*
-                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_arret_signalement));
-                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                    alertInscriptionIalide.show();
-                    */
-                    autoCompleteTextViewArret.setError(getResources().getString(R.string.erreur_selection_arret));
                 }
                 break;
             case android.R.id.home:
@@ -596,7 +484,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 return entry.getKey().intValue();
             }
         }
-
         return -1;
     }
 
@@ -624,7 +511,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
     public int getIndiceByTypeSignalementValue(String typeSignalementValue)
     {
         int ind = 0;
-
         for (int i = 0; i<this.typeSignalements.size(); i++)
         {
             if (this.typeSignalements.get(i).getType().equals(typeSignalementValue))
@@ -632,7 +518,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 return i;
             }
         }
-
         return ind;
     }
 
@@ -662,7 +547,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         };
 
@@ -723,15 +607,12 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                         auteurPresent = true;
                     }
                     jsonArray.put(((SignalementPublic) signalement).getUtilisateursDestinateurs().get(i).getId());
-                    //new JSONObject().put("idUser", ((SignalementPublic) signalement).getUtilisateursDestinateurs().get(i).getId())
                 }
 
                 if (!auteurPresent)
                 {
                     jsonArray.put(sessionManager.getUserId());
-                    //new JSONObject().put("idUser", sessionManager.getUserId())
                 }
-
 
                 pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
             }
@@ -791,5 +672,105 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
         RequestPostTask requestPostTask = new RequestPostTask("addSignalement", pairsPost, mHandler, this, this.getResources().getString(R.string.progress_dialog_message_envoi_signalement));
         requestPostTask.execute();
+    }
+
+    public Signalement validerSignalements(int indiceTypeSignalement, int indiceTypeDestination, AutoCompleteTextView autoCompleteTextViewArret)
+    {
+        Signalement signalement = null;
+        if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.groupe_spinner)))
+        {
+            signalement = new SignalementGroupe();
+        }
+        else
+        {
+            signalement = new SignalementPublic();
+        }
+
+        if (this.idLigneArretCourant != ListView.INVALID_POSITION) {
+            LigneArretBD ligneArretBD = new LigneArretBD(this);
+            ligneArretBD.open();
+            Arret arret = ligneArretBD.getArret(this.idLigneArretCourant);
+            ligneArretBD.close();
+
+            signalement.setArret(arret);
+        }
+        else
+        {
+            autoCompleteTextViewArret.setError(getResources().getString(R.string.erreur_validation_arret));
+            return null;
+        }
+
+        ContenuSignalement contenuSignalement = new ContenuSignalement(autoCompleteTextViewArret.getText().toString(), this.idLigneArretCourant, new ArrayList<String>());
+
+        if (this.typeSignalements.get(indiceTypeSignalement).getType().equals(this.getResources().getString(R.string.horaire_spinner)))
+        {
+            if (this.horaires.size()>0)
+            {
+                contenuSignalement.setTempsAttente(this.horaires);
+            }
+            else
+            {
+                buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_horaire_signalement));
+                AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                alertInscriptionInvalide.show();
+                return null;
+            }
+        }
+
+        signalement.setContenu(contenuSignalement.getJson().toString());
+
+        if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.groupe_spinner)))
+        {
+            ListView listViewGroupe = (ListView) findViewById(R.id.listGroupUserAjoutSignalement);
+            SparseBooleanArray indiceGroupeChecked = listViewGroupe.getCheckedItemPositions();
+            ArrayList<Groupe> groupesSelected = new ArrayList<Groupe>();
+
+            for (int i=0; i<listViewGroupe.getCount(); i++)
+            {
+                if (indiceGroupeChecked.get(i))
+                {
+                    groupesSelected.add(this.groupesDestination.get(i));
+                }
+            }
+
+            if (groupesSelected.size() > 0)
+            {
+                ((SignalementGroupe)signalement).setGroupesDestinateurs(groupesSelected);
+            }
+            else
+            {
+                buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_groupe_signalement));
+                AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                alertInscriptionInvalide.show();
+                return null;
+            }
+        }
+        else if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.autres_personnes_spinner))) {
+            UtilisateursDestinationSignalementCompletionView utilisateursDestinationSignalementCompletionView = (UtilisateursDestinationSignalementCompletionView) findViewById(R.id.tokenUtilisateur);
+
+            ArrayList<Utilisateur> destination = new ArrayList<>();
+            for (Utilisateur u : utilisateursDestinationSignalementCompletionView.getObjects()) {
+                if (utilisateursDestination.contains(u)) {
+                    destination.add((Utilisateur) u);
+                }
+            }
+
+            if (destination.size() > 0) {
+                ((SignalementPublic) signalement).setUtilisateursDestinateurs(destination);
+            } else {
+                utilisateursDestinationSignalementCompletionView.setError(getResources().getString(R.string.message_alert_dialog_erreur_utilisateur_signalement));
+                return null;
+            }
+        }
+        else
+        {
+            ((SignalementPublic)signalement).setUtilisateursDestinateurs(null);
+        }
+
+        signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
+        signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
+        signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
+
+        return signalement;
     }
 }
