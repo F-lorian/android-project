@@ -43,11 +43,15 @@ function sendNotification($registrationIds, $message){
     $notification = new Notification();
     $notification->setMessage($message);
     
+    /*
     foreach($registrationIds as $regid)
     {
         $notification->setRegistrationId(array($regid));
         $notification->send();
-    }
+    }*/
+    
+    $notification->setRegistrationId($registrationIds);
+    $notification->send();
     
 }
 
@@ -515,7 +519,8 @@ function editGroup($id_group, $name, $type, $description){
     
     try {
          
-        if(groupExist($name) == DENIED){
+        $test = getGroupByName($name);
+        if($test == null || $test['id'] == $id_group){
             $id_groupInt = (int) $id_group;
             $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
@@ -707,7 +712,7 @@ function getGroups($user_id, $search){
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
+        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
         $stmt->execute();
         $dbh = null;
 
@@ -733,7 +738,7 @@ function getSigns($user_id){
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM signalement s, signalement_for_user su WHERE su.user = '$user_id' AND su.signalement = s.id AND TIME_TO_SEC(TIMEDIFF(NOW(), s.date))/3600 < 24");
+        $stmt = $dbh->prepare("SELECT s.id, s.contenu, s.remarque, s.date, s.diffusion, s.arret, s.type, s.emetteur FROM signalement s, signalement_for_user su WHERE su.user = '$user_id' AND su.signalement = s.id AND TIME_TO_SEC(TIMEDIFF(NOW(), s.date))/3600 < 24");
         $stmt->execute();
         $dbh = null;
 
@@ -909,6 +914,8 @@ function addSignalement(){
     try {
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        
+        $date = date('Y-m-d H:i:s.u');
         $stmt = $dbh->prepare("INSERT INTO signalement (contenu, remarque, date, diffusion, arret, type, emetteur) VALUES ('$contenu', '$remarque', '$date', '$diffusion', '$arret', '$type', '$emetteur')");
         $stmt->execute();
 		$idSignalement = $dbh->lastInsertId();
@@ -944,7 +951,7 @@ function addSignalement(){
         $content = array('id' => $idSignalement,
                          'contenu'  => $_POST["contenu"], 
                          'remarque'  => $_POST["remarque"], 
-                         'date'  => $_POST["date"],
+                         'date'  => $date,
                          'diffusion'  => $_POST["diffusion"],
                          'arret'   => $_POST["arret"],
                          'type'  => $_POST["type"],

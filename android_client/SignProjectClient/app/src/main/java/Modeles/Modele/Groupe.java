@@ -137,13 +137,13 @@ public class Groupe {
     public static boolean nomValide(String nom)
     {
         // chiffre ou MAJ ou MINUS de 6 à 16 caractere
-        return nom.matches("^[0-9A-Za-z_-]{6,16}$");
+        return nom.matches("^[0-9 A-Za-z_-]{6,16}$");
     }
 
     public static boolean descriptionValide(String description)
     {
         // chiffre ou MAJ ou MINUS de 6 à 16 caractere
-        return description.matches("[0-9A-Za-z_-]{0,500}$");
+        return description.matches("[?!.,;:/0-9 A-Za-z_-]{0,500}$");
     }
 
 }

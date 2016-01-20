@@ -295,7 +295,7 @@ public class ModificationGroupeActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(rp);
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED)) {
-                        displayAlertError(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                        displayAlertError(getResources().getString(R.string.message_alert_dialog_nom_deja_utilise));
 
                     } else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR)) {
                         displayAlertError(getResources().getString(R.string.message_alert_dialog_erreur_ajout_groupe_bd));

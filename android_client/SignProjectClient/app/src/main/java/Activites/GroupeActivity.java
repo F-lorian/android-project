@@ -737,7 +737,7 @@ public class GroupeActivity extends AppCompatActivity {
         params.put("user_id", Integer.toString(id_user));
 
         Handler mHandler = getResponseHandler(this.getResources().getString(R.string.groupe_rejoint));
-        RequestPostTask.sendRequest("acceptMember", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
+        RequestPostTask.sendRequest("acceptInvite", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
 
     }
 

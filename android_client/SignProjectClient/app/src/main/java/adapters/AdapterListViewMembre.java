@@ -100,10 +100,17 @@ public class AdapterListViewMembre extends BaseAdapter {
         ImageView refuse = (ImageView) layoutItem.findViewById(R.id.image_refuse);
         final LinearLayout membre = (LinearLayout) layoutItem.findViewById(R.id.layout_membre);
 
+        accept.setVisibility(View.GONE);
+        refuse.setVisibility(View.GONE);
+
         String pseudoText = this.membres.get(position).getPseudo();
         pseudo.setText(pseudoText);
 
         if(this.admin) {
+
+            accept.setVisibility(View.VISIBLE);
+            refuse.setVisibility(View.VISIBLE);
+
             membre.setTag(position);
             if(this.state.equals(GroupeUtilisateurBD.ETAT_ATTENTE)) {
                 accept.setOnClickListener(new View.OnClickListener() {

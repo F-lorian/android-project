@@ -53,6 +53,9 @@ if(isset($dbh)){
             case "acceptMember":
                 acceptMemberRequest();
                 break;
+            case "acceptInvite":
+                acceptInviteRequest();
+                break;
             case "refuseMember":
                 refuseMemberRequest();
                 break;

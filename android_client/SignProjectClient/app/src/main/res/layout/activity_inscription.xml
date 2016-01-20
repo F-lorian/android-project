@@ -70,7 +70,7 @@
             android:layout_marginLeft="@dimen/margin_between_field"
             android:background="@drawable/btn_annuler"
             android:layout_width="@dimen/largeur_boutons_formulaire"
-            android:hint="@string/btn_Annuler"/>
+            android:hint="@string/btn_reset"/>
     </LinearLayout>
 
 

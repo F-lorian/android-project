@@ -227,7 +227,7 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
                     if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
                     {
-                        displayAlertError(getResources().getString(R.string.message_alert_dialog_inscription_denied));
+                        displayAlertError(getResources().getString(R.string.message_alert_dialog_nom_deja_utilise));
                     }
                     else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
                     {
