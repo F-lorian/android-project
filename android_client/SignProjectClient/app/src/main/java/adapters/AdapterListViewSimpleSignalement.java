@@ -149,7 +149,7 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
                 remarque.setMovementMethod(new ScrollingMovementMethod());
                 TextView date = (TextView) dialogDetailSignalement.findViewById(R.id.dialog_date_detail_signalement);
                 TextView heure = (TextView) dialogDetailSignalement.findViewById(R.id.dialog_heure_detail_signalement);
-                TextView pseudo = (TextView) dialogDetailSignalement.findViewById(R.id.dialog_pseudo_detail_signalement);
+                //TextView pseudo = (TextView) dialogDetailSignalement.findViewById(R.id.dialog_pseudo_detail_signalement);
                 Button fermer = (Button) dialogDetailSignalement.findViewById(R.id.dialog_btn_detail_signalement);
 
                 int indice = ((Integer)v.getTag()).intValue();
@@ -166,7 +166,7 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
                 cal.setTime(signalements.get(indice).getDate());
                 heure.setText(cal.get(Calendar.HOUR_OF_DAY) + "h" + cal.get(Calendar.MINUTE));
 
-                pseudo.setText(signalements.get(indice).getEmetteur().getPseudo());
+                //pseudo.setText(signalements.get(indice).getEmetteur().getPseudo());
 
                 fermer.setOnClickListener(new View.OnClickListener() {
                     @Override

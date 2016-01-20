@@ -227,7 +227,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     if (Config.isNetworkAvailable(this)) {
                         this.envoyerSignalement(signalement);
                     } else {
-                        SignalementBD signalementBD = new SignalementBD(this);
+                        /**SignalementBD signalementBD = new SignalementBD(this);
                         signalementBD.open();
                         int id = (int) signalementBD.addSignalement(signalement, SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
                         signalementBD.close();
@@ -235,11 +235,11 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                         if (id > 0) {
                             Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
                             this.finish();
-                        } else {
-                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
-                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                            alertInscriptionInvalide.show();
-                        }
+                        } else {**/
+                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
+                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                        alertInscriptionInvalide.show();
+
                     }
                 }
                 break;

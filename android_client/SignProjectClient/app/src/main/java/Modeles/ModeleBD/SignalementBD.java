@@ -3,6 +3,7 @@ package modeles.modeleBD;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 
@@ -182,7 +183,7 @@ public class SignalementBD {
 
         Signalement s = null;
 
-        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ID_SIGNALEMENT+"="+id+" AND "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ID_SIGNALEMENT+"="+id+" AND "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT, null);
 
         if (c.moveToFirst()) {
 
@@ -202,7 +203,7 @@ public class SignalementBD {
             s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
             s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
             s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
-            s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)),c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)),"",null,null,null));
+            s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(EMETTEUR_SIGNALEMENT)), "", "", null,null,null));
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             try {
@@ -230,7 +231,7 @@ public class SignalementBD {
 
     public ArrayList<Signalement> getSignalements(String table) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
 
         ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 
@@ -255,7 +256,7 @@ public class SignalementBD {
                 s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
                 s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
                 s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
-                s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+                s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(EMETTEUR_SIGNALEMENT)), "", "", null, null, null));
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 try {
@@ -287,7 +288,7 @@ public class SignalementBD {
 
     public ArrayList<Signalement> getSignalementsByType(String table, String type) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TypeSignalementBD.ID_TYPE_SIGNALEMENT+"="+TYPE_SIGNALEMENT+" AND "+TypeSignalementBD.NOM_TYPE_SIGNALEMENT+"='"+type+"' ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+TypeSignalementBD.ID_TYPE_SIGNALEMENT+"="+TYPE_SIGNALEMENT+" AND "+TypeSignalementBD.NOM_TYPE_SIGNALEMENT+"='"+type+"' ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
 
         ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 
@@ -312,7 +313,7 @@ public class SignalementBD {
                 s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
                 s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
                 s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
-                s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+                s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(EMETTEUR_SIGNALEMENT)), "", "", null, null, null));
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 try {
@@ -344,7 +345,7 @@ public class SignalementBD {
 
     public ArrayList<Signalement> getSignalementsProches(String table, Location location, float distanceMax) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
 
         ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 
@@ -378,7 +379,7 @@ public class SignalementBD {
                     s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
                     s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
                     s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
-                    s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+                    s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(EMETTEUR_SIGNALEMENT)), "", "", null, null, null));
 
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                     try {
@@ -409,7 +410,7 @@ public class SignalementBD {
 
     public ArrayList<Signalement> getSignalementsProchesNonVu(String table, Location location, float distanceMax) {
         // sélection de tous les enregistrements de la table
-        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+UtilisateurBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+EMETTEUR_SIGNALEMENT+"="+UtilisateurBD.ID_UTILISATEUR+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" AND "+VU_SIGNALEMENT+"=0 ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" AND "+VU_SIGNALEMENT+"=0 ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
 
         ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 
@@ -443,7 +444,7 @@ public class SignalementBD {
                     s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
                     s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
                     s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
-                    s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(UtilisateurBD.ID_UTILISATEUR)), c.getString(c.getColumnIndex(UtilisateurBD.PSEUDO_UTILISATEUR)), "", null, null, null));
+                    s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(EMETTEUR_SIGNALEMENT)), "", "", null, null, null));
 
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                     try {
@@ -469,6 +470,62 @@ public class SignalementBD {
         c.close();
 
         return signalements;
+    }
+
+    public long getCount(String table)
+    {
+        return DatabaseUtils.queryNumEntries(this.db, table);
+    }
+
+    public Signalement getFirstSignalement(String table) {
+        // sélection de tous les enregistrements de la table
+        Cursor c = db.rawQuery("SELECT * FROM "+table+", "+ArretBD.TABLE_NAME+", "+TypeSignalementBD.TABLE_NAME+" WHERE "+ARRET_SIGNALEMENT+"="+ArretBD.ID_ARRET+" AND "+TYPE_SIGNALEMENT+"="+TypeSignalementBD.ID_TYPE_SIGNALEMENT+" ORDER BY datetime("+DATE_SIGNALEMENT+") DESC", null);
+
+        Signalement s = null;
+
+        if (c.moveToFirst()) {
+
+
+            String type = c.getString(c.getColumnIndex(TYPE_DIFFUSION_SIGNALEMENT));
+
+            if (type.equals(SignalementGroupe.TYPE_DESTINATAIRE))
+            {
+                s = new SignalementGroupe(0,"","",null,false,null,null,null,null);
+            }
+            else
+            {
+                s = new SignalementPublic(0,"","",null,false,null,null,null,null);
+            }
+
+            s.setId(c.getInt(c.getColumnIndex(ID_SIGNALEMENT)));
+            s.setContenu(c.getString(c.getColumnIndex(CONTENU_SIGNALEMENT)));
+            s.setRemarques(c.getString(c.getColumnIndex(REMARQUE_SIGNALEMENT)));
+            s.setArret(new Arret(c.getInt(c.getColumnIndex(ARRET_SIGNALEMENT)), c.getString(c.getColumnIndex(ArretBD.NOM_ARRET)), c.getString(c.getColumnIndex(ArretBD.COORDONNEES_ARRET)), c.getString(c.getColumnIndex(ArretBD.DIRECTION_ARRET)), null, null));
+            s.setType(new TypeSignalement(c.getInt(c.getColumnIndex(TYPE_SIGNALEMENT)), c.getString(c.getColumnIndex(TypeSignalementBD.NOM_TYPE_SIGNALEMENT))));
+            s.setEmetteur(new Utilisateur(c.getInt(c.getColumnIndex(EMETTEUR_SIGNALEMENT)), "", "", null, null, null));
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            try {
+                s.setDate(df.parse(c.getString(c.getColumnIndex(DATE_SIGNALEMENT))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            int vu = c.getInt(c.getColumnIndex(VU_SIGNALEMENT));
+            if (vu == 0)
+            {
+                s.setVu(false);
+            }
+            else
+            {
+                s.setVu(true);
+            }
+
+        }
+
+        c.close();
+
+        return s;
     }
 
 

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,12 +20,15 @@ import com.example.florian.signprojectclient.R;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import activites.AccueilUserActivity;
 import activites.GroupeActivity;
@@ -37,6 +41,8 @@ import modeles.modele.Utilisateur;
 import modeles.modeleBD.ArretBD;
 import modeles.modeleBD.SignalementBD;
 import utilitaires.Config;
+import utilitaires.PostRequest;
+import utilitaires.SessionManager;
 
 /**
  * Created by Axel_2 on 18/01/2016.
@@ -47,6 +53,7 @@ public class GcmListenerSignalementService extends GcmListenerService implements
     private Arret arret;
     private Signalement signalement;
     private LocationManager locationManager;
+    private Thread threadPostConfirmation;
 
     public GcmListenerSignalementService()
     {
@@ -76,6 +83,9 @@ public class GcmListenerSignalementService extends GcmListenerService implements
 
             this.signalement = addSignalement(message);
             this.arret = getArret(signalement.getId());
+            threadPostConfirmation.start();
+
+            threadPostConfirmation.start();
 
         } else {
             sendNotificationGroupe(type, message);
@@ -327,4 +337,20 @@ public class GcmListenerSignalementService extends GcmListenerService implements
 
         return type + " - " + signalement.getArret().getNom();
     }
+
+    private void updateHoraireThread(){
+
+        threadPostConfirmation = new Thread() {
+
+            @Override
+            public void run() {
+                SessionManager sessionManager = new SessionManager(GcmListenerSignalementService.this);
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("user_id",sessionManager.getUserId()+""));
+                params.add(new BasicNameValuePair("signalement_id",GcmListenerSignalementService.this.signalement.getId()+""));
+                PostRequest postRequest = new PostRequest("signalementRecu",params);
+            }
+        };
+    }
+
 }
