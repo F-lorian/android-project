@@ -45,6 +45,8 @@ if(isset($isLogged) && $isLogged){
                 echo isInGroup(15, 74);
     echo isInGroup(8, 82);*/
                // print_r(getGroups(0, ''));
+    
+     //print_r(checkViewSign(7, 44));
             ?>
         </div>
     </div>

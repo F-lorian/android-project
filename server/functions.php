@@ -1177,9 +1177,25 @@ function getAll($user_id){
 }
 
 function checkViewSign($user_id, $signalement_id){
-    $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-    $stmt = $dbh->prepare("UPDATE signalement_for_user SET checked = 1 WHERE `user` = '$user_id' AND signalement = '$signalement_id'");
-    $stmt->execute();
+    try {
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $dbh->prepare("UPDATE signalement_for_user SET checked = 1 WHERE `user` = '$user_id' AND signalement = '$signalement_id'");
+        $stmt->execute();
+        
+        $stmt2 = $dbh->prepare("Select * From signalement_for_user WHERE `user` = '$user_id' AND signalement = '$signalement_id'");
+        $stmt2->execute();
+        while ($row = $stmt2->fetch()) {
+            $result[] = $row;
+        }
+        
+        return $result;
+        
+        $dbh = null;
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
 }
     
 ?>
