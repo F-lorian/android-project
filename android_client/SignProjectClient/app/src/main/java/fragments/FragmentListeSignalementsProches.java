@@ -53,18 +53,6 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
 
         this.locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
 
-        /*
-        SignalementBD signalementBD = new SignalementBD(getActivity());
-        signalementBD.open();
-        this.signalements = signalementBD.getSignalements(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
-        signalementBD.close();
-
-        this.signalements = new ArrayList<>();
-
-        this.initData();
-        this.updateSignalements();
-        */
-
         this.adapterExpandableListViewHoraire = null;
 
         this.fabAjoutSignalement.setOnClickListener(new View.OnClickListener() {

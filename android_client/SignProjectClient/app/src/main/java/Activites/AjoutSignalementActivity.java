@@ -223,27 +223,23 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
                 Signalement signalement = this.validerSignalements(indiceTypeSignalement,indiceTypeDestination,autoCompleteTextViewArret);
 
-                if (Config.isNetworkAvailable(this))
-                {
-                    this.envoyerSignalement(signalement);
-                }
-                else
-                {
-                    SignalementBD signalementBD = new SignalementBD(this);
-                    signalementBD.open();
-                    int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
-                    signalementBD.close();
+                if (signalement != null) {
+                    if (Config.isNetworkAvailable(this)) {
+                        this.envoyerSignalement(signalement);
+                    } else {
+                        SignalementBD signalementBD = new SignalementBD(this);
+                        signalementBD.open();
+                        int id = (int) signalementBD.addSignalement(signalement, SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
+                        signalementBD.close();
 
-                    if (id > 0)
-                    {
-                        Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
-                        this.finish();
-                    }
-                    else
-                    {
-                        buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
-                        AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                        alertInscriptionInvalide.show();
+                        if (id > 0) {
+                            Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
+                            this.finish();
+                        } else {
+                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
+                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                            alertInscriptionInvalide.show();
+                        }
                     }
                 }
                 break;
@@ -686,7 +682,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
             signalement = new SignalementPublic();
         }
 
-        if (this.idLigneArretCourant != ListView.INVALID_POSITION) {
+        if (this.idLigneArretCourant != ListView.INVALID_POSITION && this.arretsArray.contains(autoCompleteTextViewArret.getText().toString())) {
             LigneArretBD ligneArretBD = new LigneArretBD(this);
             ligneArretBD.open();
             Arret arret = ligneArretBD.getArret(this.idLigneArretCourant);
