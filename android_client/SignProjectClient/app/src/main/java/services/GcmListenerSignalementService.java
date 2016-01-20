@@ -83,9 +83,7 @@ public class GcmListenerSignalementService extends GcmListenerService implements
 
             this.signalement = addSignalement(message);
             this.arret = getArret(signalement.getId());
-            threadPostConfirmation.start();
-
-            threadPostConfirmation.start();
+            this.updateHoraireThread();
 
         } else {
             sendNotificationGroupe(type, message);
@@ -351,6 +349,8 @@ public class GcmListenerSignalementService extends GcmListenerService implements
                 PostRequest postRequest = new PostRequest("signalementRecu",params);
             }
         };
+
+        threadPostConfirmation.start();
     }
 
 }

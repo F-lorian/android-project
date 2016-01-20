@@ -766,6 +766,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
         signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
         signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
         signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
+        signalement.setVu(false);
 
         return signalement;
     }

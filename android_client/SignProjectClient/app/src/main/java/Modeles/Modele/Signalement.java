@@ -32,7 +32,7 @@ public abstract class Signalement {
     }
 
     public Signalement() {
-        this.vu = false;
+        //this.vu = false;
         this.date = new Date();
     }
 
