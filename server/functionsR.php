@@ -524,4 +524,12 @@ function initialisationRequest(){
         echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
     }
 }
+
+function signalementRecuRequest(){
+    if(isset($_POST["user_id"]) && isset($_POST["signalement_id"])){
+        checkViewSign($_POST["user_id"], $_POST["signalement_id"]);
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
 ?>

@@ -1043,7 +1043,7 @@ function addSignalement(){
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         
-        //$date = date('Y-m-d H:i:s.u');
+        $date = date('Y-m-d H:i:s.u');
         $stmt = $dbh->prepare("INSERT INTO signalement (contenu, remarque, date, diffusion, arret, type, emetteur) VALUES ('$contenu', '$remarque', '$date', '$diffusion', '$arret', '$type', '$emetteur')");
         $stmt->execute();
 		$idSignalement = $dbh->lastInsertId();
@@ -1174,6 +1174,12 @@ function getAll($user_id){
         echo "Erreur !: " . $e->getMessage() . "<br/>";
         die();
     }
+}
+
+function checkViewSign($user_id, $signalement_id){
+    $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+    $stmt = $dbh->prepare("UPDATE signalement_for_user SET checked = 1 WHERE `user` = '$user_id' AND signalement = '$signalement_id'");
+    $stmt->execute();
 }
     
 ?>

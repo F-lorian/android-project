@@ -92,6 +92,9 @@ if(isset($dbh)){
             case "groupExist":
                 groupExistRequest();
                 break;
+            case "signalementRecu":
+                signalementRecuRequest();
+                break;
 			case "getDataFormAddSignalement":
                 getDataFormAddSignalementRequest();
                 break;
