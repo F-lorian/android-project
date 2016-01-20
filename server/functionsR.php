@@ -442,7 +442,6 @@ function removeMemberRequest(){
     }
 }
 
-
 function getGroupsRequest(){
     
     if (isset($_POST["user_id"])) {
@@ -479,4 +478,13 @@ function addSignalementRequest(){
 	}
 }
 
+function initialisationRequest(){
+    if (isset($_POST["user_id"])) {
+        $res = getAll($_POST["user_id"]);
+        echo json_encode($res);
+
+    } else {
+        echo getReplyMessage(ERROR, PARAMETERS_MISSING, array());
+    }
+}
 ?>

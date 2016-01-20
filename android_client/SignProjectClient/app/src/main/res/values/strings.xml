@@ -40,6 +40,7 @@
     <string name="message_alert_dialog_erreur_utilisateur_introuvable">l\'utilisateur n\'existe pas</string>
     <string name="message_alert_dialog_erreur_ajout_signalement_bd">Problème d\'enregistrement du signalement</string>
     <string name="message_alert_dialog_erreur_arret_signalement">Aucun arret selectionné</string>
+    <string name="message_alert_dialog_quitter_groupe">Ce groupe est privé, si vous le quittez vous ne pourrez plus y accéder</string>
 
 
     <string name="progress_dialog_titre">Chargement...</string>

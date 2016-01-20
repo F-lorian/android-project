@@ -707,7 +707,7 @@ function getGroups($user_id, $search){
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
+        $stmt = $dbh->prepare("SELECT * FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
         $stmt->execute();
         $dbh = null;
 
@@ -716,6 +716,28 @@ function getGroups($user_id, $search){
             $nb_member = getNbMember($row['id']);
             $row["member_request"] = $nb_member_request;
             $row["nb_member"] = $nb_member;
+            $result[] = $row;
+        }
+         
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
+function getSigns($user_id){
+    
+     try {
+         
+        $result = array();
+        $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
+        $stmt = $dbh->prepare("SELECT * FROM signalement s, signalement_for_user su WHERE su.user = '$user_id' AND su.signalement = s.id AND TIME_TO_SEC(TIMEDIFF(NOW(), s.date))/3600 < 24");
+        $stmt->execute();
+        $dbh = null;
+
+        while ($row = $stmt->fetch()) {
             $result[] = $row;
         }
          
@@ -991,4 +1013,21 @@ function deleteSignalement(){
     }
 }
 
+function getAll($user_id){
+    try {
+         
+        $groups = getGroups($user_id, "");
+        $signs = getSigns($user_id);
+            
+        //$group_idint = (int) $group_id;
+        $result = array("groupes" => $groups, "signalements" => $signs);
+        
+        return $result;
+        
+    } catch (PDOException $e) {
+        echo "Erreur !: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+    
 ?>

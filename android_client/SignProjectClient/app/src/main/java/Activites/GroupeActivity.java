@@ -362,7 +362,26 @@ public class GroupeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (Config.isNetworkAvailable(GroupeActivity.this)) {
-                            quit();
+
+                            if(groupe.getType().equals(Groupe.TYPE_PRIVE)) {
+                                AlertDialog.Builder buildAlert = new AlertDialog.Builder(GroupeActivity.this);
+                                buildAlert.setTitle(getResources().getString(R.string.action_toolbar_deconnnexion));
+                                buildAlert.setIcon(R.drawable.ic_action_warning);
+                                buildAlert.setMessage(getResources().getString(R.string.message_alert_dialog_quitter_groupe));
+                                buildAlert.setPositiveButton(getResources().getString(R.string.btn_valider), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        quit();
+                                    }
+                                });
+                                buildAlert.setNegativeButton(getResources().getString(R.string.btn_Annuler), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                            } else {
+                                quit();
+                            }
+
                         } else {
                             displayErrorInternet();
                         }
@@ -532,8 +551,20 @@ public class GroupeActivity extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(GroupeActivity.this, message, Toast.LENGTH_LONG).show();
-                        refresh();
+
                         setModification(true);
+
+                        if(groupe.getType().equals(Groupe.TYPE_PRIVE)){
+
+                            Intent returnIntent = new Intent();
+                            setResult(RESULT_OK, returnIntent);
+
+                            GroupeActivity.this.finish();
+
+                        } else {
+                            refresh();
+                        }
+
                     }
 
                 } catch (JSONException e) {
@@ -637,6 +668,7 @@ public class GroupeActivity extends AppCompatActivity {
 
     }
     public void quit() {
+
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();

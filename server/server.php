@@ -10,7 +10,10 @@ if(isset($dbh)){
     //traitement de l'action demandée/////////////////////////
     if(isset($_REQUEST['action'])){
         
-        switch($_REQUEST['action']){
+        switch($_REQUEST['action']){    
+            case "initialisation":
+                initialisationRequest();
+                break;
             case "register":
                 registerRequest();
                 break;
