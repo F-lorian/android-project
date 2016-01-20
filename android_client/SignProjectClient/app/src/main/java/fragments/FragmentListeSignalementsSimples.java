@@ -36,7 +36,6 @@ public class FragmentListeSignalementsSimples extends Fragment {
     AdapterListViewSimpleSignalement adapterListViewSimpleSignalement;
     Thread mTimeUpdateThread;
     Thread mSignalementUpdateThread;
-    Lock verrouUpdateSignalement = new ReentrantLock();
 
     public FragmentListeSignalementsSimples()
     {
@@ -120,16 +119,18 @@ public class FragmentListeSignalementsSimples extends Fragment {
                     while (!mSignalementUpdateThread.isInterrupted()) {
                         Thread.sleep(exampleIntervall);
 
-                        verrouUpdateSignalement.lock();
-
-                        SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsSimples.this.getActivity());
-                        signalementBD.open();
-                        FragmentListeSignalementsSimples.this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU, getArguments().getString(Config.TYPE_SIGNALEMENT));
-                        signalementBD.close();
-
-                        FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.notifyDataSetChanged();
-
-                        verrouUpdateSignalement.unlock();
+                        FragmentListeSignalementsSimples.this.getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsSimples.this.getActivity());
+                                signalementBD.open();
+                                FragmentListeSignalementsSimples.this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU, getArguments().getString(Config.TYPE_SIGNALEMENT));
+                                signalementBD.close();
+                                
+                                FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.setSignalements(FragmentListeSignalementsSimples.this.signalements);
+                                FragmentListeSignalementsSimples.this.adapterListViewSimpleSignalement.notifyDataSetChanged();
+                            }
+                        });
                     }
                 }
                 catch (InterruptedException e) {

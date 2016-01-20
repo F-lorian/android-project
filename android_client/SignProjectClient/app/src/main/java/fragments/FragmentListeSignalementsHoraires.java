@@ -40,7 +40,6 @@ public class FragmentListeSignalementsHoraires extends Fragment{
     AdapterExpandableListViewHoraire adapterExpandableListViewHoraire;
     Thread mTimeUpdateThread;
     Thread mSignalementUpdateThread;
-    Lock verrouUpdateSignalement = new ReentrantLock();
 
     public FragmentListeSignalementsHoraires()
     {
@@ -156,21 +155,22 @@ public class FragmentListeSignalementsHoraires extends Fragment{
                     while (!mSignalementUpdateThread.isInterrupted()) {
                         Thread.sleep(exampleIntervall);
 
-                        verrouUpdateSignalement.lock();
+                        FragmentListeSignalementsHoraires.this.getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsHoraires.this.getActivity());
+                                signalementBD.open();
+                                FragmentListeSignalementsHoraires.this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU, Config.HORAIRES);
+                                signalementBD.close();
 
-                        SignalementBD signalementBD = new SignalementBD(FragmentListeSignalementsHoraires.this.getActivity());
-                        signalementBD.open();
-                        FragmentListeSignalementsHoraires.this.signalements = signalementBD.getSignalementsByType(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU, Config.HORAIRES);
-                        signalementBD.close();
+                                FragmentListeSignalementsHoraires.this.initData();
 
-                        FragmentListeSignalementsHoraires.this.initData();
+                                FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.setSignalementsHoraires(FragmentListeSignalementsHoraires.this.signalements);
+                                FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.setListOfChilds(FragmentListeSignalementsHoraires.this.horairesSignalements);
 
-                        FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.setSignalementsHoraires(FragmentListeSignalementsHoraires.this.signalements);
-                        FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.setListOfChilds(FragmentListeSignalementsHoraires.this.horairesSignalements);
-
-                        FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.notifyDataSetChanged();
-
-                        verrouUpdateSignalement.unlock();
+                                FragmentListeSignalementsHoraires.this.adapterExpandableListViewHoraire.notifyDataSetChanged();
+                            }
+                        });
                     }
                 }
                 catch (InterruptedException e) {

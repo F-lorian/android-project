@@ -105,6 +105,7 @@ public class GcmListenerSignalementService extends GcmListenerService implements
             long id = signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
             signalementBD.close();
 
+
             if (id == -1)
             {
                 return null;

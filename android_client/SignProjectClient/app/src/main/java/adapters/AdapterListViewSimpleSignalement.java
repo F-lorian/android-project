@@ -47,6 +47,10 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
         this.mInflater = LayoutInflater.from(mContext);
     }
 
+    public void setSignalements(List<Signalement> signalements) {
+        this.signalements = signalements;
+    }
+
     @Override
     public int getCount() {
         return this.signalements.size();
