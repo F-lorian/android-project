@@ -84,11 +84,14 @@ public class GroupeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        this.modification = getIntent().getBooleanExtra("modif", false);
 
         if (id_groupe != -1) {
             setContentView(R.layout.activity_groupe);
 
-            this.modification = false;
+
+            this.groupe = new Groupe();
+            this.groupe.setId(id_groupe);
 
             this.alert = new AlertDialog.Builder(this);
             this.alert.setTitle(getResources().getString(R.string.titre_alert_dialog_erreur));
@@ -194,8 +197,8 @@ public class GroupeActivity extends AppCompatActivity {
         if (requestCode == 1) {
 
             if(resultCode == RESULT_OK){
-                this.setModification(true);
                 refresh();
+                this.setModification(true);
             }
             if (resultCode == RESULT_CANCELED) {
                 //Do nothing
@@ -213,8 +216,6 @@ public class GroupeActivity extends AppCompatActivity {
 
     public void refresh(){
 
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
-
         this.layout_membre.setVisibility(View.GONE);
         this.layout_en_attente.setVisibility(View.GONE);
         this.layout_invite.setVisibility(View.GONE);
@@ -228,7 +229,7 @@ public class GroupeActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(GroupeActivity.this);
         int id_user = sessionManager.getUserId();
         Map<String, String> params = new HashMap<>();
-        params.put("group_id", Integer.toString(id_groupe));
+        params.put("group_id", Integer.toString(this.groupe.getId()));
         params.put("user_id", Integer.toString(id_user));
 
         Handler mHandler = getGroupeHandler();
@@ -378,6 +379,8 @@ public class GroupeActivity extends AppCompatActivity {
                                         dialog.cancel();
                                     }
                                 });
+
+                                buildAlert.show();
                             } else {
                                 quit();
                             }
@@ -554,17 +557,99 @@ public class GroupeActivity extends AppCompatActivity {
 
                         setModification(true);
 
-                        if(groupe.getType().equals(Groupe.TYPE_PRIVE)){
 
-                            Intent returnIntent = new Intent();
-                            setResult(RESULT_OK, returnIntent);
 
-                            GroupeActivity.this.finish();
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
 
-                        } else {
-                            refresh();
-                        }
+                        refresh();
+                        setModification(true);
 
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        return mHandler;
+    }
+
+    public Handler getQuitHandler() {
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+
+                    String rp = (String) msg.obj;
+                    //System.out.println(" MSG : "+rp);
+                    JSONObject jsonObject = new JSONObject(rp);
+
+                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
+                    {
+                        displayAlertError(getResources().getString(R.string.action_refusee));
+
+                    }
+                    else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                    {
+                        displayAlertError(getResources().getString(R.string.erreur_serveur));
+
+                    } else {
+                        Toast.makeText(GroupeActivity.this, getResources().getString(R.string.groupe_quitte), Toast.LENGTH_LONG).show();
+
+                        setModification(true);
+
+
+
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
+
+                        GroupeActivity.this.finish();
+
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        return mHandler;
+    }
+
+    public Handler getRefuseHandler() {
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+
+                    String rp = (String) msg.obj;
+                    //System.out.println(" MSG : "+rp);
+                    JSONObject jsonObject = new JSONObject(rp);
+
+                    if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_DENIED))
+                    {
+                        displayFatalError();
+
+                    }
+                    else if (jsonObject.getString(Config.JSON_STATE).equals(Config.JSON_ERROR))
+                    {
+                        displayAlertError(getResources().getString(R.string.erreur_serveur));
+
+                    } else {
+
+                        setModification(true);
+                        Toast.makeText(GroupeActivity.this, getResources().getString(R.string.groupe_invitation_refusee), Toast.LENGTH_LONG).show();
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
+                        GroupeActivity.this.finish();
                     }
 
                 } catch (JSONException e) {
@@ -646,7 +731,7 @@ public class GroupeActivity extends AppCompatActivity {
 
     public void edit() {
 
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
         Intent intent = new Intent(this, ModificationGroupeActivity.class);
         intent.putExtra(Config.ID_GROUPE, id_groupe);
@@ -657,7 +742,7 @@ public class GroupeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
 
         Map<String, String> params = new HashMap<>();
@@ -672,14 +757,14 @@ public class GroupeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
 
         Map<String, String> params = new HashMap<>();
         params.put("group_id", Integer.toString(id_groupe));
         params.put("user_id", Integer.toString(id_user));
 
-        Handler mHandler = getResponseHandler(this.getResources().getString(R.string.groupe_quitte));
+        Handler mHandler = getQuitHandler();
         RequestPostTask.sendRequest("removeMember", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
 
     }
@@ -687,7 +772,7 @@ public class GroupeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
         /*
         if(id != -1){
@@ -714,7 +799,7 @@ public class GroupeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
 
         Map<String, String> params = new HashMap<>();
@@ -730,7 +815,7 @@ public class GroupeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
         Map<String, String> params = new HashMap<>();
         params.put("group_id", Integer.toString(id_groupe));
@@ -745,13 +830,13 @@ public class GroupeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
         int id_user = sessionManager.getUserId();
-        int id_groupe = getIntent().getIntExtra(Config.ID_GROUPE, -1);
+        int id_groupe = this.groupe.getId();
 
         Map<String, String> params = new HashMap<>();
         params.put("group_id", Integer.toString(id_groupe));
         params.put("user_id", Integer.toString(id_user));
 
-        Handler mHandler = getResponseHandler(this.getResources().getString(R.string.groupe_invitation_refusee));
+        Handler mHandler = getRefuseHandler();
         RequestPostTask.sendRequest("removeMember", params, mHandler, this, this.getResources().getString(R.string.progress_dialog_message));
 
     }

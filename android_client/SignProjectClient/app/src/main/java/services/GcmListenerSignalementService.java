@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import activites.AccueilUserActivity;
+import activites.GroupeActivity;
 import modeles.modele.Arret;
 import modeles.modele.Signalement;
 import modeles.modele.SignalementGroupe;
@@ -65,15 +66,21 @@ public class GcmListenerSignalementService extends GcmListenerService implements
     @Override
     public void onMessageReceived(String from, Bundle data) {
 
-        System.out.println("$$$$ data gcm serveur $$$ "+ data);
+        System.out.println("$$$$ data gcm serveur $$$ " + data);
 
-        if (data.getString("type").equals("signalement"))
-        {
-            String message = data.getString("message");
-            System.out.println("$$$$ signalement gcm serveur $$$ "+ message);
+        String type = data.getString("type");
+        String message = data.getString("message");
+        System.out.println("$$$$ signalement gcm serveur $$$ " + message);
+
+        if(type.equals("signalement")){
+
             this.signalement = addSignalement(message);
             this.arret = getArret(signalement.getId());
+
+        } else {
+            sendNotificationGroupe(type, message);
         }
+
     }
 
     private Signalement addSignalement(String msg)
@@ -159,7 +166,7 @@ public class GcmListenerSignalementService extends GcmListenerService implements
 
                 int id = signalementBD.updateSignalement(signalement, SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
 
-                this.sendNotification(messageNotification,signalement.getId());
+                this.sendNotificationSignalement(messageNotification, signalement.getId());
             }
         }
 
@@ -215,7 +222,7 @@ public class GcmListenerSignalementService extends GcmListenerService implements
         this.locationManager.removeUpdates(this);
     }
 
-    private void sendNotification(String message, int idSignalement) {
+    private void sendNotificationSignalement(String message, int idSignalement) {
         Intent intent = new Intent(this, AccueilUserActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -235,6 +242,64 @@ public class GcmListenerSignalementService extends GcmListenerService implements
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(idSignalement, notificationBuilder.build());
+    }
+
+    private void sendNotificationGroupe(String type, String message) {
+
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(message);
+            int id_groupe = jsonObject.getInt("id");
+
+            String title = "";
+            String text = "";
+
+            switch(type) {
+                case "groupeRequest":
+                    title = this.getResources().getString(R.string.titre_notification_groupe_demande);
+                    text = this.getResources().getString(R.string.text_notification_groupe_demande);
+                    break;
+                case "groupeAccept":
+                    title = this.getResources().getString(R.string.titre_notification_groupe_accept);
+                    text = this.getResources().getString(R.string.text_notification_groupe_accept);
+                    break;
+                case "groupeInvite":
+                    title = this.getResources().getString(R.string.titre_notification_groupe_invite);
+                    text = this.getResources().getString(R.string.text_notification_groupe_invite);
+                    break;
+                case "inviteAccept":
+                    title = this.getResources().getString(R.string.titre_notification_groupe_invite_accept);
+                    text = this.getResources().getString(R.string.text_notification_groupe_invite_accept);
+                    break;
+            }
+
+
+            Intent intent = new Intent(this, GroupeActivity.class);
+            intent.putExtra(Config.ID_GROUPE, id_groupe);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+            /***** A ADAPTER *****/
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_notification_signalement)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setAutoCancel(true)
+                    .setVibrate(new long[]{1000, 1000})
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(id_groupe, notificationBuilder.build());
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String createMessageNotification(Signalement signalement)

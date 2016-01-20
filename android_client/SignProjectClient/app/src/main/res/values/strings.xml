@@ -103,6 +103,18 @@
 
     <string name="titre_notification_signalement">Signalement proche !</string>
 
+    <string name="titre_notification_groupe_demande">demande à rejoinde le groupe</string>
+    <string name="text_notification_groupe_demande">Groupe</string>
+
+    <string name="titre_notification_groupe_accept">Vous avez été accepté dans le groupe</string>
+    <string name="text_notification_groupe_accept">Groupe</string>
+
+    <string name="titre_notification_groupe_invite">Vous êtes invité à rejoindre le groupe</string>
+    <string name="text_notification_groupe_invite">Groupe</string>
+
+    <string name="titre_notification_groupe_invite_accept">à rejoint le groupe</string>
+    <string name="text_notification_groupe_invite_accept">Groupe</string>
+
     <string name="titre_toolbar_ajout_groupe">Nouveau groupe</string>
     <string name="titre_toolbar_modifier_groupe">Modifier groupe</string>
     <string name="titre_toolbar_groupe">Groupe</string>

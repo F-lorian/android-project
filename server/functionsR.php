@@ -256,7 +256,7 @@ function removeGroupRequest(){
             echo getReplyMessage(SUCCESS, GROUP_DELETED, array());
         }
         else if($res == DENIED){
-            echo getReplyMessage(DENIED, GROUP_NOT_FOUND, array());
+            echo getReplyMessage(DENIED, GROUP_NOT_FOUND, array('id' => $_POST["group_id"]));
         }
         else if($res == ERROR){
             echo getReplyMessage(ERROR, GROUP_DELETE_FAIL, array());
@@ -357,12 +357,7 @@ function inviteMemberRequest(){
         $res = inviteMember($_POST["group_id"], $_POST["pseudo"]); 
         if($res == SUCCESS){
             
-            $content = array('id' => $group_id);
-        
-            $message = new Message();
-            $message->setContent($content);
-            $message->setType("groupeInvite");
-            $result = sendNotification($registration_ids, $message);
+            
             
             echo getReplyMessage(SUCCESS, USER_INVITED, array());
         }

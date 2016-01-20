@@ -74,7 +74,7 @@ public class InitDataTask extends AsyncTask<Void,Void,Void> {
                 parserKMLToBD.parse(is);
                 this.reussi = parserKMLToBD.addInBD(this.activity);
 
-                //JeuDeDonnees j = new JeuDeDonnees(this.activity);
+                JeuDeDonnees j = new JeuDeDonnees(this.activity);
 
             } catch (Exception e) {
                 e.printStackTrace();

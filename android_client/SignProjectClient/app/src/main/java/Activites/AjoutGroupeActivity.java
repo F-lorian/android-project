@@ -258,12 +258,14 @@ public class AjoutGroupeActivity extends AppCompatActivity {
 
                         Intent returnIntent = new Intent();
                         setResult(RESULT_OK, returnIntent);
+                        AjoutGroupeActivity.this.finish();
 
                         Intent intent = new Intent(AjoutGroupeActivity.this, GroupeActivity.class);
                         intent.putExtra(Config.ID_GROUPE, id);
+                        intent.putExtra("modif", true);
                         startActivity(intent);
 
-                        AjoutGroupeActivity.this.finish();
+
                     }
 
                 } catch (JSONException e) {

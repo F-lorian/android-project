@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -80,7 +81,7 @@ public class FragmentListeGroupes extends Fragment {
                     if (Config.isNetworkAvailable(getActivity())) {
 
                         Intent intent = new Intent(getActivity(), AjoutGroupeActivity.class);
-                        startActivityForResult(intent, 1);
+                        getActivity().startActivityForResult(intent, 1);
 
                     } else
 

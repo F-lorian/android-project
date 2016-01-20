@@ -493,9 +493,7 @@ function addGroup($name, $type, $creator, $description){
 function removeGroup($group_id){
     
      try {
-         
-        if(getGroupById($id) != null){
-            $result = array();
+          $result = array();
             $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
             $stmt = $dbh->prepare("DELETE FROM `group` WHERE id = '$group_id'");
             $stmt->execute();
@@ -506,9 +504,7 @@ function removeGroup($group_id){
             } else {
                 return ERROR;
             }
-        }
-        return DENIED;
-        
+
     } catch (PDOException $e) {
         echo "Erreur !: " . $e->getMessage() . "<br/>";
         die();
@@ -593,12 +589,11 @@ function getGroupByName($name){
 function getGroupById($id){
     
      try {
-         
-        $group_idint = (int) $id;
+        
          
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
-        $stmt = $dbh->prepare("SELECT * FROM `group` g WHERE g.id = '$group_idint' LIMIT 1");
+        $stmt = $dbh->prepare("SELECT * FROM `group` WHERE id = '$id' LIMIT 1");
         $stmt->execute();
         $dbh = null;
         while ($row = $stmt->fetch()) {
@@ -714,7 +709,7 @@ function getGroups($user_id, $search){
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         $stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator, ug.state FROM `group` g, user_in_group ug WHERE ug.user = '$user_id' AND ug.`group` = g.id AND g.name LIKE '%$search%'");
         $stmt->execute();
-        $dbh = null;
+        
 
         while ($row = $stmt->fetch()) {
             $nb_member_request = getNbMemberRequest($row['id']);
@@ -723,6 +718,18 @@ function getGroups($user_id, $search){
             $row["nb_member"] = $nb_member;
             $result[] = $row;
         }
+         
+        //$stmt = $dbh->prepare("SELECT g.id, g.name, g.type, g.description, g.creator FROM `group` g WHERE g.name LIKE '%$search%' AND g.type = 'public");
+        //$stmt->execute();
+        $dbh = null;
+         
+       /*  while ($row = $stmt->fetch()) {
+            $nb_member_request = getNbMemberRequest($row['id']);
+            $nb_member = getNbMember($row['id']);
+            $row["member_request"] = $nb_member_request;
+            $row["nb_member"] = $nb_member;
+            $result[] = $row;
+        }*/
          
         return $result;
         
@@ -781,6 +788,15 @@ function getMembersByGroupId($group_id, $state, $search){
 function inviteMember($group_id, $pseudo){
     $res = getUserByPseudo($pseudo);
     if( $res != null){
+        
+        $content = array('id' => $group_id);
+        
+        $message = new Message();
+        $message->setContent($content);
+        $message->setType("groupeInvite");
+        $result = sendNotification(array($res['gcm_regid']), $message);
+        
+        
         return addToGroup($res['id'], $group_id, 'invite'); 
     }
     return DENIED;
@@ -915,7 +931,7 @@ function addSignalement(){
         $result = array();
         $dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE, DB_USER, DB_PASSWORD);
         
-        $date = date('Y-m-d H:i:s.u');
+        //$date = date('Y-m-d H:i:s.u');
         $stmt = $dbh->prepare("INSERT INTO signalement (contenu, remarque, date, diffusion, arret, type, emetteur) VALUES ('$contenu', '$remarque', '$date', '$diffusion', '$arret', '$type', '$emetteur')");
         $stmt->execute();
 		$idSignalement = $dbh->lastInsertId();
