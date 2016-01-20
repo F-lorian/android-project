@@ -56,6 +56,7 @@ import modeles.modeleBD.LigneArretBD;
 import modeles.modeleBD.SignalementBD;
 import modeles.modeleBD.TypeSignalementBD;
 import utilitaires.Config;
+import utilitaires.ContenuSignalement;
 import utilitaires.RequestPostTask;
 import utilitaires.SessionManager;
 import utilitaires.UtilisateursDestinationSignalementCompletionView;
@@ -242,16 +243,13 @@ public class AjoutSignalementActivity extends AppCompatActivity {
 
                     signalement.setArret(arret);
 
-                    String contenu = autoCompleteTextViewArret.getText().toString() + "\n" + this.idLigneArretCourant;
+                    ContenuSignalement contenuSignalement = new ContenuSignalement(autoCompleteTextViewArret.getText().toString(),this.idLigneArretCourant,new ArrayList<String>());
 
                     if (this.typeSignalements.get(indiceTypeSignalement).getType().equals(this.getResources().getString(R.string.horaire_spinner)))
                     {
                         if (this.horaires.size()>0)
                         {
-                            for (int i=0; i<this.horaires.size(); i++)
-                            {
-                                contenu = contenu + "\n" + this.horaires.get(i);
-                            }
+                            contenuSignalement.setTempsAttente(this.horaires);
                         }
                         else
                         {
@@ -261,7 +259,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                         }
                     }
 
-                    signalement.setContenu(contenu);
+                    signalement.setContenu(contenuSignalement.getJson().toString());
 
                     if (this.typeDestinataire.get(indiceTypeDestination).equals(this.getResources().getString(R.string.groupe_spinner)))
                     {
@@ -307,8 +305,6 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
                             signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
                             signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
-
-                            System.out.println(signalement);
 
                             if (Config.isNetworkAvailable(this))
                             {
@@ -749,16 +745,13 @@ public class AjoutSignalementActivity extends AppCompatActivity {
             for (int i=0; i<((SignalementGroupe)signalement).getGroupesDestinateurs().size(); i++)
             {
                 jsonArray.put(((SignalementGroupe) signalement).getGroupesDestinateurs().get(i).getId());
-                //new JSONObject().put("idGroupe", ((SignalementGroupe) signalement).getGroupesDestinateurs().get(i).getId())
             }
-
-            System.out.println(jsonArray);
 
             pairsPost.add(new BasicNameValuePair("destinataires", jsonArray.toString()));
         }
         return pairsPost;
     }
-
+    
     private void envoyerSignalement(Signalement signalement)
     {
         List<NameValuePair> pairsPost = null;

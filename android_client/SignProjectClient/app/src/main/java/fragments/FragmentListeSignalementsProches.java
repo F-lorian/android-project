@@ -53,21 +53,19 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
 
         this.locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
 
-        /**
+        /*
         SignalementBD signalementBD = new SignalementBD(getActivity());
         signalementBD.open();
         this.signalements = signalementBD.getSignalements(SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
         signalementBD.close();
-         **/
 
         this.signalements = new ArrayList<>();
 
         this.initData();
         this.updateSignalements();
+        */
 
-        this.adapterExpandableListViewHoraire = new AdapterExpandableListViewHoraire(getActivity(),this.signalements,this.horairesSignalements);
-
-        this.listeSignalements.setAdapter(this.adapterExpandableListViewHoraire);
+        this.adapterExpandableListViewHoraire = null;
 
         this.fabAjoutSignalement.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +75,7 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
             }
         });
 
-        this.expandAll();
+
         this.updateHoraireThread();
         this.abonnementNetwork();
 
@@ -130,10 +128,21 @@ public class FragmentListeSignalementsProches extends FragmentListeSignalementsH
 
         this.initData();
 
-        this.adapterExpandableListViewHoraire.setSignalementsHoraires(this.signalements);
-        this.adapterExpandableListViewHoraire.setListOfChilds(this.horairesSignalements);
+        if (this.adapterExpandableListViewHoraire == null)
+        {
+            this.adapterExpandableListViewHoraire = new AdapterExpandableListViewHoraire(getActivity(),this.signalements,this.horairesSignalements);
 
-        this.adapterExpandableListViewHoraire.notifyDataSetChanged();
+            this.listeSignalements.setAdapter(this.adapterExpandableListViewHoraire);
+
+            this.expandAll();
+        }
+        else
+        {
+            this.adapterExpandableListViewHoraire.setSignalementsHoraires(this.signalements);
+            this.adapterExpandableListViewHoraire.setListOfChilds(this.horairesSignalements);
+            this.adapterExpandableListViewHoraire.notifyDataSetChanged();
+        }
+
     }
 
     @Override

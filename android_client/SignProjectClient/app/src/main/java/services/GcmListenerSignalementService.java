@@ -157,7 +157,7 @@ public class GcmListenerSignalementService extends GcmListenerService implements
 
                 signalement.setVu(true);
 
-                signalementBD.updateSignalement(signalement, SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
+                int id = signalementBD.updateSignalement(signalement, SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
 
                 this.sendNotification(messageNotification,signalement.getId());
             }
@@ -260,6 +260,6 @@ public class GcmListenerSignalementService extends GcmListenerService implements
             type = getResources().getString(R.string.horaire_spinner);
         }
 
-        return type + "\n" + signalement.getArret().getNom();
+        return type + " - " + signalement.getArret().getNom();
     }
 }

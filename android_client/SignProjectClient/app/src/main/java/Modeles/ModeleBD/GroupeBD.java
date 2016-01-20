@@ -78,17 +78,7 @@ public class GroupeBD {
         values.put(ADMIN_GROUPE, groupe.getAdmin().getId());
 
         // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
-        long id = db.insert(TABLE_NAME,null,values);
-
-        if(id != -1){
-            groupe.setId((int) id);
-            GroupeUtilisateurBD groupUtilisateurBD = new GroupeUtilisateurBD(this.context);
-            groupUtilisateurBD.open();
-            groupUtilisateurBD.add(groupe.getAdmin().getId(), id, GroupeUtilisateurBD.ETAT_APPARTIENT);
-            groupUtilisateurBD.close();
-        }
-
-        return id;
+        return db.insert(TABLE_NAME,null,values);
     }
 
     public int update(Groupe groupe) {
@@ -115,6 +105,11 @@ public class GroupeBD {
         String[] whereArgs = {groupe.getId()+""};
 
         return db.delete(TABLE_NAME, where, whereArgs);
+    }
+
+    public int deleteAll() {
+
+        return db.delete(TABLE_NAME, null, null);
     }
 
     public Groupe getGroupeAdmin(int id) {

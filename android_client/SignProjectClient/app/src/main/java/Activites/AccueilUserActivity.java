@@ -281,22 +281,8 @@ public class AccueilUserActivity extends AppCompatActivity {
 
     public void InitilisationDesDonnees()
     {
-        LigneArretBD la = new LigneArretBD(this);
-
-        la.open();
-
-        if (la.getCount() <= 0)
-        {
-            InitDataTask initDataTask = new InitDataTask(this);
-            initDataTask.execute();
-        }
-        else
-        {
-            MenuItem mi = nvDrawer.getMenu().getItem(0).getSubMenu().getItem(0);
-            this.selectDrawerItem(mi);
-        }
-
-        la.close();
+        InitDataTask initDataTask = new InitDataTask(this);
+        initDataTask.execute();
     }
 
 

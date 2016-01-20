@@ -27,6 +27,7 @@ import modeles.modeleBD.DestinationSignalementGroupeBD;
 import modeles.modeleBD.DestinationSignalementPublicBD;
 import modeles.modeleBD.SignalementBD;
 import utilitaires.Config;
+import utilitaires.ContenuSignalement;
 
 /**
  * Created by Axel_2 on 24/12/2015.
@@ -104,15 +105,9 @@ public class FragmentListeSignalementsHoraires extends Fragment{
         for (int i=0; i<this.signalements.size(); i++)
         {
             Signalement signalement = this.signalements.get(i);
-            String[] horaires = signalement.getContenu().split("\n");
-            List<String> listHoraires = new ArrayList<>();
-
-            for(int j=2; j<horaires.length; j++)
-            {
-                listHoraires.add(horaires[j]);
-            }
-
-            this.horairesSignalements.put(signalement,listHoraires);
+            signalement.setVu(true);
+            ContenuSignalement contenuSignalement = new ContenuSignalement(signalement.getContenu());
+            this.horairesSignalements.put(signalement,contenuSignalement.getTempsAttente());
         }
     }
 
@@ -231,15 +226,10 @@ public class FragmentListeSignalementsHoraires extends Fragment{
                     }
                 }
 
+                ContenuSignalement contenuSignalement = new ContenuSignalement(entry.getKey().getContenu());
+                contenuSignalement.setTempsAttente(entry.getValue());
 
-                String[] ancienContenuSplit = entry.getKey().getContenu().split("\n");
-                String nouveauContenu = ancienContenuSplit[0] + "\n" + ancienContenuSplit[1];
-
-                for (int i = 0; i < entry.getValue().size(); i++) {
-                    nouveauContenu = nouveauContenu + "\n" + entry.getValue().get(i);
-                }
-
-                entry.getKey().setContenu(nouveauContenu);
+                entry.getKey().setContenu(contenuSignalement.getJson().toString());
 
                 signalementBD.updateSignalement(entry.getKey(), SignalementBD.TABLE_NAME_SIGNALEMENT_RECU);
             }

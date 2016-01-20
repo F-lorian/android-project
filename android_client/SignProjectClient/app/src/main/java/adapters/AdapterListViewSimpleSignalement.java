@@ -26,6 +26,7 @@ import java.util.List;
 import activites.PositionSignalementMapsActivity;
 import modeles.modele.Signalement;
 import utilitaires.Config;
+import utilitaires.ContenuSignalement;
 
 /**
  * Created by Axel_2 on 25/12/2015.
@@ -106,8 +107,8 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
             titre.setTextColor(Color.BLUE);
         }
 
-        String contenu = this.signalements.get(position).getContenu();
-        arret.setText(contenu.split("\n")[0]);
+        ContenuSignalement contenuSignalement = new ContenuSignalement(this.signalements.get(position).getContenu());
+        arret.setText(contenuSignalement.getLigneArret());
 
 
         Date dt2 = new Date();
@@ -125,7 +126,7 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
             @Override
             public void onClick(View v) {
                 int indice = ((Integer)v.getTag()).intValue();
-                int idLigneArret = Integer.valueOf(AdapterListViewSimpleSignalement.this.signalements.get(indice).getContenu().split("\n")[1]).intValue();
+                int idLigneArret = new ContenuSignalement(AdapterListViewSimpleSignalement.this.signalements.get(indice).getContenu()).getIdLigneArret();
                 Intent intent = new Intent(AdapterListViewSimpleSignalement.this.mContext, PositionSignalementMapsActivity.class);
                 intent.putExtra(AdapterListViewSimpleSignalement.this.ID_LIGNE_ARRET,idLigneArret);
                 intent.putExtra(AdapterListViewSimpleSignalement.this.TYPE_SIGNALEMENT,AdapterListViewSimpleSignalement.this.signalements.get(indice).getType().getType());
@@ -153,8 +154,8 @@ public class AdapterListViewSimpleSignalement extends BaseAdapter{
 
                 int indice = ((Integer)v.getTag()).intValue();
                 List<Signalement> signalements = AdapterListViewSimpleSignalement.this.signalements;
-                String contenu = signalements.get(indice).getContenu();
-                arret.setText(contenu.split("\n")[0]);
+                ContenuSignalement contenuSignalement1 = new ContenuSignalement(signalements.get(indice).getContenu());
+                arret.setText(contenuSignalement1.getLigneArret());
 
                 remarque.setText(signalements.get(indice).getRemarques());
 

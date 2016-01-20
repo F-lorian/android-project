@@ -172,6 +172,11 @@ public class SignalementBD {
         return db.delete(table, where, whereArgs);
     }
 
+    public int deleteAll(String table)
+    {
+        return db.delete(table,null,null);
+    }
+
     public Signalement getSignalement(int id, String table) {
         // Retourne l'enregistrement dont l'id est passé en paramètre
 

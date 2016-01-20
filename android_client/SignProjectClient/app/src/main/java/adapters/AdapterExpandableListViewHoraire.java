@@ -25,6 +25,7 @@ import java.util.List;
 import activites.PositionSignalementMapsActivity;
 import modeles.modele.Signalement;
 import utilitaires.Config;
+import utilitaires.ContenuSignalement;
 
 /**
  * Created by Axel_2 on 26/12/2015.
@@ -103,7 +104,6 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
 
         String typeSignalement = signalement.getType().getType();
 
-
         if (typeSignalement.equals(Config.CONTROLEUR))
         {
             titre.setText(this.context.getResources().getString(R.string.controleur_spinner).toUpperCase());
@@ -127,9 +127,8 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
             titre.setTextColor(Color.GREEN);
         }
 
-
-        String contenu = signalement.getContenu();
-        arret.setText(contenu.split("\n")[0]);
+        ContenuSignalement contenuSignalement = new ContenuSignalement(signalement.getContenu());
+        arret.setText(contenuSignalement.getLigneArret());
 
         Date dt2 = new Date();
         long diff = dt2.getTime() - signalement.getDate().getTime();
@@ -144,7 +143,7 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
             @Override
             public void onClick(View v) {
                 int indice = ((Integer) v.getTag()).intValue();
-                int idLigneArret = Integer.valueOf(AdapterExpandableListViewHoraire.this.signalementsHoraires.get(indice).getContenu().split("\n")[1]).intValue();
+                int idLigneArret = new ContenuSignalement(AdapterExpandableListViewHoraire.this.signalementsHoraires.get(indice).getContenu()).getIdLigneArret();
                 Intent intent = new Intent(AdapterExpandableListViewHoraire.this.context, PositionSignalementMapsActivity.class);
                 intent.putExtra(AdapterListViewSimpleSignalement.ID_LIGNE_ARRET, idLigneArret);
                 intent.putExtra(AdapterListViewSimpleSignalement.TYPE_SIGNALEMENT, AdapterExpandableListViewHoraire.this.signalementsHoraires.get(indice).getType().getType());
@@ -172,8 +171,8 @@ public class AdapterExpandableListViewHoraire extends BaseExpandableListAdapter{
 
                 int indice = ((Integer)v.getTag()).intValue();
                 List<Signalement> signalements = AdapterExpandableListViewHoraire.this.signalementsHoraires;
-                String contenu = signalements.get(indice).getContenu();
-                arret.setText(contenu.split("\n")[0]);
+                ContenuSignalement contenuSignalement = new ContenuSignalement(signalements.get(indice).getContenu());
+                arret.setText(contenuSignalement.getLigneArret());
 
                 remarque.setText(signalements.get(indice).getRemarques());
 
