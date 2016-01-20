@@ -72,7 +72,7 @@ public class FragmentListeSignalementsSimples extends Fragment {
         });
 
         this.updateTimeThread();
-        this.updateSignalements();
+        this.updateSignalementThread();
 
         return view;
     }
@@ -137,7 +137,7 @@ public class FragmentListeSignalementsSimples extends Fragment {
             }
         };
 
-        mTimeUpdateThread.start();
+        mSignalementUpdateThread.start();
     }
 
     private void updateSignalements()

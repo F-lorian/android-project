@@ -20,14 +20,14 @@ public class GestionRegID {
 
     public String register() throws IOException {
         InstanceID instanceID = InstanceID.getInstance(this.context);
-        String token = instanceID.getToken(Config.API_KEY,
+        String token = instanceID.getToken(Config.PROJECT_ID,
                 GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
         return token;
     }
 
     public void unregister() throws IOException {
         InstanceID instanceID = InstanceID.getInstance(this.context);
-        instanceID.deleteToken(Config.API_KEY,
+        instanceID.deleteToken(Config.PROJECT_ID,
                 GoogleCloudMessaging.INSTANCE_ID_SCOPE);
     }
 }

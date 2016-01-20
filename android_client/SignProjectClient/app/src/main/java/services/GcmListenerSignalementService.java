@@ -50,7 +50,12 @@ public class GcmListenerSignalementService extends GcmListenerService implements
     public GcmListenerSignalementService()
     {
         super();
-        this.distanceDuSignalement = 1f;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        this.distanceDuSignalement = -1f;
         this.arret = null;
         this.signalement = null;
         this.locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
@@ -60,10 +65,12 @@ public class GcmListenerSignalementService extends GcmListenerService implements
     @Override
     public void onMessageReceived(String from, Bundle data) {
 
+        System.out.println("$$$$ data gcm serveur $$$ "+ data);
+
         if (data.getString("type").equals("signalement"))
         {
             String message = data.getString("message");
-            System.out.println("$$$$ signalement gcm serveur $$$"+ message);
+            System.out.println("$$$$ signalement gcm serveur $$$ "+ message);
             this.signalement = addSignalement(message);
             this.arret = getArret(signalement.getId());
         }

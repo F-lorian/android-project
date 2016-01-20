@@ -85,8 +85,17 @@ public class FragmentListeSignalementsHoraires extends Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
-        mTimeUpdateThread.interrupt();
-        mSignalementUpdateThread.interrupt();
+
+        if (mTimeUpdateThread != null && mTimeUpdateThread.isAlive())
+        {
+            mTimeUpdateThread.interrupt();
+        }
+
+        if (mSignalementUpdateThread != null && mSignalementUpdateThread.isAlive())
+        {
+            mSignalementUpdateThread.interrupt();
+        }
+
     }
 
     protected void initData()
@@ -169,7 +178,7 @@ public class FragmentListeSignalementsHoraires extends Fragment{
             }
         };
 
-        mTimeUpdateThread.start();
+        mSignalementUpdateThread.start();
     }
 
     protected void expandAll()

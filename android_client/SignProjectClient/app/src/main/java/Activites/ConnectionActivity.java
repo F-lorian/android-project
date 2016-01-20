@@ -125,7 +125,6 @@ public class ConnectionActivity extends Activity {
         });
 
 
-
         seConnecter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

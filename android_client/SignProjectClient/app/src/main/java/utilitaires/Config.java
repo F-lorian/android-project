@@ -13,6 +13,7 @@ public class Config {
     public static final String KML_URL = "http://florian-m.fr/sign-project/tam.kml";
     public static final String SERVEUR_URL = "http://florian-m.fr/sign-project/server.php";
     public static final String API_KEY = "AIzaSyA_O8dXv4VMFnIOxNnrIytx7He6k5EhLEQ";
+    public static final String PROJECT_ID = "1006907114300";
 
     public static final String CONTROLEUR = "Controleur";
     public static final String HORAIRES = "Horaires";
