@@ -3,13 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutPrincipaleUserAjoutSignalement"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/hauteur_champs_saisie"
-    android:layout_marginTop="@dimen/margin_top_dynamic_field">
+    style="@style/DataIndicatorChampSaisie">
 
     <utilitaires.UtilisateursDestinationSignalementCompletionView
         android:id="@+id/tokenUtilisateur"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:textColor="@android:color/white"/>
 
 </LinearLayout>

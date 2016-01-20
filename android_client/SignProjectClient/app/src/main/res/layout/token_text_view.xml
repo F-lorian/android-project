@@ -4,6 +4,7 @@
     android:layout_width="wrap_content">
 
     <LinearLayout
+        android:id="@+id/layout_token"
         style="@style/DataIndicator"
         android:layout_marginTop="2sp"
         android:layout_marginLeft="2sp"
@@ -11,7 +12,7 @@
         <TextView
             android:id="@+id/name"
             style="@style/DataIndicatorText"
-            android:text="toto"/>
+            android:text=""/>
     </LinearLayout>
 
 

@@ -37,6 +37,7 @@
     <string name="message_alert_dialog_erreur_horaire_signalement">Aucun horaire ajouté</string>
     <string name="message_alert_dialog_erreur_groupe_signalement">Aucun groupe selectionné</string>
     <string name="message_alert_dialog_erreur_utilisateur_signalement">Aucun utilisateur selectionné</string>
+    <string name="message_alert_dialog_erreur_utilisateur_introuvable">l\'utilisateur n\'existe pas</string>
     <string name="message_alert_dialog_erreur_ajout_signalement_bd">Problème d\'enregistrement du signalement</string>
     <string name="message_alert_dialog_erreur_arret_signalement">Aucun arret selectionné</string>
 
@@ -76,7 +77,7 @@
     <string name="groupe_spinner">Groupe(s)</string>
     <string name="autres_personnes_spinner">Autre(s) personne(s)</string>
 
-    <string name="horaires_ajout_signalement">Horaire</string>
+    <string name="horaires_ajout_signalement">Horaires</string>
 
     <string name="prefix_token_ajout_signalement">Destiné à :</string>
 
@@ -145,5 +146,8 @@
     <string name="action_refusee">action refusée</string>
     <string name="refuse">refusé</string>
     <string name="supprime_du_groupe">supprimé du groupe</string>
+    <string name="erreur_selection_arret">veuillez selectionner un arrêt</string>
+    <string name="erreur_validation_arret">arrêt invalide</string>
+
 
 </resources>

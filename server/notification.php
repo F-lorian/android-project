@@ -77,7 +77,7 @@ class Notification
             curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode($this->fields) );
             $result = curl_exec($ch );
             curl_close( $ch );
-            echo $result;
+            //echo $result;
             
             return 'success : notification was sent';
         

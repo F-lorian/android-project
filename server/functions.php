@@ -46,7 +46,7 @@ function sendNotification($registrationIds, $message){
     foreach($registrationIds as $regid)
     {
         $notification->setRegistrationId(array($regid));
-        echo $notification->send();
+        $notification->send();
     }
     
 }

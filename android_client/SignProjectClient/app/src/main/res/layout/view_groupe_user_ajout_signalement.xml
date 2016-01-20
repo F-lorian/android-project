@@ -10,6 +10,7 @@
     <LinearLayout
         android:id="@+id/layoutTypeAjoutSignalement"
         style="@style/DataIndicatorChampSaisie"
+        android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         android:gravity="center">
 
@@ -17,7 +18,8 @@
             android:id="@+id/listGroupUserAjoutSignalement"
             style="@style/DataIndicatorTextChampSaisie"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"></ListView>
     </LinearLayout>
 
 </LinearLayout>

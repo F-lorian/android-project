@@ -144,6 +144,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 {
                     AjoutSignalementActivity.this.horaires.clear();
                     AjoutSignalementActivity.this.adapterListViewHoraireSignalement.notifyDataSetChanged();
+                    AjoutSignalementActivity.this.autoCompleteTextViewArret.setError(null);
 
                 }
             }
@@ -229,7 +230,10 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     signalement = new SignalementPublic();
                 }
 
-                if (this.idLigneArretCourant != ListView.INVALID_POSITION)
+                if(!this.arretsArray.contains(autoCompleteTextViewArret.getText().toString())){
+                    autoCompleteTextViewArret.setError(getResources().getString(R.string.erreur_validation_arret));
+                }
+                else if (this.idLigneArretCourant != ListView.INVALID_POSITION)
                 {
                     LigneArretBD ligneArretBD = new LigneArretBD(this);
                     ligneArretBD.open();
@@ -288,15 +292,59 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                     {
                         UtilisateursDestinationSignalementCompletionView utilisateursDestinationSignalementCompletionView = (UtilisateursDestinationSignalementCompletionView) findViewById(R.id.tokenUtilisateur);
 
-                        if (utilisateursDestinationSignalementCompletionView.getObjects().size()>0)
+                        ArrayList<Utilisateur> destination = new ArrayList<>();
+                        for ( Utilisateur u: utilisateursDestinationSignalementCompletionView.getObjects()) {
+                            if (utilisateursDestination.contains(u)){
+                                destination.add((Utilisateur) u);
+                            }
+                        }
+
+                        if (destination.size() > 0)
                         {
-                            ((SignalementPublic)signalement).setUtilisateursDestinateurs((ArrayList<Utilisateur>) utilisateursDestinationSignalementCompletionView.getObjects());
+
+                            ((SignalementPublic)signalement).setUtilisateursDestinateurs(destination);
+
+                            signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
+                            signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
+                            signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
+
+                            System.out.println(signalement);
+
+                            if (Config.isNetworkAvailable(this))
+                            {
+                                this.envoyerSignalement(signalement);
+                            }
+                            else
+                            {
+                                SignalementBD signalementBD = new SignalementBD(this);
+                                signalementBD.open();
+                                int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
+                                signalementBD.close();
+
+                                if (id > 0)
+                                {
+                                    Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
+                                    this.finish();
+                                }
+                                else
+                                {
+
+                                    buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
+                                    AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                                    alertInscriptionInvalide.show();
+                                }
+                            }
+
                         }
                         else
-                        {
+                      {
+                            /*
                             buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_utilisateur_signalement));
                             AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                            alertInscriptionInvalide.show();
+                            alertInscriptionInvalide.w();
+                            */
+
+                            utilisateursDestinationSignalementCompletionView.setError(getResources().getString(R.string.message_alert_dialog_erreur_utilisateur_signalement));
                         }
                     }
                     else
@@ -304,42 +352,15 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                         //CAS PUBLIC
                         ((SignalementPublic)signalement).setUtilisateursDestinateurs(null);
                     }
-
-                    signalement.setRemarques(((EditText) findViewById(R.id.textAreaAjoutSignalement)).getText().toString());
-                    signalement.setType(this.typeSignalements.get(indiceTypeSignalement));
-                    signalement.setEmetteur(new Utilisateur(sessionManager.getUserId(), "", "", null, null, null));
-
-                    System.out.println(signalement);
-
-                    if (Config.isNetworkAvailable(this))
-                    {
-                        this.envoyerSignalement(signalement);
-                    }
-                    else
-                    {
-                        SignalementBD signalementBD = new SignalementBD(this);
-                        signalementBD.open();
-                        int id = (int) signalementBD.addSignalement(signalement,SignalementBD.TABLE_NAME_SIGNALEMENT_A_ENVOYER);
-                        signalementBD.close();
-
-                        if (id > 0)
-                        {
-                            Toast.makeText(this, this.getResources().getString(R.string.toast_signalement_envoye), Toast.LENGTH_LONG).show();
-                            this.finish();
-                        }
-                        else
-                        {
-                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_ajout_signalement_bd));
-                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                            alertInscriptionInvalide.show();
-                        }
-                    }
                 }
                 else
-                {
+              {
+                    /*
                     buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.message_alert_dialog_erreur_arret_signalement));
                     AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
-                    alertInscriptionInvalide.show();
+                    alertInscriptionIalide.show();
+                    */
+                    autoCompleteTextViewArret.setError(getResources().getString(R.string.erreur_selection_arret));
                 }
                 break;
             case android.R.id.home:
@@ -440,6 +461,11 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                             });
 
                             dialogAjoutHoraire.show();
+                        } else {
+                            autoCompleteTextViewArret.setError(getResources().getString(R.string.erreur_selection_arret));
+                            buildAlertInscriptionInvalide.setMessage(getResources().getString(R.string.erreur_selection_arret));
+                            AlertDialog alertInscriptionInvalide = buildAlertInscriptionInvalide.create();
+                            alertInscriptionInvalide.show();
                         }
 
                     }
@@ -488,6 +514,7 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 utilisateursDestinationSignalementCompletionView.setPrefix(this.getResources().getString(R.string.prefix_token_ajout_signalement) + " ");
                 utilisateursDestinationSignalementCompletionView.setSplitChar(' ');
                 utilisateursDestinationSignalementCompletionView.allowDuplicates(false);
+                utilisateursDestinationSignalementCompletionView.setList(utilisateursDestination);
 
             }
         }
@@ -521,22 +548,22 @@ public class AjoutSignalementActivity extends AppCompatActivity {
                 listViewGroups.setOnTouchListener(new ListView.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction();
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                            // Disallow ScrollView to intercept touch events.
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
-                            break;
+                        int action = event.getAction();
+                        switch (action) {
+                            case MotionEvent.ACTION_DOWN:
+                                // Disallow ScrollView to intercept touch events.
+                                v.getParent().requestDisallowInterceptTouchEvent(true);
+                                break;
 
-                        case MotionEvent.ACTION_UP:
-                            // Allow ScrollView to intercept touch events.
-                            v.getParent().requestDisallowInterceptTouchEvent(false);
-                            break;
-                    }
+                            case MotionEvent.ACTION_UP:
+                                // Allow ScrollView to intercept touch events.
+                                v.getParent().requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
 
-                    // Handle ListView touch events.
-                    v.onTouchEvent(event);
-                    return true;
+                        // Handle ListView touch events.
+                        v.onTouchEvent(event);
+                        return true;
                     }
                 });
             }

@@ -2,22 +2,22 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutRemarquesAjoutSignalement"
+    style="@style/DataIndicatorChampSaisie"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/hauteur_text_area"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_marginTop="@dimen/margin_formulaire">
 
     <EditText
         android:id="@+id/textAreaAjoutSignalement"
+        style="@style/DataIndicatorTextChampSaisie"
         android:hint="@string/titre_textarea_remarque_ajout_signalement"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
         android:singleLine="false"
-        android:lines="5"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip" />
+        android:lines="5"/>
 
 </LinearLayout>
 
