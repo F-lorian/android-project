@@ -872,20 +872,20 @@ function addToGroup($user_id, $group_id, $state){
             $dbh = null;
             
             if (isInGroup($user_id, $group_id) == SUCCESS) { 
-              /*  
+              
                 if($state == 'attente'){
                     
                     $user = getUserById($id);
                     
+                    $message = new Message();
                     $message->setType("groupeRequest");
                     $content = array('id' => $group_id);
         
-                    $message = new Message();
                     $message->setContent($content);
                 
                     $result = sendNotification(array($user['gcm_regid']), $message);
                 }
-                */
+                
                 
                 
                 return SUCCESS;
@@ -972,6 +972,7 @@ function acceptMember($group_id, $user_id){
             $check = getState($user_id, $group_id);
             if ($check != null) { 
                 
+                $message = new Message();
                 if($check == 'attente'){
                     $message->setType("groupeAccept");
                 }
@@ -981,7 +982,7 @@ function acceptMember($group_id, $user_id){
                 
                 $user = getUserById($user_id);
                 $content = array('id' => $group_id);
-                $message = new Message();
+                
                 $message->setContent($content);
                 $result = sendNotification(array($user['gcm_regid']), $message);
                 
@@ -1074,14 +1075,16 @@ function addSignalement(){
                 $stmt = $dbh->prepare("INSERT INTO signalement_for_group (signalement, `group`) VALUES ('$idSignalement', '$idGroup')");
 				$stmt->execute();
                 
-                $destinataires = getMembersByGroupId($idGroup, 'appartient', '');
-                foreach($destinataires as $User)
+                $destinataires2 = getMembersByGroupId($idGroup, 'appartient', '');
+                foreach($destinataires2 as $user)
                 {
                     if($user['gcm_regid'] != null && $user['gcm_regid'] != ''){
                         $registration_ids[] = $user['gcm_regid'];
                     }
+                    
+                    $idUser = $user['id'];
 
-                    $stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, user, checked) VALUES ('$idSignalement', '$idUser', 0)");
+                    $stmt = $dbh->prepare("INSERT INTO signalement_for_user (signalement, `user`, checked) VALUES ('$idSignalement', '$idUser', 0)");
                     $stmt->execute();
                 }
 			}
